@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".recommend.acitivty.RecommendActivity">
+  <include
+      layout="@layout/title"
+      android:id="@+id/include" />
+  <com.liaoinstan.springview.widget.SpringView
+      android:layout_width="match_parent"
+      android:layout_below="@id/include"
+      android:id="@+id/sv"
+      android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/include"
+        android:id="@+id/rc_recommend"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+  </com.liaoinstan.springview.widget.SpringView>
+
+</RelativeLayout>

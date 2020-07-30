@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/rl_first"
+    android:background="#F5F5F5"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="@dimen/dp_73"
+        android:text="酒水"
+        android:textSize="@dimen/sp_16"
+        android:id="@+id/tv_name"
+        android:gravity="center"
+        android:textColor="@color/more_font"
+        android:layout_height="@dimen/dp_40">
+    </TextView>
+</LinearLayout>

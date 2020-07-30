@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rl_main"
+    tools:context=".main.activity.MainActivity">
+    <ImageView
+        android:layout_width="match_parent"
+        android:src="@mipmap/nonet"
+        android:visibility="gone"
+        android:id="@+id/iv_nonet"
+        android:layout_centerVertical="true"
+        android:layout_height="@dimen/dp_300">
+    </ImageView>
+    <FrameLayout
+        android:id="@+id/flContent"
+        android:layout_above="@id/rgMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <RadioGroup
+        android:layout_alignParentBottom="true"
+        android:id="@+id/rgMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="@dimen/dp_50"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbHome"
+            style="@style/MainTab"
+            android:drawableTop="@drawable/selector_main_home"
+            android:text="首页" />
+        <RadioButton
+            android:id="@+id/rbClassIf"
+            style="@style/MainTab"
+            android:drawableTop="@drawable/selector_main_sort"
+            android:text="分类" />
+        <RadioButton
+            android:id="@+id/rbOrder"
+            style="@style/MainTab"
+            android:drawableTop="@drawable/selector_main_order"
+            android:text="进货单" />
+
+        <RadioButton
+            android:id="@+id/rbMine"
+            style="@style/MainTab"
+            android:drawableTop="@drawable/selector_main_my"
+            android:text="我的" />
+    </RadioGroup>
+</RelativeLayout>

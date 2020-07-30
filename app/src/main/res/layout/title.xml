@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_50"
+    android:background="@color/title">
+    <ImageView
+        android:layout_width="@dimen/dp_18"
+        android:layout_marginBottom="@dimen/dp_13"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:src="@mipmap/arrow_left"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/back"
+        android:layout_height="@dimen/dp_20">
+    </ImageView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/title"
+        android:textSize="@dimen/sp_18"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dp_12"
+        android:text="添加收货地址"
+        android:layout_height="wrap_content">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1111"
+        android:layout_marginRight="@dimen/dp_10"
+        android:id="@+id/tv_right"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        android:layout_marginBottom="@dimen/dp_13"
+        android:layout_alignParentRight="true"
+        ></TextView>
+
+</RelativeLayout>

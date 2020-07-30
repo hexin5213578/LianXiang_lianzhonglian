@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/include"
+        android:background="@color/title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50">
+        <ImageView
+            android:layout_width="@dimen/dp_18"
+            android:layout_marginBottom="@dimen/dp_13"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:src="@mipmap/arrow_left"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/back"
+            android:layout_height="@dimen/dp_20">
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/title"
+            android:textSize="@dimen/sp_18"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_12"
+            android:text="添加收货地址"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1111"
+            android:layout_marginRight="@dimen/dp_10"
+            android:id="@+id/tv_manager"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            android:layout_marginBottom="@dimen/dp_13"
+            android:layout_alignParentRight="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1111"
+            android:layout_marginRight="@dimen/dp_10"
+            android:id="@+id/tv_finish"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            android:layout_marginBottom="@dimen/dp_13"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_below="@id/include"
+        android:id="@+id/rc_always_buy"
+        android:background="@color/white"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_below="@id/include"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/dp_50"
+        android:id="@+id/rc_always_buy_manager"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+    <View
+        android:background="#E3E3E3"
+        android:layout_below="@+id/rc_always_buy_manager"
+        android:id="@+id/v1"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="1dp">
+    </View>
+    <RelativeLayout
+        android:id="@+id/rl_delete"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_alignParentBottom="true"
+        android:layout_height="@dimen/dp_50">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:id="@+id/rb_checkAll"
+            android:button="@drawable/check_box"
+            android:paddingLeft="@dimen/dp_5"
+            android:textSize="@dimen/sp_20"
+            android:layout_marginLeft="@dimen/dp_24"
+            android:textColor="#999999"
+            android:text="全选">
+        </CheckBox>
+        <Button
+            android:layout_width="@dimen/dp_96"
+            android:layout_height="@dimen/dp_40"
+            android:background="@drawable/order_bt_bg"
+            android:text="删除"
+            android:id="@+id/bt_delete"
+            android:visibility="visible"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_centerVertical="true"
+            >
+        </Button>
+    </RelativeLayout>
+</RelativeLayout>

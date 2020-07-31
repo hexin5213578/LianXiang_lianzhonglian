@@ -1,4 +1,4 @@
-package com.LianXiangKeJi.SupplyChain.regist;
+package com.LianXiangKeJi.SupplyChain.regist.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -22,17 +22,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.LianXiangKeJi.SupplyChain.R;
-import com.LianXiangKeJi.SupplyChain.address.activity.AddaddressActivity;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
-import com.LianXiangKeJi.SupplyChain.map.MapActivity;
+import com.LianXiangKeJi.SupplyChain.map.activity.MapActivity;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.amap.api.services.core.PoiItem;
 import com.bumptech.glide.Glide;
+import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
 
 import org.greenrobot.eventbus.EventBus;
@@ -177,7 +177,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
             // TODO: 2020/7/17 门头照
             case R.id.rl_mentou:
                 onTakePhoto();
-                PictureSelector.create(RegistActivity.this, 100).selectPicture(false, 200, 100, 200, 100);
+                PictureSelector.create(RegistActivity.this, 100).selectPicture(true);
                 break;
             // TODO: 2020/7/17 店铺营业执照
             case R.id.rl_yingye:
@@ -317,30 +317,24 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 100) {
             if (data != null) {
-                /*PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
+                PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
                 stringExtra = bean.getPath();
-                file = new File(stringExtra);*/
-                String stringExtra = data.getStringExtra(PictureSelector.PICTURE_PATH);
                 file = new File(stringExtra);
                 Glide.with(RegistActivity.this).load(stringExtra).into(ivMentou);
                 ivCamera1.setVisibility(View.GONE);
                 tvMentou.setVisibility(View.GONE);
-                Log.d("hmy", stringExtra + "");
             }
         }
 
         if (resultCode == RESULT_OK && requestCode == 101) {
             if (data != null) {
-              /*  PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
+                PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
                 stringExtra1 = bean.getPath();
-                file1 = new File(stringExtra1);*/
+                file1 = new File(stringExtra1);
 
-                String stringExtra = data.getStringExtra(PictureSelector.PICTURE_PATH);
-                file1 = new File(stringExtra);
                 Glide.with(RegistActivity.this).load(stringExtra1).into(ivYingye);
                 ivCamera2.setVisibility(View.GONE);
                 tvYingye.setVisibility(View.GONE);
-                Log.d("hmy", stringExtra1 + "");
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.LianXiangKeJi.SupplyChain.bindphone.activity;
 
 import android.os.CountDownTimer;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,20 +11,21 @@ import android.widget.Toast;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
-import com.LianXiangKeJi.SupplyChain.base.Common;
+import com.LianXiangKeJi.SupplyChain.bindphone.bean.ReplactPhoneBean;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
-import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
+import com.LianXiangKeJi.SupplyChain.setup.bean.UpdateImageBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.google.gson.Gson;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * @ClassName:ReplacePhoneActivity
@@ -49,6 +49,7 @@ public class ReplacePhoneActivity extends BaseAvtivity implements View.OnClickLi
     Button btGetcode;
     private String phone;
     private CountDownTimer mTimer;
+    private String id;
 
     @Override
     protected int getResId() {
@@ -64,6 +65,9 @@ public class ReplacePhoneActivity extends BaseAvtivity implements View.OnClickLi
         btQueding.setOnClickListener(this);
         btGetcode.setOnClickListener(this);
 
+        id = SPUtil.getInstance().getData(ReplacePhoneActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ID);
+
+
     }
 
     @Override
@@ -77,9 +81,46 @@ public class ReplacePhoneActivity extends BaseAvtivity implements View.OnClickLi
             case R.id.bt_queding:
                 phone = etPhone.getText().toString();
                 String code = etCode.getText().toString();
+                //發起綁定手機號請求
+                ReplactPhoneBean replactPhoneBean = new ReplactPhoneBean();
+                replactPhoneBean.setId(id);
+                replactPhoneBean.setPhone(phone);
+                replactPhoneBean.setCode(code);
 
+                Gson gson = new Gson();
 
-                // TODO: 2020/7/16 發起綁定手機號請求
+                String json = gson.toJson(replactPhoneBean);
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                showDialog();
+                NetUtils.getInstance().getApis().doUpdatePhone(requestBody)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<UpdateImageBean>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(UpdateImageBean updateImageBean) {
+                                hideDialog();
+                                Toast.makeText(ReplacePhoneActivity.this, ""+updateImageBean.getData(), Toast.LENGTH_SHORT).show();
+                                if(updateImageBean.getData().equals("修改成功")){
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                hideDialog();
+                                Toast.makeText(ReplacePhoneActivity.this, "更换手机号失败", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
                 break;
             case R.id.back:
                 finish();
@@ -90,7 +131,7 @@ public class ReplacePhoneActivity extends BaseAvtivity implements View.OnClickLi
                 if(StringUtil.checkPhoneNumber(phone)){
                     //调用倒计时
                     countDownTime();
-                    // TODO: 2020/7/28 发起获取验证码的网络请求
+                    //发起获取验证码的网络请求
                     showDialog();
                     NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code",phone)
                             .subscribeOn(Schedulers.io())

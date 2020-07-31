@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +20,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -32,7 +30,6 @@ import com.LianXiangKeJi.SupplyChain.BuildConfig;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
-import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.base.LatitudeandlongitudeBean;
 import com.LianXiangKeJi.SupplyChain.common.bean.SaveSuccessBean;
 import com.LianXiangKeJi.SupplyChain.common.service.LocationService;
@@ -40,19 +37,12 @@ import com.LianXiangKeJi.SupplyChain.main.fragment.FragmentClassIf;
 import com.LianXiangKeJi.SupplyChain.main.fragment.FragmentHome;
 import com.LianXiangKeJi.SupplyChain.main.fragment.FragmentMine;
 import com.LianXiangKeJi.SupplyChain.main.fragment.FragmentOrder;
-import com.LianXiangKeJi.SupplyChain.map.MapActivity;
-import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedChangeListener {
 

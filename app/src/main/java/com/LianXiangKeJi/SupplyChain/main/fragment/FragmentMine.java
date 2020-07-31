@@ -2,7 +2,6 @@ package com.LianXiangKeJi.SupplyChain.main.fragment;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,15 +15,13 @@ import com.LianXiangKeJi.SupplyChain.alwaysbuy.activity.AlwaysBuyActivity;
 import com.LianXiangKeJi.SupplyChain.base.BaseFragment;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
-import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
+import goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
-import com.LianXiangKeJi.SupplyChain.order.OrderActivity;
+import com.LianXiangKeJi.SupplyChain.order.activity.OrderActivity;
 import com.LianXiangKeJi.SupplyChain.setup.activity.SetUpActivity;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +31,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 
 import butterknife.BindView;
-import okhttp3.RequestBody;
 
 /**
  * @ClassName:FragmentHome

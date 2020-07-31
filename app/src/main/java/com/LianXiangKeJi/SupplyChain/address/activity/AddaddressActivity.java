@@ -1,13 +1,10 @@
 package com.LianXiangKeJi.SupplyChain.address.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -15,7 +12,7 @@ import android.widget.TextView;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
-import com.LianXiangKeJi.SupplyChain.map.MapActivity;
+import com.LianXiangKeJi.SupplyChain.map.activity.MapActivity;
 import com.amap.api.services.core.PoiItem;
 import com.bigkoo.pickerview.OptionsPickerView;
 
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class AddaddressActivity extends BaseAvtivity implements View.OnClickListener {
 

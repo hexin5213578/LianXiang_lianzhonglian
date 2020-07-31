@@ -1,7 +1,6 @@
 package com.LianXiangKeJi.SupplyChain.bindphone.activity;
 
 import android.os.CountDownTimer;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,13 +11,9 @@ import android.widget.Toast;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
-import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
@@ -87,7 +82,7 @@ public class BindPhoneActivity extends BaseAvtivity implements View.OnClickListe
                 if(StringUtil.checkPhoneNumber(phone)){
                     //调用倒计时
                     countDownTime();
-                    // TODO: 2020/7/28 发起获取验证码的网络请求
+                    //发起获取验证码的网络请求
                     showDialog();
                     NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code",phone)
                             .subscribeOn(Schedulers.io())

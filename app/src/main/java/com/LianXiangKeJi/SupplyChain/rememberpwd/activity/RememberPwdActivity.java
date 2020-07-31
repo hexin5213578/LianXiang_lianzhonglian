@@ -1,9 +1,6 @@
-package com.LianXiangKeJi.SupplyChain.rememberpwd;
+package com.LianXiangKeJi.SupplyChain.rememberpwd.activity;
 
-import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,8 +12,6 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
-import com.LianXiangKeJi.SupplyChain.regist.RegistActivity;
-import com.LianXiangKeJi.SupplyChain.rememberpwd.activity.ChangePwdActivity;
 import com.LianXiangKeJi.SupplyChain.rememberpwd.bean.ForgetPwdBean;
 import com.LianXiangKeJi.SupplyChain.setup.bean.UpdateImageBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
@@ -25,7 +20,6 @@ import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.google.gson.Gson;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;

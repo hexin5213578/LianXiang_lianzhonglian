@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,9 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,11 +31,7 @@ import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.bindphone.activity.ReplacePhoneActivity;
-import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
-import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
-import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
-import com.LianXiangKeJi.SupplyChain.rememberpwd.RememberPwdActivity;
 import com.LianXiangKeJi.SupplyChain.rememberpwd.activity.ChangePwdActivity;
 import com.LianXiangKeJi.SupplyChain.setup.bean.UpdateImageBean;
 import com.LianXiangKeJi.SupplyChain.setup.bean.UserNameBean;
@@ -49,20 +42,18 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -70,7 +61,6 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Url;
 
 /**
  * @ClassName:MyAddressAdapter
@@ -169,7 +159,8 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
                 break;
             // TODO: 2020/7/20 更换头像
             case R.id.rl_mytouxiang:
-                PictureSelector.create(SetUpActivity.this, PictureSelector.SELECT_REQUEST_CODE).selectPicture(true, 200, 200, 200, 200);
+
+                PictureSelector.create(SetUpActivity.this, PictureSelector.SELECT_REQUEST_CODE).selectPicture(true,200,200,1,1);
                 break;
             // TODO: 2020/7/20 修改昵称
             case R.id.rl_nicheng:
@@ -184,12 +175,10 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
         if (resultCode==RESULT_OK&&requestCode==PictureSelector.SELECT_REQUEST_CODE){
             if (data != null) {
 
-                /*PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
+                PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
                 stringExtra = bean.getPath();
-                file = new File(stringExtra);*/
-
-                String stringExtra = data.getStringExtra(PictureSelector.PICTURE_PATH);
                 file = new File(stringExtra);
+
 
                 ArrayList<File> list = new ArrayList<>();
                 HashMap<String, String> map = new HashMap<>();
@@ -219,6 +208,7 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
 
                             @Override
                             public void onError(Throwable e) {
+                                hideDialog();
 
                             }
 

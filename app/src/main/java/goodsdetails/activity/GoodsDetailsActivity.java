@@ -1,4 +1,4 @@
-package com.LianXiangKeJi.SupplyChain.goodsdetails.activity;
+package goodsdetails.activity;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -28,9 +28,7 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
-import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
-import com.LianXiangKeJi.SupplyChain.welcome.WelcomeActivity;
 import com.bumptech.glide.Glide;
 
 import java.text.DecimalFormat;

@@ -53,12 +53,12 @@
         android:theme="@style/AppTheme"
         tools:targetApi="q">
         <!-- 地图定位 -->
-        <activity android:name=".map.MapActivity" />
+        <activity android:name=".map.activity.MapActivity" />
         <!-- 设置页 -->
         <activity android:name=".setup.activity.SetUpActivity"
             android:screenOrientation="portrait"/>
         <!-- 注册页 -->
-        <activity android:name=".regist.RegistActivity"
+        <activity android:name=".regist.activity.RegistActivity"
             android:screenOrientation="portrait"/>
         <!-- 登录页 -->
         <activity android:name=".login.activity.LoginActivity"
@@ -89,19 +89,19 @@
         <activity android:name=".main.activity.MainActivity"
             android:screenOrientation="portrait"/>
         <!-- 忘记密码 -->
-        <activity android:name=".rememberpwd.RememberPwdActivity"
+        <activity android:name=".rememberpwd.activity.RememberPwdActivity"
             android:screenOrientation="portrait"/>
         <!-- 更换手机号 -->
         <activity android:name=".bindphone.activity.ReplacePhoneActivity"
             android:screenOrientation="portrait"/>
         <!-- 订单页 -->
-        <activity android:name=".order.OrderActivity"
+        <activity android:name=".order.activity.OrderActivity"
             android:screenOrientation="portrait"/>
         <!-- 修改地址 -->
         <activity android:name=".address.activity.UpdataAddressActivity"
             android:screenOrientation="portrait"/>
         <!-- 商品详情 -->
-        <activity android:name=".goodsdetails.activity.GoodsDetailsActivity"
+        <activity android:name="goodsdetails.activity.GoodsDetailsActivity"
             android:screenOrientation="portrait">
 
         </activity>

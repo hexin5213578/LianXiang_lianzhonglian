@@ -13,7 +13,7 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.custom.CustomDialog;
-import com.LianXiangKeJi.SupplyChain.map.MapActivity;
+import com.LianXiangKeJi.SupplyChain.map.activity.MapActivity;
 import com.amap.api.services.core.PoiItem;
 
 import org.greenrobot.eventbus.EventBus;

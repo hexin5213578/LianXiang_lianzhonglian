@@ -1,12 +1,8 @@
 package com.LianXiangKeJi.SupplyChain.login.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,15 +20,14 @@ import com.LianXiangKeJi.SupplyChain.login.bean.LoginBean;
 import com.LianXiangKeJi.SupplyChain.login.bean.LoginPhoneBean;
 import com.LianXiangKeJi.SupplyChain.login.bean.LoginSuccessBean;
 import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
-import com.LianXiangKeJi.SupplyChain.regist.RegistActivity;
-import com.LianXiangKeJi.SupplyChain.rememberpwd.RememberPwdActivity;
+import com.LianXiangKeJi.SupplyChain.regist.activity.RegistActivity;
+import com.LianXiangKeJi.SupplyChain.rememberpwd.activity.RememberPwdActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.google.gson.Gson;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -132,9 +127,11 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                 // TODO: 2020/7/16 獲取用戶名及密碼
                 String username = etUsername.getText().toString();
                 String pwd = etPwd.getText().toString();
+
                 LoginBean loginBean = new LoginBean();
                 loginBean.setPhone(username);
                 loginBean.setPassword(pwd);
+
                 Gson gson = new Gson();
                 String json = gson.toJson(loginBean);
                 RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
@@ -152,32 +149,30 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                     }
                                     @Override
                                     public void onNext(LoginSuccessBean bean) {
-                                        showDialog();
+                                        hideDialog();
 
-                                        String message = bean.getMessage();
-                                        if(message.equals("success")){
+                                        if(bean.getMessage().equals("success")){
                                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             finish();
                                             Toast.makeText(LoginActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
+
+                                            LoginSuccessBean.DataBean data = bean.getData();
+                                            //将登录后的用户信息存储
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_TOKEN,data.getToken());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.HEAD_URL,data.getHeadUrl());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.USER_NAME,data.getUsername());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.CHECK_STATUS,data.getCheckStatus()+"");
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ID,data.getId());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ADDRESS,data.getAddress());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_SCOPE,data.getScope());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_PHONE,data.getPhone());
                                         }
-                                        LoginSuccessBean.DataBean data = bean.getData();
-
-                                        //将登录后的用户信息存储
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_TOKEN,data.getToken());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.HEAD_URL,data.getHeadUrl());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.USER_NAME,data.getUsername());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.CHECK_STATUS,data.getCheckStatus()+"");
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ID,data.getId());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ADDRESS,data.getAddress());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_SCOPE,data.getScope());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_PHONE,data.getPhone());
-
-
                                     }
 
                                     @Override
                                     public void onError(Throwable e) {
-
+                                        hideDialog();
+                                        Toast.makeText(LoginActivity.this, "没有此用户,可能账号或密码错误", Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override
@@ -216,27 +211,27 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                     @Override
                                     public void onNext(LoginSuccessBean bean) {
                                         hideDialog();
-                                        String message = bean.getMessage();
-                                        if(message.equals("success")){
+                                        if(bean.getMessage().equals("success")){
                                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             finish();
                                             Toast.makeText(LoginActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
+                                            LoginSuccessBean.DataBean data = bean.getData();
+                                            //将登录后的用户信息存储
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_TOKEN,data.getToken());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.HEAD_URL,data.getHeadUrl());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.USER_NAME,data.getUsername());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.CHECK_STATUS,data.getCheckStatus()+"");
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ID,data.getId());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ADDRESS,data.getAddress());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_SCOPE,data.getScope());
+                                            SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_PHONE,data.getPhone());
                                         }
-                                        LoginSuccessBean.DataBean data = bean.getData();
-                                        //将登录后的用户信息存储
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_TOKEN,data.getToken());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.HEAD_URL,data.getHeadUrl());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.USER_NAME,data.getUsername());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.CHECK_STATUS,data.getCheckStatus()+"");
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ID,data.getId());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ADDRESS,data.getAddress());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_SCOPE,data.getScope());
-                                        SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_PHONE,data.getPhone());
                                     }
 
                                     @Override
                                     public void onError(Throwable e) {
-
+                                        hideDialog();
+                                        Toast.makeText(LoginActivity.this, "没有此验证码可能已经过期", Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override

@@ -158,6 +158,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                         if(message.equals("success")){
                                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             finish();
+                                            Toast.makeText(LoginActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
                                         }
                                         LoginSuccessBean.DataBean data = bean.getData();
 
@@ -219,6 +220,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                         if(message.equals("success")){
                                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             finish();
+                                            Toast.makeText(LoginActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
                                         }
                                         LoginSuccessBean.DataBean data = bean.getData();
                                         //将登录后的用户信息存储
@@ -227,7 +229,6 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                         SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.USER_NAME,data.getUsername());
                                         SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.CHECK_STATUS,data.getCheckStatus()+"");
                                         SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ID,data.getId());
-
                                         SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_ADDRESS,data.getAddress());
                                         SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_SCOPE,data.getScope());
                                         SPUtil.getInstance().saveData(LoginActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_PHONE,data.getPhone());

@@ -33,7 +33,6 @@ import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.amap.api.services.core.PoiItem;
 import com.bumptech.glide.Glide;
-import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
 
 import org.greenrobot.eventbus.EventBus;
@@ -318,8 +317,10 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 100) {
             if (data != null) {
-                PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
+                /*PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
                 stringExtra = bean.getPath();
+                file = new File(stringExtra);*/
+                String stringExtra = data.getStringExtra(PictureSelector.PICTURE_PATH);
                 file = new File(stringExtra);
                 Glide.with(RegistActivity.this).load(stringExtra).into(ivMentou);
                 ivCamera1.setVisibility(View.GONE);
@@ -330,9 +331,12 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
 
         if (resultCode == RESULT_OK && requestCode == 101) {
             if (data != null) {
-                PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
+              /*  PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
                 stringExtra1 = bean.getPath();
-                file1 = new File(stringExtra1);
+                file1 = new File(stringExtra1);*/
+
+                String stringExtra = data.getStringExtra(PictureSelector.PICTURE_PATH);
+                file1 = new File(stringExtra);
                 Glide.with(RegistActivity.this).load(stringExtra1).into(ivYingye);
                 ivCamera2.setVisibility(View.GONE);
                 tvYingye.setVisibility(View.GONE);

@@ -47,4 +47,16 @@ public interface Apis {
     //修改用户名
     @POST("user/updateUsername")
     Observable<UpdateImageBean>doUpdateUserName(@Body RequestBody body);
+
+    //修改密码
+    @POST("user/updatePassword")
+    Observable<UpdateImageBean> doUpdatePassword(@Body RequestBody body);
+
+    //忘记密码
+    @POST("user/forgetPassword")
+    Observable<UpdateImageBean> doForgetPassword(@Body RequestBody body);
+
+    //更换手机号
+    @POST("user/updatePhone")
+    Observable<UpdateImageBean> doUpdatePhone(@Body RequestBody body);
 }

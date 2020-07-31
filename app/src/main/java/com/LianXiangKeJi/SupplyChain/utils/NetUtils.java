@@ -3,7 +3,10 @@ package com.LianXiangKeJi.SupplyChain.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.LianXiangKeJi.SupplyChain.base.App;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,12 +70,12 @@ public class NetUtils {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
-            //String doctorId = SPUtil.getInstance().getData(App.getContext(), SPUtil.FILE_NAME, SPUtil.KEY_DOCTORID);
-           // String sessionId = SPUtil.getInstance().getData(App.getContext(), SPUtil.FILE_NAME, SPUtil.KEY_SESSIONID);
-          //  if(TextUtils.isEmpty(doctorId) || TextUtils.isEmpty(sessionId)){
-               // return chain.proceed(request);
-         //   }
+           String token = SPUtil.getInstance().getData(App.getContext(), SPUtil.FILE_NAME, SPUtil.KEY_TOKEN);
+            if(TextUtils.isEmpty(token)){
+             return chain.proceed(request);
+           }
             Request requestNew = request.newBuilder().addHeader("Content-Type","application/json;charset=UTF-8")
+                    .addHeader("token",token)
                     .build();;
 
             return chain.proceed(requestNew);

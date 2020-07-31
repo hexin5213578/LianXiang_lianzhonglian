@@ -17,8 +17,12 @@ import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
 import com.LianXiangKeJi.SupplyChain.regist.RegistActivity;
 import com.LianXiangKeJi.SupplyChain.rememberpwd.activity.ChangePwdActivity;
+import com.LianXiangKeJi.SupplyChain.rememberpwd.bean.ForgetPwdBean;
+import com.LianXiangKeJi.SupplyChain.setup.bean.UpdateImageBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
+import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +30,8 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * @ClassName:RememberPwdActivity
@@ -50,6 +56,7 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
     @BindView(R.id.bt_queding)
     Button btQueding;
     private CountDownTimer mTimer;
+    private String id;
 
     @Override
     protected int getResId() {
@@ -68,6 +75,7 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
 
 
         StringUtil.changePwdToCiphertext(etNewpwd);
+        id = SPUtil.getInstance().getData(RememberPwdActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ID);
 
     }
 
@@ -123,8 +131,44 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
                 if(StringUtil.checkPhoneNumber(phone)){
                     if(StringUtil.checkPassword(newpwd)){
                         if(StringUtil.checkSms(code)){
+                            ForgetPwdBean forgetPwdBean = new ForgetPwdBean();
+                            forgetPwdBean.setPhone(phone);
+                            forgetPwdBean.setCode(code);
+                            forgetPwdBean.setPassword(newpwd);
 
+                            Gson gson = new Gson();
 
+                            String json = gson.toJson(forgetPwdBean);
+                            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                            showDialog();
+                            NetUtils.getInstance().getApis().doForgetPassword(requestBody)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Observer<UpdateImageBean>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(UpdateImageBean updateImageBean) {
+                                            hideDialog();
+                                            Toast.makeText(RememberPwdActivity.this, ""+updateImageBean.getData(), Toast.LENGTH_SHORT).show();
+                                            if(updateImageBean.getData().equals("修改成功")){
+                                                finish();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
+                                        }
+                                    });
                         }
                     }
                 }

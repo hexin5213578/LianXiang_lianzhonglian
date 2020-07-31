@@ -39,6 +39,7 @@ import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
 import com.LianXiangKeJi.SupplyChain.rememberpwd.RememberPwdActivity;
+import com.LianXiangKeJi.SupplyChain.rememberpwd.activity.ChangePwdActivity;
 import com.LianXiangKeJi.SupplyChain.setup.bean.UpdateImageBean;
 import com.LianXiangKeJi.SupplyChain.setup.bean.UserNameBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
@@ -48,7 +49,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
-import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
 
 import org.greenrobot.eventbus.EventBus;
@@ -147,11 +147,11 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
         switch (view.getId()) {
             // TODO: 2020/7/18  更换手机号
             case R.id.rl_changephone:
-                
+                startActivity(new Intent(SetUpActivity.this,ReplacePhoneActivity.class));
                 break;
             // TODO: 2020/7/18 修改密码
             case R.id.rl_changepwd:
-                startActivity(new Intent(SetUpActivity.this, RememberPwdActivity.class));
+                startActivity(new Intent(SetUpActivity.this, ChangePwdActivity.class));
                 break;
             // TODO: 2020/7/18 返回
             case R.id.back:
@@ -170,8 +170,6 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
             // TODO: 2020/7/20 更换头像
             case R.id.rl_mytouxiang:
                 PictureSelector.create(SetUpActivity.this, PictureSelector.SELECT_REQUEST_CODE).selectPicture(true, 200, 200, 200, 200);
-
-
                 break;
             // TODO: 2020/7/20 修改昵称
             case R.id.rl_nicheng:
@@ -186,8 +184,11 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
         if (resultCode==RESULT_OK&&requestCode==PictureSelector.SELECT_REQUEST_CODE){
             if (data != null) {
 
-                PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
+                /*PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
                 stringExtra = bean.getPath();
+                file = new File(stringExtra);*/
+
+                String stringExtra = data.getStringExtra(PictureSelector.PICTURE_PATH);
                 file = new File(stringExtra);
 
                 ArrayList<File> list = new ArrayList<>();

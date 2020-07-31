@@ -122,14 +122,18 @@ public class StringUtil {
             return false;
         }
 //		else return phoneNum.matches("^(13[0-9]|17[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|4|3|5|6|7|8|9])\\d{8}$");
-        else return phoneNum.matches("^1\\d{10}$");
+        else {
+            return phoneNum.matches("^1\\d{10}$");
+        }
     }
 
     //校验手机号码
     public static boolean isLegalPhoneNum(String phoneNum) {
         if (StringUtil.isBlank(phoneNum)) {
             return false;
-        } else return phoneNum.matches("^1\\d{10}$");
+        } else {
+            return phoneNum.matches("^1\\d{10}$");
+        }
 
     }
 
@@ -137,7 +141,9 @@ public class StringUtil {
     public static boolean isLegalIdNum(String idNum) {
         if (StringUtil.isBlank(idNum)) {
             return false;
-        } else return idNum.matches("^\\d{17}(\\d|X|x)$");
+        } else {
+            return idNum.matches("^\\d{17}(\\d|X|x)$");
+        }
     }
 
     //校验中国用户名
@@ -153,15 +159,18 @@ public class StringUtil {
     public static boolean isLegalMailAddress(String mail) {
         if (StringUtil.isBlank(mail)) {
             return false;
-        } else
+        } else{
             return mail.matches("^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+        }
     }
 
     //校验银行卡号
     public static boolean isLegalBankCardNo(String bankNo) {
         if (StringUtil.isBlank(bankNo)) {
             return false;
-        } else return bankNo.matches("^\\d{16,19}$");
+        } else {
+            return bankNo.matches("^\\d{16,19}$");
+        }
     }
 
     //混淆手机号码，中间添加*格式   133****1236
@@ -453,8 +462,12 @@ public class StringUtil {
      * @return
      */
     public static SpannableString changeSizeByDot(String s, float relativeSize) {
-        if (TextUtils.isEmpty(s)) return new SpannableString("");
-        if (!s.contains(".")) return new SpannableString(s);
+        if (TextUtils.isEmpty(s)) {
+            return new SpannableString("");
+        }
+        if (!s.contains(".")){
+            return new SpannableString(s);
+        }
 
 //        if(TextUtils.equals(s , "0") || TextUtils.equals(s , "0.0") ||TextUtils.equals(s , "0.00")){
 //            return new SpannableString(s);

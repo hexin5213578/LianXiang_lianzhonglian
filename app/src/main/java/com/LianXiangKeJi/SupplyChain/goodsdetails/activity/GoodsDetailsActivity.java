@@ -1,4 +1,4 @@
-package goodsdetails.activity;
+package com.LianXiangKeJi.SupplyChain.goodsdetails.activity;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;

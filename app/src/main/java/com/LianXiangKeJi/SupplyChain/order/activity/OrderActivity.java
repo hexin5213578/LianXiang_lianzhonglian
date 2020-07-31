@@ -48,7 +48,7 @@ import static com.LianXiangKeJi.SupplyChain.base.App.getContext;
 /**
  * @ClassName:OrderActivity
  * @Author:hmy
- * @Description:java类作用描述
+ * @Description:java类作用描述   我的订单页
  */
 public class OrderActivity extends BaseAvtivity implements View.OnClickListener {
     @BindView(R.id.back)

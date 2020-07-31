@@ -101,7 +101,7 @@
         <activity android:name=".address.activity.UpdataAddressActivity"
             android:screenOrientation="portrait"/>
         <!-- 商品详情 -->
-        <activity android:name="goodsdetails.activity.GoodsDetailsActivity"
+        <activity android:name="com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity"
             android:screenOrientation="portrait">
 
         </activity>

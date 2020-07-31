@@ -256,7 +256,8 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
 
                                                                                 @Override
                                                                                 public void onError(Throwable e) {
-
+                                                                                    hideDialog();
+                                                                                    Toast.makeText(RegistActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
                                                                                 }
 
                                                                                 @Override

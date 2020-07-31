@@ -75,7 +75,12 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                 finish();
                 break;
             case R.id.bt_confirm:
-
+                String pay_theway = tvOrderPayTheway.getText().toString();
+                if(pay_theway.equals("微信支付")){
+                    // TODO: 2020/7/31 调起微信支付
+                }else{
+                    // TODO: 2020/7/31 调起支付宝支付
+                }
                 break;
         }
     }

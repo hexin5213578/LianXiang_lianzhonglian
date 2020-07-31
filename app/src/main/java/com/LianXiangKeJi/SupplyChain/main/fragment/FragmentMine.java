@@ -15,7 +15,7 @@ import com.LianXiangKeJi.SupplyChain.alwaysbuy.activity.AlwaysBuyActivity;
 import com.LianXiangKeJi.SupplyChain.base.BaseFragment;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
-import goodsdetails.activity.GoodsDetailsActivity;
+import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
 import com.LianXiangKeJi.SupplyChain.order.activity.OrderActivity;
 import com.LianXiangKeJi.SupplyChain.setup.activity.SetUpActivity;

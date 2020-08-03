@@ -17,8 +17,8 @@ import retrofit2.http.Url;
 public interface Apis {
 
     //获取分类商品
-    @GET()
-    Observable<ClassIfBean> getClassIf(@Url String url);
+    @GET("category/findCategoryList")
+    Observable<ClassIfBean> getClassIf();
 
     //获取验证码
     @GET()

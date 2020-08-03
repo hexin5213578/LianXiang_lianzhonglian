@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ClassIfModel implements ClassIfContract.IModel {
     @Override
     public void doGetClassIf(dogetClassIfCallBack callBack) {
-        NetUtils.getInstance().getApis().getClassIf("http://192.168.0.143:8080/category/findList")
+        NetUtils.getInstance().getApis().getClassIf()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ClassIfBean>() {

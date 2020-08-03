@@ -28,10 +28,10 @@ import butterknife.ButterKnife;
  */
 public class FirstListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
-    private final List<ClassIfBean.DataBean.CategoryChildBean> list;
+    private final List<ClassIfBean.DataBean> list;
     private int id;
 
-    public FirstListAdapter(Context context, List<ClassIfBean.DataBean.CategoryChildBean> list) {
+    public FirstListAdapter(Context context, List<ClassIfBean.DataBean> list) {
         this.context = context;
         this.list = list;
     }

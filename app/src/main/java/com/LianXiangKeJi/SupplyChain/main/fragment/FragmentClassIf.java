@@ -77,7 +77,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
                 startActivity(intent);
             }
         });
-        // TODO: 2020/7/25 发起分类的请求
+        // 发起分类的请求
         BasePresenter basePresenter = getPresenter();
         if(basePresenter instanceof ClassIfPresenter){
             showDialog();
@@ -106,13 +106,12 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     @Override
     public void onGetClassIfSuccess(ClassIfBean bean) {
         hideDialog();
-        ClassIfBean.DataBean data = bean.getData();
-        List<ClassIfBean.DataBean.CategoryChildBean> list = data.getCategoryChild();
+        List<ClassIfBean.DataBean> data = bean.getData();
         //布局管理器
         LinearLayoutManager manager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
         rcFirstList.setLayoutManager(manager);
         //创建适配器
-        firstListAdapter = new FirstListAdapter(getContext(), list);
+        firstListAdapter = new FirstListAdapter(getContext(), data);
         rcFirstList.setAdapter(firstListAdapter);
     }
 

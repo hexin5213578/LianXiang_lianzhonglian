@@ -63,10 +63,6 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     RelativeLayout rlSelectAddress;
     @BindView(R.id.rc_order)
     RecyclerView rcOrder;
-    @BindView(R.id.rb1)
-    RadioButton rb1;
-    @BindView(R.id.rb2)
-    RadioButton rb2;
     @BindView(R.id.tv_yunfei)
     TextView tvYunfei;
     @BindView(R.id.et_remarks)
@@ -293,12 +289,5 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

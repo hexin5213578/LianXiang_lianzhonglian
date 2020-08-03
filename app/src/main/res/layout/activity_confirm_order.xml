@@ -97,59 +97,11 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
                 android:background="@drawable/confirmorder_bg"
-                android:layout_height="@dimen/dp_178">
+                android:layout_height="@dimen/dp_120">
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="配送方式"
-                            android:gravity="center"
-                            android:layout_marginLeft="@dimen/dp_8"
-                            android:textSize="@dimen/sp_14"
-                            android:textColor="#333333"
-                            android:layout_height="match_parent">
-                        </TextView>
-                        <RadioGroup
-                            android:orientation="horizontal"
-                            android:id="@+id/rg_peisong"
-                            android:layout_marginLeft="@dimen/dp_17"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent">
-                            <RadioButton
-                                android:layout_width="@dimen/dp_70"
-                                android:text="本地发货"
-                                android:id="@+id/rb1"
-                                android:gravity="center"
-                                android:layout_gravity="center"
-                                android:textColor="@color/white"
-                                android:button="@null"
-                                android:checked="true"
-                                android:background="@drawable/guige_rb_bg"
-                                android:textSize="@dimen/sp_13"
-                                android:layout_height="@dimen/dp_28">
-                            </RadioButton>
-                            <RadioButton
-                                android:text="链象发货"
-                                android:layout_marginLeft="@dimen/dp_6"
-                                android:id="@+id/rb2"
-                                android:gravity="center"
-                                android:layout_gravity="center"
-                                android:button="@null"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/sp_13"
-                                android:background="@drawable/guige_rb_bg"
-                                android:layout_width="@dimen/dp_70"
-                                android:layout_height="@dimen/dp_28">
-                            </RadioButton>
-                        </RadioGroup>
-
-                    </LinearLayout>
+                    android:layout_height="@dimen/dp_120">
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_1"

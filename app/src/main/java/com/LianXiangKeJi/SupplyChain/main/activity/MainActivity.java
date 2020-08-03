@@ -189,11 +189,13 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
         float longitude = location.getLongitude();
         float latitude = location.getLatitude();
 
-        Log.d("hmy","经度为"+longitude+"纬度为"+latitude);
+        //Log.d("hmy","经度为"+longitude+"纬度为"+latitude);
 
-        if(EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().unregister(this);
-        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void getId(Integer id){
+        replace(fragmentClassIf);
+        rbClassIf.setChecked(true);
     }
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -275,7 +277,9 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
     }
 
 

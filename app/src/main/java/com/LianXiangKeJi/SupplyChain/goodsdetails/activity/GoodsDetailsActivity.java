@@ -28,9 +28,11 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
+import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,11 +72,12 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
 
     int count = 1;
     String str = "";
-    String imagesrc = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1595591122615&di=ab06989ab3d03aed29c138cec04324d0&imgtype=0&src=http%3A%2F%2Fg.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0ff41bd5ad6eddc49f66885739dbb6fd5366339c.jpg";
     private String token;
     int Titlecolor = 0;
     private View view1;
     private View view2;
+    private String image;
+    private GoodsDeatailsBean bean;
 
     @Override
     protected int getResId() {
@@ -84,8 +87,33 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
     @Override
     protected void getData() {
         token = Common.getToken();
+        Intent intent = getIntent();
+        bean = (GoodsDeatailsBean) intent.getSerializableExtra("goods");
+        if(bean !=null){
+            image = bean.getImage();
+            tvGoodsTitle.setText(bean.getName());
+            tvGoodsMoney.setText("¥ "+ bean.getPrice());
+            if(bean.getStock()!=null && !bean.getStock().equals("null")){
+                tvGoodsKucun.setText("库存"+ bean.getStock()+"件");
+            }else{
+                tvGoodsKucun.setVisibility(View.INVISIBLE);
+                tvGoodsYunfei.setVisibility(View.INVISIBLE);
+            }
+            if(bean.getMonthsell()!=null && !bean.getMonthsell().equals("null")){
+                tvGoodsXiaoliang.setText("月销:"+ bean.getMonthsell()+"件");
+            }else{
+                tvGoodsXiaoliang.setVisibility(View.INVISIBLE);
+            }
+            Glide.with(GoodsDetailsActivity.this).load(image).into(ivGoodImage);
 
-        Glide.with(GoodsDetailsActivity.this).load(imagesrc).into(ivGoodImage);
+            if(bean.getOld_price()!=null){
+                tvGoodsYuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
+                tvGoodsYuanjia.setText(bean.getOld_price());
+            }else{
+                tvGoodsYuanjia.setVisibility(View.INVISIBLE);
+            }
+        }
+
         // TODO: 2020/7/20 加载网络图片
         new Thread(new Runnable() {
             @Override
@@ -93,7 +121,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 try {
                     Bitmap myBitmap = Glide.with(GoodsDetailsActivity.this)
                             .asBitmap()
-                            .load(imagesrc)//必须
+                            .load(image)//必须
                             .into(500, 500)
                             .get();
                     ArrayList<Integer> picturePixel = Common.getPicturePixel(myBitmap);
@@ -128,7 +156,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                     GoodsDetailsActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // TODO: 2020/7/20 设置顶部状态栏背景
+                            //设置顶部状态栏背景
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                                 Window window = GoodsDetailsActivity.this.getWindow();
@@ -144,7 +172,8 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
             }
         }).start();
 
-        tvGoodsYuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG); //中划线
+
+
 
         back.setOnClickListener(this);
         btJoin.setOnClickListener(this);
@@ -160,19 +189,21 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            // TODO: 2020/7/18 结束当前页
+            //结束当前页
             case R.id.back:
                 finish();
                 break;
-            // TODO: 2020/7/18 加入购物车
+            //加入购物车
             case R.id.bt_join:
-                // TODO: 2020/7/18 立即支付
+                //立即支付
             case R.id.bt_buy:
                 if(!TextUtils.isEmpty(token)){
                     showSelect();
                 }else{
                     Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
                 }
+
+
                 break;
         }
     }
@@ -213,6 +244,11 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
 
 
         }else{
+            tv_name.setText(bean.getName());
+            tv_guige.setText(bean.getSpec());
+            tv_price.setText("￥"+bean.getPrice());
+            Glide.with(GoodsDetailsActivity.this).load(bean.getImage()).into(iv_touxiang);
+
             tv_count.setText(count+"");
             tv_count_change.setText(count+"");
             // TODO: 2020/7/20 计算总价

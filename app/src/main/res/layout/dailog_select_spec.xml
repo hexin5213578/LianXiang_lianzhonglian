@@ -121,6 +121,7 @@
                 <LinearLayout
                     android:id="@+id/ll_select_guige"
                     android:layout_below="@id/tv_price"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_marginTop="@dimen/dp_18"
                     android:orientation="horizontal"

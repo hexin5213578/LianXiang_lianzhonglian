@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +15,11 @@ import com.LianXiangKeJi.SupplyChain.base.BaseFragment;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.main.adapter.Home_HotSellAdapter;
 import com.LianXiangKeJi.SupplyChain.main.adapter.Home_labelAdapter;
+import com.LianXiangKeJi.SupplyChain.main.bean.HomeClassIfBean;
+import com.LianXiangKeJi.SupplyChain.movable.activity.MovableActivity;
 import com.LianXiangKeJi.SupplyChain.recommend.acitivty.RecommendActivity;
 import com.LianXiangKeJi.SupplyChain.search.activity.SearchActivity;
+import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.bumptech.glide.Glide;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
@@ -28,6 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @ClassName:FragmentHome
@@ -49,7 +55,8 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
     List<Integer> images = new ArrayList<>();
     @BindView(R.id.sv)
     SpringView sv;
-    private List<Integer> textlist = new ArrayList<>();
+    @BindView(R.id.activity_coupon)
+    ImageView activityCoupon;
     private Home_HotSellAdapter home_hotSellAdapter;
 
     @Override
@@ -74,6 +81,7 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
 
         etSearch.setOnClickListener(this);
         llMore.setOnClickListener(this);
+        activityCoupon.setOnClickListener(this);
         images.add(R.mipmap.lunbo1);
         images.add(R.mipmap.lunbo2);
         images.add(R.mipmap.lunbo3);
@@ -91,26 +99,47 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
         xbn.setOnItemClickListener(new XBanner.OnItemClickListener() {
             @Override
             public void onItemClick(XBanner banner, Object model, View view, int position) {
-                Toast.makeText(getContext(), "点击了第" + (position + 1) + "张图片", Toast.LENGTH_SHORT).show();
+
+
             }
         });
         // TODO: 2020/7/21 测试分类标签栏
 
-       for (int i=0;i<10;i++){
-           textlist.add(0);
-       }
+        NetUtils.getInstance().getApis().doGetHomeClassIf()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HomeClassIfBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
-        rcFenLei.setLayoutManager(manager);
-        Home_labelAdapter home_labelAdapter = new Home_labelAdapter(getContext(), textlist);
-        rcFenLei.setAdapter(home_labelAdapter);
+                    }
+
+                    @Override
+                    public void onNext(HomeClassIfBean homeClassIfBean) {
+                        List<HomeClassIfBean.DataBean> data = homeClassIfBean.getData();
+                        GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
+                        rcFenLei.setLayoutManager(manager);
+                        Home_labelAdapter home_labelAdapter = new Home_labelAdapter(getContext(), data);
+                        rcFenLei.setAdapter(home_labelAdapter);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
 
         // TODO: 2020/7/21 测试热销展示的四条商品
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        /*GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         rcRecommendGoods.setLayoutManager(gridLayoutManager);
         home_hotSellAdapter = new Home_HotSellAdapter(getContext(), textlist);
-        rcRecommendGoods.setAdapter(home_hotSellAdapter);
+        rcRecommendGoods.setAdapter(home_hotSellAdapter);*/
 
         sv.setListener(new SpringView.OnFreshListener() {
             @Override
@@ -123,7 +152,7 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
                     }
                 }, 1000);
                 // TODO: 2020/7/23 刷新适配器
-                home_hotSellAdapter.notifyDataSetChanged();
+                //home_hotSellAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -143,12 +172,16 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.et_search:
-                Intent intent = new Intent(getContext(), SearchActivity.class);
-                startActivity(intent);
+                //跳转搜索页
+                startActivity(new Intent(getContext(), SearchActivity.class));
                 break;
             case R.id.ll_more:
-                Intent intent1 = new Intent(getContext(), RecommendActivity.class);
-                startActivity(intent1);
+                //跳转查看更多热销商品
+                startActivity(new Intent(getContext(), RecommendActivity.class));
+                break;
+            case R.id.activity_coupon:
+                //跳转到
+                startActivity(new Intent(getContext(), MovableActivity.class));
                 break;
         }
     }

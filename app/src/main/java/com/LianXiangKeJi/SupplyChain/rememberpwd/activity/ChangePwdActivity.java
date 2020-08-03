@@ -21,6 +21,8 @@ import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
@@ -92,7 +94,9 @@ public class ChangePwdActivity extends BaseAvtivity implements View.OnClickListe
                     if(StringUtil.checkPassword(oldpwd)){
                         if(newpwd1.equals(newpwd2)){
                             ChangePwdBean changePwdBean = new ChangePwdBean();
-                            changePwdBean.setPassword(newpwd1);
+                            changePwdBean.setNewPassword(newpwd1);
+                            changePwdBean.setPassword(oldpwd);
+
                             Gson gson = new Gson();
 
                             String json = gson.toJson(changePwdBean);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/rl_title"
@@ -39,12 +40,30 @@
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:background="@color/white"
-        android:id="@+id/rc_secondList"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:layout_toRightOf="@id/rc_firstList"
         android:layout_below="@id/rl_title"
-        android:layout_height="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_4"
+            android:background="@color/white"
+            android:layout_marginLeft="@dimen/dp_9"
+            android:id="@+id/rc_secondList"
+            android:layout_height="wrap_content">
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_12"
+            android:id="@+id/rc_search_goodss"
+            android:layout_marginLeft="@dimen/dp_9"
+            android:background="@color/white"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
 </RelativeLayout>

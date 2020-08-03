@@ -127,6 +127,14 @@
         <activity android:name=".rememberpwd.activity.ChangePwdActivity"
             android:screenOrientation="portrait"/>
 
+        <!-- 活动页面-->
+
+        <activity android:name=".movable.activity.MovableActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 优惠券-->
+        <activity android:name=".movable.activity.CouponActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"

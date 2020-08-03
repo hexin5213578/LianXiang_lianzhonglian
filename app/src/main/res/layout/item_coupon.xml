@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="@dimen/dp_107">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:src="@mipmap/coupon"
+        android:layout_height="@dimen/dp_95">
+    </ImageView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="￥"
+        android:textColor="#F4323A"
+        android:id="@+id/tv"
+        android:layout_marginLeft="@dimen/dp_75"
+        android:layout_marginTop="@dimen/dp_60"
+        android:layout_height="wrap_content">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="10"
+        android:textSize="@dimen/dp_70"
+        android:textColor="#F96E28"
+        android:id="@+id/tv_coupon_jian"
+        android:layout_toRightOf="@id/tv"
+        android:layout_height="wrap_content">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="全场满399元可用"
+        android:textSize="@dimen/sp_14"
+        android:id="@+id/tv_coupon_man"
+        android:textColor="#4E4E50"
+        android:layout_toRightOf="@id/tv_coupon_jian"
+        android:layout_marginTop="@dimen/dp_34">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="有效期至于 2020.08.31 23:59"
+        android:textSize="@dimen/sp_8"
+        android:layout_below="@id/tv_coupon_man"
+        android:textColor="#4E4E50"
+        android:id="@+id/tv_coupon_time"
+        android:layout_toRightOf="@id/tv_coupon_jian"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <ImageView
+        android:layout_width="@dimen/dp_50"
+        android:layout_toRightOf="@id/tv_coupon_man"
+        android:id="@+id/iv_use"
+        android:layout_height="@dimen/dp_90">
+    </ImageView>
+</RelativeLayout>

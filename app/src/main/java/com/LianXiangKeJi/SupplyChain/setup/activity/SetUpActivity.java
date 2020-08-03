@@ -279,7 +279,8 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
                                public void onNext(UpdateImageBean updateImageBean) {
                                    hideDialog();
                                    Toast.makeText(SetUpActivity.this, ""+updateImageBean.getData(), Toast.LENGTH_SHORT).show();
-                                   EventBus.getDefault().post(name);
+
+                                   //将新昵称存入sp
                                    SPUtil.getInstance().saveData(SetUpActivity.this,SPUtil.FILE_NAME,SPUtil.USER_NAME,name);
                                }
 

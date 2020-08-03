@@ -1,5 +1,7 @@
 package com.LianXiangKeJi.SupplyChain.rememberpwd.bean;
 
+import java.util.List;
+
 /**
  * @ProjectName: LianXiang_lianzhonglian
  * @Package: com.LianXiangKeJi.SupplyChain.rememberpwd.bean
@@ -9,7 +11,16 @@ package com.LianXiangKeJi.SupplyChain.rememberpwd.bean;
  * @CreateDate: 2020/7/31 10:42
  */
 public class ChangePwdBean {
+    private String newPassword;
     private String password;
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
 
     public String getPassword() {
         return password;

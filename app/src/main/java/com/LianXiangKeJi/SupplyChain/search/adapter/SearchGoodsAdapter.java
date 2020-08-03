@@ -1,6 +1,7 @@
 package com.LianXiangKeJi.SupplyChain.search.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.alwaysbuy.adapter.AlwaysBuyAdapterOne;
 import com.LianXiangKeJi.SupplyChain.base.Common;
+import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
+import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
+import com.LianXiangKeJi.SupplyChain.main.adapter.ClassifSearchGoodsAdapter;
+import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -28,10 +34,10 @@ import butterknife.ButterKnife;
  */
 public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
-    private final List<Integer> list;
+    private final List<SearchGoodsBean.DataBean> list;
     private Integer integer;
 
-    public SearchGoodsAdapter(Context context, List<Integer> list) {
+    public SearchGoodsAdapter(Context context, List<SearchGoodsBean.DataBean> list) {
 
         this.context = context;
         this.list = list;
@@ -50,16 +56,26 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(TextUtils.isEmpty(token)){
             ((ViewHolder)holder).tvGoodsPrice.setText("￥？");
         }
+        Glide.with(context).load(list.get(position).getLittlePrintUrl()).into(((ViewHolder)holder).ivGoodsImage);
+        ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
+
+        ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName()+"  "+list.get(position).getSpecs());
+        ((ViewHolder)holder).tvGoodsPrice.setText("￥"+list.get(position).getPrice());
+
+        double price =Double.parseDouble(list.get(position).getPrice());
+        Integer count = Integer.valueOf(list.get(position).getAllSell());
+        ((ViewHolder)holder).tvGoodsYichengjiao.setText("成交"+count*price+"元");
+
         ((ViewHolder)holder).jia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(TextUtils.isEmpty(token)){
                     Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
                 }else{
-                    integer = list.get(position);
+                    integer = list.get(position).getPostion();
                     integer++;
-                    list.set(position,integer);
-                    ((ViewHolder)holder).tvGoodsCount.setText(integer+"");
+                    list.get(position).setPostion(integer);
+                    ((ViewHolder)holder).tvGoodsCount.setText(integer +"");
                     ((ViewHolder)holder).tvGoodsCount.setVisibility(View.VISIBLE);
                     ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
                     // TODO: 2020/7/21 拿到商品信息 以count为数量加入购物车
@@ -70,13 +86,15 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         });
         ((ViewHolder)holder).jian.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View view) {
-                integer = list.get(position);
+                integer = list.get(position).getPostion();
                 integer--;
-                list.set(position,integer);
-                ((ViewHolder)holder).tvGoodsCount.setText(integer+"");
-                if(integer==0){
+                list.get(position).setPostion(integer);
+                ((ViewHolder)holder).tvGoodsCount.setText(integer +"");
+                if(integer ==0){
                     ((ViewHolder)holder).tvGoodsCount.setVisibility(View.GONE);
                     ((ViewHolder)holder).jian.setVisibility(View.GONE);
                 }
@@ -86,7 +104,17 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((ViewHolder)holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                GoodsDeatailsBean goodsDeatailsBean = new GoodsDeatailsBean();
+                goodsDeatailsBean.setImage(list.get(position).getLittlePrintUrl());
+                goodsDeatailsBean.setName(list.get(position).getName()+list.get(position).getSpecs());
+                goodsDeatailsBean.setPrice(list.get(position).getPrice());
+                goodsDeatailsBean.setStock(list.get(position).getStock());
+                goodsDeatailsBean.setMonthsell(list.get(position).getMonthSell()+"");
+                goodsDeatailsBean.setSpec(list.get(position).getSpecs());
 
+                Intent intent = new Intent(context, GoodsDetailsActivity.class);
+                intent.putExtra("goods",goodsDeatailsBean);
+                context.startActivity(intent);
             }
         });
     }

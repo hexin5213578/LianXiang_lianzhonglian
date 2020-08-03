@@ -623,11 +623,6 @@ public class StringUtil {
 
             return false;
         }
-        if (!isLetterDigitOrChinese(password)) {
-            Toast.makeText(App.getContext(), "密码为6-12位数字与字母组合", Toast.LENGTH_SHORT).show();
-
-            return false;
-        }
         return true;
     }
 

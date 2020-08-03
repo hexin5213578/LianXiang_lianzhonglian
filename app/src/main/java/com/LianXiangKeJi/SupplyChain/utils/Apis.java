@@ -3,7 +3,14 @@ package com.LianXiangKeJi.SupplyChain.utils;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
 import com.LianXiangKeJi.SupplyChain.login.bean.LoginSuccessBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfSearchGoodsBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfSearchGoodsNoLoginBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.HomeClassIfBean;
+import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
+import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
+import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
+import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
 import com.LianXiangKeJi.SupplyChain.setup.bean.UpdateImageBean;
 
 import io.reactivex.Observable;
@@ -59,4 +66,28 @@ public interface Apis {
     //更换手机号
     @POST("user/updatePhone")
     Observable<UpdateImageBean> doUpdatePhone(@Body RequestBody body);
+
+    //查询三级分类商品
+    @POST("category/findShopGoods")
+    Observable<ClassIfSearchGoodsBean> doClassifSearchGoods(@Body RequestBody body);
+
+    //查询三级分类商品 未登录
+    @POST("category/findShopGoods")
+    Observable<ClassIfSearchGoodsNoLoginBean> doClassifSearchGoodsNoLogin(@Body RequestBody body);
+
+    //查找商品
+    @POST("category/seekShopGoods")
+    Observable<SearchGoodsBean> doSearchGoods(@Body RequestBody body);
+
+    //查找商品 未登录
+    @POST("category/seekShopGoods")
+    Observable<SearchGoodsNoLoginBean> doSearchGoodsNoLogin(@Body RequestBody body);
+
+    //首页分类
+    @GET("category/findHomePage")
+    Observable<HomeClassIfBean> doGetHomeClassIf();
+
+    //优惠券
+    @GET("userCoupon/super/findUserCoupon")
+    Observable<CouponBean> doGetCoupon();
 }

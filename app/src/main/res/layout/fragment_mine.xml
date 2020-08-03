@@ -275,7 +275,7 @@
           android:layout_height="@dimen/dp_1">
       </View>
       <RelativeLayout
-          android:id="@+id/rl_bindphone"
+          android:id="@+id/rl_youhui"
           android:layout_below="@id/v2"
           android:layout_width="match_parent"
           android:layout_height="@dimen/dp_49">
@@ -293,7 +293,7 @@
              android:layout_marginLeft="@dimen/dp_8"
              android:layout_height="wrap_content"
              android:layout_toRightOf="@id/iv3"
-             android:text="临时跳转详情页"
+             android:text="优惠券"
              android:textSize="@dimen/sp_14"
              android:textColor="@color/font_color">
          </TextView>
@@ -310,7 +310,7 @@
           android:layout_width="match_parent"
           android:background="#EFEFEF"
           android:id="@+id/v3"
-          android:layout_below="@id/rl_bindphone"
+          android:layout_below="@id/rl_youhui"
           android:layout_height="@dimen/dp_1">
       </View>
    </RelativeLayout>

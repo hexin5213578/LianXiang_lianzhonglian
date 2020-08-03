@@ -17,6 +17,7 @@ import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
+import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.order.activity.OrderActivity;
 import com.LianXiangKeJi.SupplyChain.setup.activity.SetUpActivity;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
@@ -59,10 +60,10 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
     RelativeLayout rlChangmai;
     @BindView(R.id.rl_myaddress)
     RelativeLayout rlMyaddress;
-    @BindView(R.id.rl_bindphone)
-    RelativeLayout rlBindphone;
     @BindView(R.id.tv_username)
     TextView tvUsername;
+    @BindView(R.id.rl_youhui)
+    RelativeLayout rlYouhui;
     private Intent intent_order;
     private String token;
 
@@ -84,7 +85,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
@@ -92,7 +93,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
@@ -109,7 +110,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
         yiwancheng.setOnClickListener(this);
         rlChangmai.setOnClickListener(this);
         rlMyaddress.setOnClickListener(this);
-        rlBindphone.setOnClickListener(this);
+        rlYouhui.setOnClickListener(this);
 
         String username = SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.USER_NAME);
         String hearurl = SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.HEAD_URL);
@@ -126,16 +127,20 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
         // TODO: 2020/7/18 创建跳转至订单页的Intent
         intent_order = new Intent(getContext(), OrderActivity.class);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getHeadImage(File file){
+    public void getHeadImage(File file) {
 
         Glide.with(getContext()).load(file).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivYuan);
 
     }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getUserName(String name){
-        tvUsername.setText(name);
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        tvUsername.setText(SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.USER_NAME));
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -205,7 +210,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
             case R.id.rl_changmai:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     startActivity(new Intent(getContext(), AlwaysBuyActivity.class));
                 }
                 break;
@@ -219,8 +224,8 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             // TODO: 2020/7/15 绑定手机页
-            case R.id.rl_bindphone:
-                startActivity(new Intent(getContext(), GoodsDetailsActivity.class));
+            case R.id.rl_youhui:
+                startActivity(new Intent(getContext(), CouponActivity.class));
                 break;
             default:
                 break;

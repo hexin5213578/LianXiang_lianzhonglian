@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="@dimen/dp_36">
+    <TextView
+        android:layout_width="@dimen/dp_84"
+        android:text="崂山啤酒"
+        android:textColor="#666666"
+        android:layout_marginTop="@dimen/dp_8"
+        android:textSize="@dimen/sp_13"
+        android:id="@+id/tv_name"
+        android:gravity="center"
+        android:background="@drawable/classif_second_list_item_bg"
+        android:layout_height="@dimen/dp_28">
+    </TextView>
+</RelativeLayout>

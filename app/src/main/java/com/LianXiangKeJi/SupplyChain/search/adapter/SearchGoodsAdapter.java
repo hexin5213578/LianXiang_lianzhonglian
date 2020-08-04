@@ -19,13 +19,24 @@ import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
 import com.LianXiangKeJi.SupplyChain.main.adapter.ClassifSearchGoodsAdapter;
+import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
+import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * @ClassName:SearchGoodsAdapter
@@ -69,24 +80,64 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((ViewHolder)holder).jia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(TextUtils.isEmpty(token)){
-                    Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
-                }else{
+
                     integer = list.get(position).getPostion();
                     integer++;
-                    list.get(position).setPostion(integer);
-                    ((ViewHolder)holder).tvGoodsCount.setText(integer +"");
-                    ((ViewHolder)holder).tvGoodsCount.setVisibility(View.VISIBLE);
-                    ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
-                    // TODO: 2020/7/21 拿到商品信息 以count为数量加入购物车
+                    if(integer==1){
+                        list.get(position).setPostion(integer);
+                        ((ViewHolder)holder).tvGoodsCount.setText(integer +"");
+                        ((ViewHolder)holder).tvGoodsCount.setVisibility(View.VISIBLE);
+                        ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
+                        // TODO: 2020/7/21 拿到商品信息 以count为数量加入购物车
+
+                        List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
+
+                        String id = list.get(position).getId();
+                        SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                        saveShopCarBean.setState(false);
+
+                        SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                        resultBean.setShopGoodsId(id);
+
+                        shoplist.add(resultBean);
+                        saveShopCarBean.setShoppingCartList(shoplist);
+
+                        Gson gson = new Gson();
+                        String json = gson.toJson(saveShopCarBean);
+
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                        //查询购物车
+                        NetUtils.getInstance().getApis().doShopCar(requestBody)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<ShopCarBean>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(ShopCarBean shopCarBean) {
+                                        Toast.makeText(context, "添加进货单成功", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
 
 
-                    Toast.makeText(context, "添加进货单成功", Toast.LENGTH_SHORT).show();
-                }
+
+                    }
             }
         });
         ((ViewHolder)holder).jian.setOnClickListener(new View.OnClickListener() {
-
 
             @Override
             public void onClick(View view) {

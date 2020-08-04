@@ -29,17 +29,30 @@ import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
+import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * @ClassName:GoodsDetailsActivity
@@ -269,53 +282,6 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 dismiss();
             }
         });
-        iv_jia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(TextUtils.isEmpty(token)){
-                    Toast.makeText(GoodsDetailsActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
-                }else{
-                    count++;
-
-                    tv_count.setText(count+"");
-                    tv_count_change.setText(count+"");
-                    // TODO: 2020/7/20 计算总价
-                    String s = tv_price.getText().toString();
-                    String substring = s.substring(1);
-                    float price = Float.parseFloat(substring);
-                    double allprice = count*price;
-                    DecimalFormat df = new DecimalFormat("#.00");
-                    df.format((float) allprice);
-                    tv_allprice.setText("¥"+df.format((float) allprice));
-                }
-            }
-        });
-        iv_jian.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(TextUtils.isEmpty(token)){
-                    Toast.makeText(GoodsDetailsActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
-                }else{
-                    if(count<=1){
-                        Toast.makeText(GoodsDetailsActivity.this, "数量不能为0", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    count--;
-
-                    tv_count.setText(count+"");
-                    tv_count_change.setText(count+"");
-                    // TODO: 2020/7/20 计算总价
-                    String s = tv_price.getText().toString();
-                    String substring = s.substring(1);
-                    float price = Float.parseFloat(substring);
-                    double allprice = count*price;
-                    DecimalFormat df = new DecimalFormat("#.00");
-                    df.format((float) allprice);
-                    tv_allprice.setText("¥"+df.format((float) allprice));
-                }
-         
-            }
-        });
 
         // TODO: 2020/7/20 加入进货单
         bt_join.setOnClickListener(new View.OnClickListener() {
@@ -337,39 +303,89 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 if (TextUtils.isEmpty(token)){
                     Toast.makeText(GoodsDetailsActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
                 }else{
+                    //拿到商品信息 以count为数量加入购物车
+                    String id = bean.getId();
+                    String name = bean.getName();
 
+                    LinkedHashMap<String, String> map = SPUtil.getMap(GoodsDetailsActivity.this, "goodsid");
+                    map.put(id,name);
 
+                    List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
+
+                    //遍历集合的键
+                    if(map.size()>0) {
+                        SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                        saveShopCarBean.setState(false);
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                            String key = entry.getKey();
+                            SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                            resultBean.setShopGoodsId(key);
+                            shoplist.add(resultBean);
+                        }
+                        saveShopCarBean.setShoppingCartList(shoplist);
+
+                        Gson gson = new Gson();
+                        String json = gson.toJson(saveShopCarBean);
+
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                        NetUtils.getInstance().getApis().doShopCar(requestBody)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<ShopCarBean>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(ShopCarBean shopCarBean) {
+                                        // TODO: 2020/7/24 添加成功后处理
+                                        mPopupWindow1 = new PopupWindow();
+                                        mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                                        mPopupWindow1.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                                        view2 = LayoutInflater.from(GoodsDetailsActivity.this).inflate(R.layout.dialog_addshopcar_success,null);
+                                        //popwindow设置属性
+                                        mPopupWindow1.setContentView(view2);
+                                        mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
+                                        mPopupWindow1.setFocusable(true);
+                                        mPopupWindow1.setOutsideTouchable(true);
+                                        mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss() {
+                                                setWindowAlpa(false);
+                                            }
+                                        });
+
+                                        ((ViewGroup)view1).removeAllViews();
+
+                                        show1(view2);
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                //要执行的操作
+                                                dismiss1();
+                                            }
+                                        }, 2000);//2秒后执行弹出框消失
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+                    }
+
+                    SPUtil.setMap(GoodsDetailsActivity.this,"goodsid",map);
 
                     //隐藏规格选择框
                     dismiss();
-                    // TODO: 2020/7/24 添加成功后处理
-                    mPopupWindow1 = new PopupWindow();
-                    mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-                    mPopupWindow1.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                    view2 = LayoutInflater.from(GoodsDetailsActivity.this).inflate(R.layout.dialog_addshopcar_success,null);
-                    //popwindow设置属性
-                    mPopupWindow1.setContentView(view2);
-                    mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
-                    mPopupWindow1.setFocusable(true);
-                    mPopupWindow1.setOutsideTouchable(true);
-                    mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            setWindowAlpa(false);
-                        }
-                    });
 
-                    ((ViewGroup)view1).removeAllViews();
-
-                    show1(view2);
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //要执行的操作
-                           dismiss1();
-                        }
-                    }, 2000);//2秒后执行弹出框消失
 
                 }
             }

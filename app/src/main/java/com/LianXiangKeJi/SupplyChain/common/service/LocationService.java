@@ -64,7 +64,7 @@ public class LocationService extends Service implements AMapLocationListener {
     public void onDestroy() {
         super.onDestroy();
         mlocationClient.stopLocation();
-        Log.d("hmy","停止服务");
+
     }
 
     @Override

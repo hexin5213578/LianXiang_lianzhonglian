@@ -14,6 +14,15 @@ public class GoodsDeatailsBean implements Serializable {
     private String stock;
     private String from;
     private String spec;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getSpec() {
         return spec;

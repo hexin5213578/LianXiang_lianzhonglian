@@ -3,6 +3,24 @@ package com.LianXiangKeJi.SupplyChain.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+import org.json.JSONTokener;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @ClassName: SPUtil
@@ -38,6 +56,9 @@ public class SPUtil {
     public static final String KEY_SCOPE = "scope";
     public static final String KEY_PHONE = "phone";
 
+
+    public static final String FILE_NAME_GOODS = "goodsId";
+
     private SPUtil() {
     }
 
@@ -56,6 +77,7 @@ public class SPUtil {
         edit.putString(key, value);
         edit.commit();
     }
+
     //存储信息
     @SuppressLint("CommitPrefEdits")
     public void saveDataOffloat(Context context, String fileName, String key, float value){
@@ -82,5 +104,50 @@ public class SPUtil {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.commit();
+    }
+
+    //存储集合
+    public static void setMap(Context context,String key, LinkedHashMap<String, String> datas) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("savemap", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        JSONArray mJsonArray = new JSONArray();
+        Iterator<Map.Entry<String, String>> iterator = datas.entrySet().iterator();
+        JSONObject object = new JSONObject();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> entry = iterator.next();
+            try {
+                object.put(entry.getKey(), entry.getValue());
+            } catch (JSONException e) {
+            }
+        }
+        mJsonArray.put(object);
+        edit.putString(key, mJsonArray.toString());
+        edit.commit();
+    }
+
+    //获取集合
+    public static LinkedHashMap<String, String> getMap( Context context,String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("savemap", Context.MODE_PRIVATE);
+
+        LinkedHashMap<String, String> datas = new LinkedHashMap<>();
+        String result = sharedPreferences.getString(key, "");
+        try {
+            JSONArray array = new JSONArray(result);
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject itemObject = array.getJSONObject(i);
+                JSONArray names = itemObject.names();
+                if (names != null) {
+                    for (int j = 0; j < names.length(); j++) {
+                        String name = names.getString(j);
+                        String value = itemObject.getString(name);
+                        datas.put(name, value);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return datas;
     }
 }

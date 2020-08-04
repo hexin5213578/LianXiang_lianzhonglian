@@ -1,6 +1,7 @@
 package com.LianXiangKeJi.SupplyChain.search.activity;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.LianXiangKeJi.SupplyChain.search.bean.SaveKeywordBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,7 +32,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
@@ -43,7 +49,7 @@ import okhttp3.RequestBody;
 /**
  *
  */
-public class SearchActivity extends BaseAvtivity implements View.OnClickListener {
+public class  SearchActivity extends BaseAvtivity implements View.OnClickListener {
 
     @BindView(R.id.back)
     ImageView back;
@@ -99,6 +105,7 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
         }else{
             doSearchNoLogin("");
         }
+
     }
 
     @Override

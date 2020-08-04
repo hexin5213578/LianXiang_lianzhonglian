@@ -37,10 +37,13 @@ import com.LianXiangKeJi.SupplyChain.main.fragment.FragmentClassIf;
 import com.LianXiangKeJi.SupplyChain.main.fragment.FragmentHome;
 import com.LianXiangKeJi.SupplyChain.main.fragment.FragmentMine;
 import com.LianXiangKeJi.SupplyChain.main.fragment.FragmentOrder;
+import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.LinkedHashMap;
 
 import butterknife.BindView;
 
@@ -91,6 +94,9 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void getData() {
+        //存储map集合存放商品Id
+        LinkedHashMap map = new LinkedHashMap<String,String>();
+        SPUtil.getInstance().setMap(MainActivity.this,"goodsid",map);
 
         rbs[0] = rbHome;
         rbs[1] = rbClassIf;

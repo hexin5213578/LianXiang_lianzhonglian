@@ -5,7 +5,9 @@ import com.LianXiangKeJi.SupplyChain.login.bean.LoginSuccessBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfSearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfSearchGoodsNoLoginBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.DeleteShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.HomeClassIfBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
@@ -90,4 +92,12 @@ public interface Apis {
     //优惠券
     @GET("userCoupon/super/findUserCoupon")
     Observable<CouponBean> doGetCoupon();
+
+    //购物车添加 查询
+    @POST("shoppingCart/findShoppingCart")
+    Observable<ShopCarBean> doShopCar(@Body RequestBody body);
+
+    //购物车删除
+    @POST("shoppingCart/findShoppingCart")
+    Observable<DeleteShopCarBean> doDeleteShopCar(@Body RequestBody body);
 }

@@ -1,17 +1,14 @@
 package com.LianXiangKeJi.SupplyChain.main.bean;
 
-import android.content.Intent;
-
 import java.util.List;
 
-public class ClassIfSearchGoodsBean {
-
+public class ShopCarBean {
 
     /**
      * flag : true
      * code : 200
      * message : success
-     * data : [[{"id":"527bb89b-835c-48b3-ba66-01a481bca9733343","name":"阿萨姆奶茶500mlx15","price":"222.00","cost":"111.00","supplierId":"7f9959b4-5719-4bc8-acd3-2ecca11d7d74","specs":"500ml*15瓶","allSell":0,"monthSell":0,"stock":"123123","status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/893a9f34-69e9-4a94-b825-7222deab30cf9295.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/893a9f34-69e9-4a94-b825-7222deab30cf9295.png","salePrice":null,"cid":"80ebe7f7-f296-40b4-9854-656de828930c489"}]]
+     * data : [{"id":"20d0fbaa-8cc4-4107-b187-b04678c4559f2591","name":"阿萨姆奶茶","price":"4.00","cost":"3.00","supplierId":"46d89724-0cbf-4b38-bab6-f0b9e2aecb8f1122","specs":"500ml","allSell":0,"monthSell":0,"stock":"888","status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png","salePrice":null,"cid":"a8fc0f1b-c5a0-4b11-a29c-eef796c687f78050"},{"id":"20d0fbaa-8cc4-4107-b187-b04678c4559f2591","name":"阿萨姆奶茶","price":"4.00","cost":"3.00","supplierId":"46d89724-0cbf-4b38-bab6-f0b9e2aecb8f1122","specs":"500ml","allSell":0,"monthSell":0,"stock":"888","status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png","salePrice":null,"cid":"a8fc0f1b-c5a0-4b11-a29c-eef796c687f78050"}]
      * url : null
      */
 
@@ -19,7 +16,7 @@ public class ClassIfSearchGoodsBean {
     private int code;
     private String message;
     private Object url;
-    private List<List<DataBean>> data;
+    private List<DataBean> data;
 
     public boolean isFlag() {
         return flag;
@@ -53,31 +50,31 @@ public class ClassIfSearchGoodsBean {
         this.url = url;
     }
 
-    public List<List<DataBean>> getData() {
+    public List<DataBean> getData() {
         return data;
     }
 
-    public void setData(List<List<DataBean>> data) {
+    public void setData(List<DataBean> data) {
         this.data = data;
     }
 
     public static class DataBean {
         /**
-         * id : 527bb89b-835c-48b3-ba66-01a481bca9733343
-         * name : 阿萨姆奶茶500mlx15
-         * price : 222.00
-         * cost : 111.00
-         * supplierId : 7f9959b4-5719-4bc8-acd3-2ecca11d7d74
-         * specs : 500ml*15瓶
+         * id : 20d0fbaa-8cc4-4107-b187-b04678c4559f2591
+         * name : 阿萨姆奶茶
+         * price : 4.00
+         * cost : 3.00
+         * supplierId : 46d89724-0cbf-4b38-bab6-f0b9e2aecb8f1122
+         * specs : 500ml
          * allSell : 0
          * monthSell : 0
-         * stock : 123123
+         * stock : 888
          * status : 1
          * saleName : null
-         * littlePrintUrl : http://47.114.1.170/lianxiangguanwang/pics/893a9f34-69e9-4a94-b825-7222deab30cf9295.png
-         * bigPrintUrl : http://47.114.1.170/lianxiangguanwang/pics/893a9f34-69e9-4a94-b825-7222deab30cf9295.png
+         * littlePrintUrl : http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png
+         * bigPrintUrl : http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png
          * salePrice : null
-         * cid : 80ebe7f7-f296-40b4-9854-656de828930c489
+         * cid : a8fc0f1b-c5a0-4b11-a29c-eef796c687f78050
          */
 
         private String id;
@@ -95,14 +92,24 @@ public class ClassIfSearchGoodsBean {
         private String bigPrintUrl;
         private Object salePrice;
         private String cid;
-        private Integer postion=0;
+        // 有没有被勾选
+        private boolean isPersonChecked = false;
+        private int count =1;
 
-        public Integer getPostion() {
-            return postion;
+        public int getCount() {
+            return count;
         }
 
-        public void setPostion(Integer postion) {
-            this.postion = postion;
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public boolean isPersonChecked() {
+            return isPersonChecked;
+        }
+
+        public void setPersonChecked(boolean personChecked) {
+            isPersonChecked = personChecked;
         }
 
         public String getId() {

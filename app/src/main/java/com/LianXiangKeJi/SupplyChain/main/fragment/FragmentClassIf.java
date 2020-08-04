@@ -201,15 +201,23 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
 
                     @Override
                     public void onNext(ClassIfSearchGoodsBean classIfSearchGoodsBean) {
+
+                        List<List<ClassIfSearchGoodsBean.DataBean>> data = classIfSearchGoodsBean.getData();
+
+
                         //处理返回的数据
-                        List<ClassIfSearchGoodsBean.DataBean> data = classIfSearchGoodsBean.getData();
-                        LinearLayoutManager manager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
-                        rcSearchGoodss.setLayoutManager(manager);
+                        if(data.size()>0 && data!=null){
 
-                        ClassifSearchGoodsAdapter adapter = new ClassifSearchGoodsAdapter(getContext(), data);
+                            List<ClassIfSearchGoodsBean.DataBean> dataBeans1 = data.get(0);
 
-                        rcSearchGoodss.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
+                            LinearLayoutManager manager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
+                            rcSearchGoodss.setLayoutManager(manager);
+
+                            ClassifSearchGoodsAdapter adapter = new ClassifSearchGoodsAdapter(getContext(), dataBeans1);
+
+                            rcSearchGoodss.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override

@@ -1,6 +1,8 @@
 package com.LianXiangKeJi.SupplyChain.movable.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,8 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
+import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,6 +27,7 @@ import butterknife.ButterKnife;
 public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final List<CouponBean.DataBean> list;
+
 
 
     public CouPonAdapter(Context context, List<CouponBean.DataBean> list) {
@@ -38,13 +46,28 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         CouponBean.DataBean dataBean = list.get(position);
-        ((ViewHolder)holder).tvCouponMan.setText("全场满"+dataBean.getFull()+"元可用");
-        ((ViewHolder)holder).tvCouponJian.setText(dataBean.getMinus()+"");
+        ((ViewHolder) holder).tvCouponMan.setText("全场满" + dataBean.getFull() + "元可用");
+        ((ViewHolder) holder).tvCouponJian.setText(dataBean.getMinus() + "");
 
-        long beginTime = dataBean.getBeginTime();
         long overTime = dataBean.getOverTime();
 
+        String date = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(
+                new Date(overTime));
+        ((ViewHolder) holder).tvCouponTime.setText("有效期至 " + date);
+        //获取系统时间
+        long time = System.currentTimeMillis();
 
+        //结束时间跟当前时间对比 小于24小时提示即将到期
+        if(overTime-time<8640000){
+            ((ViewHolder)holder).Expiring.setVisibility(View.VISIBLE);
+        }
+        ((ViewHolder)holder).ivUse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, MainActivity.class));
+                EventBus.getDefault().postSticky("关闭界面");
+            }
+        });
     }
 
     @Override
@@ -63,9 +86,11 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TextView tvCouponTime;
         @BindView(R.id.iv_use)
         ImageView ivUse;
+        @BindView(R.id.Expiring)
+        ImageView Expiring;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

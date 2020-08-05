@@ -123,4 +123,8 @@ dependencies {
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
 
     implementation project(':pictureselector')
+
+    // 添加下面的内容
+    implementation (name: 'alipaySdk-15.7.9-20200727142846', ext: 'aar')
+
 }

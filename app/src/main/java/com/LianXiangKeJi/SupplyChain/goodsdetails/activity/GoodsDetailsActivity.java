@@ -4,10 +4,13 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,6 +31,7 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
+import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
@@ -282,7 +286,40 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 dismiss();
             }
         });
+        iv_jia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                count++;
+                tv_count.setText(count+"");
+                tv_count_change.setText(count+"");
+                // TODO: 2020/7/20 计算总价
+                String s = tv_price.getText().toString();
+                String substring = s.substring(1);
+                float price = Float.parseFloat(substring);
 
+                double allprice = count*price;
+                DecimalFormat df = new DecimalFormat("#.00");
+                df.format((float) allprice);
+                tv_allprice.setText("¥"+df.format((float) allprice));
+            }
+        });
+        iv_jian.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                count--;
+                tv_count.setText(count+"");
+                tv_count_change.setText(count+"");
+                // TODO: 2020/7/20 计算总价
+                String s = tv_price.getText().toString();
+                String substring = s.substring(1);
+                float price = Float.parseFloat(substring);
+
+                double allprice = count*price;
+                DecimalFormat df = new DecimalFormat("#.00");
+                df.format((float) allprice);
+                tv_allprice.setText("¥"+df.format((float) allprice));
+            }
+        });
         // TODO: 2020/7/20 加入进货单
         bt_join.setOnClickListener(new View.OnClickListener() {
 
@@ -408,6 +445,19 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                     Toast.makeText(GoodsDetailsActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
                 }else{
                     Intent intent = new Intent(GoodsDetailsActivity.this, ConfirmOrderActivity.class);
+                    OrderBean orderBean = new OrderBean();
+                    orderBean.setImageurl(bean.getImage());
+                    orderBean.setName(bean.getName());
+                    orderBean.setPrice(bean.getPrice());
+                    orderBean.setSpecs(bean.getSpec());
+                    orderBean.setCount(count);
+                    orderBean.setGoodsid(bean.getId());
+                    List<OrderBean> list = new ArrayList<>();
+
+                    list.add(orderBean);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("orderlist", (Serializable) list);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     dismiss();
                 }

@@ -199,6 +199,7 @@
        android:layout_height="match_parent">
       <RelativeLayout
           android:id="@+id/rl_changmai"
+          android:visibility="gone"
           android:layout_width="match_parent"
           android:layout_height="@dimen/dp_49">
          <ImageView
@@ -293,7 +294,7 @@
              android:layout_marginLeft="@dimen/dp_8"
              android:layout_height="wrap_content"
              android:layout_toRightOf="@id/iv3"
-             android:text="优惠券"
+             android:text="我的优惠券"
              android:textSize="@dimen/sp_14"
              android:textColor="@color/font_color">
          </TextView>

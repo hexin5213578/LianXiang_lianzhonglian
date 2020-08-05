@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
-import com.LianXiangKeJi.SupplyChain.paysuccess.PaySuccessActivity;
 import com.LianXiangKeJi.SupplyChain.recommend.adapter.HotsellAdapter;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;

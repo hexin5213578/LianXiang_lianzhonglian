@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
+import com.LianXiangKeJi.SupplyChain.base.App;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
@@ -26,11 +27,13 @@ import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,7 +71,6 @@ public class  SearchActivity extends BaseAvtivity implements View.OnClickListene
     @BindView(R.id.rl_history)
     RelativeLayout rlHistory;
     private List<String> list = new ArrayList<>();
-    private List<Integer> testlist = new ArrayList<>();
     private SearchHistoryAdapter searchHistoryAdapter;
     private String token;
 
@@ -92,6 +94,8 @@ public class  SearchActivity extends BaseAvtivity implements View.OnClickListene
         back.setOnClickListener(this);
         tvSearch.setOnClickListener(this);
         delete.setOnClickListener(this);
+        rlHistory.setVisibility(View.VISIBLE);
+        rcSearchGoods.setVisibility(View.GONE);
         etSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,6 +108,26 @@ public class  SearchActivity extends BaseAvtivity implements View.OnClickListene
             doSearch("");
         }else{
             doSearchNoLogin("");
+        }
+        //从sp取出
+        Gson gson = new Gson();
+        String data1 = SPUtil.getInstance().getData(SearchActivity.this, "searchlist", "search");
+        if(data1!=null){
+            Type listType = new TypeToken<List<String>>() {
+            }.getType();
+            List<String> list_search = gson.fromJson(data1, listType);
+
+            if(list_search.size()>0 && list_search!=null){
+                for (int i=0;i<list_search.size();i++){
+                    list.add(list_search.get(i));
+                }
+                //创建搜索历史记录适配器
+                GridLayoutManager manager = new GridLayoutManager(SearchActivity.this,4);
+                rcSearchHistory.setLayoutManager(manager);
+                searchHistoryAdapter = new SearchHistoryAdapter(SearchActivity.this, list_search);
+                rcSearchHistory.setAdapter(searchHistoryAdapter);
+            }
+
         }
 
     }
@@ -135,7 +159,8 @@ public class  SearchActivity extends BaseAvtivity implements View.OnClickListene
                     if(!TextUtils.isEmpty(token)){
                         doSearch(s);
                     }else{
-                        doSearchNoLogin(s);
+                        Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+                        etSearch.setText("");
                     }
 
                     for (int i=0;i<list.size();i++){
@@ -144,6 +169,20 @@ public class  SearchActivity extends BaseAvtivity implements View.OnClickListene
                         }
                     }
                     list.add(s);
+
+                    Gson gson = new Gson();
+
+                    String data = gson.toJson(list);
+
+                    SPUtil.getInstance().saveData(SearchActivity.this,"searchlist","search",data);
+
+
+                    //从sp取出
+                  /*  String data1 = SPUtil.getInstance().getData(SearchActivity.this, "searchlist", "search");
+                    Type listType = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> list_search = gson.fromJson(data1, listType);*/
+
                     //创建搜索历史记录适配器
                     GridLayoutManager manager = new GridLayoutManager(SearchActivity.this,4);
                     rcSearchHistory.setLayoutManager(manager);
@@ -153,6 +192,8 @@ public class  SearchActivity extends BaseAvtivity implements View.OnClickListene
 
                 break;
             case R.id.delete:
+                //清除sp文件
+                SPUtil.unReg(App.getContext(), "searchlist");
                 list.clear();
                 searchHistoryAdapter.notifyDataSetChanged();
                 rcSearchGoods.setVisibility(View.VISIBLE);
@@ -168,7 +209,7 @@ public class  SearchActivity extends BaseAvtivity implements View.OnClickListene
         if(!TextUtils.isEmpty(token)){
             doSearch(str);
         }else{
-            doSearchNoLogin(str);
+            Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
         }
 
     }

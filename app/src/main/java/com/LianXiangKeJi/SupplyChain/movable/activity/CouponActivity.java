@@ -15,6 +15,9 @@ import com.LianXiangKeJi.SupplyChain.movable.adapter.CouPonAdapter;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,11 +45,11 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
     @Override
     protected void getData() {
         back.setOnClickListener(this);
-        title.setText("优惠券");
+        title.setText("我的优惠券");
         tvRight.setVisibility(View.GONE);
         setTitleColor(CouponActivity.this);
 
-        NetUtils.getInstance().getApis().doGetCoupon()
+        NetUtils.getInstance().getApis().doGetMyCoupon()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<CouponBean>() {
@@ -82,7 +85,12 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
     protected BasePresenter initPresenter() {
         return null;
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void getString(String str){
+        if(str.equals("关闭界面")){
+            finish();
+        }
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){

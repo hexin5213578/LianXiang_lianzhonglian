@@ -10,6 +10,9 @@ import com.LianXiangKeJi.SupplyChain.main.bean.HomeClassIfBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
+import com.LianXiangKeJi.SupplyChain.movable.bean.GetCouponBean;
+import com.LianXiangKeJi.SupplyChain.movable.bean.MovableBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.GenerOrdersBean;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
@@ -89,9 +92,9 @@ public interface Apis {
     @GET("category/findHomePage")
     Observable<HomeClassIfBean> doGetHomeClassIf();
 
-    //优惠券
+    //查询我的优惠券
     @GET("userCoupon/super/findUserCoupon")
-    Observable<CouponBean> doGetCoupon();
+    Observable<CouponBean> doGetMyCoupon();
 
     //购物车添加 查询
     @POST("shoppingCart/findShoppingCart")
@@ -100,4 +103,17 @@ public interface Apis {
     //购物车删除
     @POST("shoppingCart/findShoppingCart")
     Observable<DeleteShopCarBean> doDeleteShopCar(@Body RequestBody body);
+
+    //查询所有优惠券
+    @GET("userCoupon/findCoupon")
+    Observable<MovableBean> doGetAllCoupon();
+
+    //用户领取优惠券
+    @POST("userCoupon/super/addUserCoupon")
+    Observable<GetCouponBean> doGetCoupon(@Body RequestBody body);
+
+
+    //生成订单
+    @POST("order/foundOrder")
+    Observable<GenerOrdersBean> doGenerOrder(@Body RequestBody body);
 }

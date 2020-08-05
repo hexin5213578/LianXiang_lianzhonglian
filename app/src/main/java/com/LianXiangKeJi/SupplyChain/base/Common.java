@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  */
 public  class Common {
 
-
+    //支付宝appid 2021001185635349
 
     /**
      * 获取token,不为空内种
@@ -113,7 +113,7 @@ public  class Common {
 //            Log.d("tag", "r=" + red + ",g=" + green + ",b=" + blue);
             int color = Color.rgb(red, green, blue);
             //除去白色和黑色
-            if (color!=Color.WHITE && color!=Color.BLACK){
+            if (color!=Color.BLACK){
                 rgb.add(color);
             }
         }

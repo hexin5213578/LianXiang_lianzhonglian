@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -222,7 +223,10 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
 
                     @Override
                     public void onError(Throwable e) {
-
+                        hideDialog();
+                        if (e.getMessage().equals("timeout")){
+                            Toast.makeText(getContext(), "连接超时", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

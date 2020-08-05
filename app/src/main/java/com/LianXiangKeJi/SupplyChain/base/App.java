@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import androidx.multidex.MultiDex;
 
+import com.alipay.sdk.app.EnvUtils;
 import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.smarx.notchlib.INotchScreen;
@@ -32,6 +33,9 @@ public class App extends Application {
         context = this;
         MultiDex.install(this);
         Fresco.initialize(context);
+        //沙箱测试
+        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+
 
     }
     public static Context getContext() {

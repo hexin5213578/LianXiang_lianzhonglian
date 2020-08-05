@@ -2,7 +2,7 @@ package com.LianXiangKeJi.SupplyChain.movable.bean;
 
 import java.util.List;
 
-public class CouponBean {
+public class MovableBean {
 
     /**
      * flag : true

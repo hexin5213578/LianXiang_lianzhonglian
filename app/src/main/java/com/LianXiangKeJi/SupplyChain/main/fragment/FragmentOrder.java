@@ -1,6 +1,8 @@
 package com.LianXiangKeJi.SupplyChain.main.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,10 +20,12 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseFragment;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
+import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.main.adapter.ShopcarAdapter;
 import com.LianXiangKeJi.SupplyChain.main.bean.DeleteShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
+import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.google.gson.Gson;
@@ -30,7 +34,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -76,6 +82,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
     private List<ShopCarBean.DataBean>list = new ArrayList<>();
     private List<String> listId = new ArrayList<>();
     private ShopcarAdapter shopcarAdapter;
+    private List<ShopCarBean.DataBean> data;
 
     @Override
     protected void getid(View view) {
@@ -108,7 +115,9 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
 
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
             //查询购物车
+            showDialog();
             doShopCar(requestBody);
+            hideDialog();
         } else {
             Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
         }
@@ -155,7 +164,9 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         //查询购物车
+
         doShopCar(requestBody);
+
     }
 
     @Override
@@ -172,8 +183,28 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.bt_jiesuan:
                 // TODO: 2020/7/21 带数据去订单页发起结算
+                List<OrderBean> list_order  = new ArrayList<>();
 
+                for (int i=0;i<data.size();i++){
+                    ShopCarBean.DataBean dataBean = data.get(i);
+                    if(dataBean.isPersonChecked()==true){
+                        OrderBean orderBean = new OrderBean();
 
+                        orderBean.setImageurl(dataBean.getLittlePrintUrl());
+                        orderBean.setGoodsid(dataBean.getId());
+                        orderBean.setCount(dataBean.getCount());
+                        orderBean.setSpecs(dataBean.getSpecs());
+                        orderBean.setName(dataBean.getName());
+                        orderBean.setPrice(dataBean.getPrice());
+                        list_order.add(orderBean);
+                    }
+                }
+
+                Intent intent = new Intent(getContext(), ConfirmOrderActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("orderlist", (Serializable) list_order);
+                intent.putExtras(bundle);
+                startActivity(intent);
 
                 break;
             case R.id.tv_finish:
@@ -212,7 +243,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                     String json1 = gson1.toJson(saveShopCarBean1);
                     RequestBody requestBody1 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json1);
                     //删除购物车
-                    showDialog();
                     NetUtils.getInstance().getApis().doDeleteShopCar(requestBody1)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -224,7 +254,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
 
                                 @Override
                                 public void onNext(DeleteShopCarBean bean) {
-                                    hideDialog();
                                     Toast.makeText(getContext(), ""+bean.getData(), Toast.LENGTH_SHORT).show();
 
                                     SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
@@ -255,17 +284,19 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                 }else{
                     SaveShopCarBean saveShopCarBean2 = new SaveShopCarBean();
                     saveShopCarBean2.setState(false);
+                    LinkedHashMap<String, String> goodsid = SPUtil.getMap(getContext(), "goodsid");
+
                     for (int i=0;i<listId.size();i++){
                         SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
                         resultBean.setShopGoodsId(listId.get(i));
                         shoplist.add(resultBean);
                         String s = listId.get(i);
 
-                        LinkedHashMap<String, String> goodsid = SPUtil.getMap(getContext(), "goodsid");
                         goodsid.remove(s);
 
-                        SPUtil.setMap(getContext(),"goodsid",goodsid);
                     }
+                    SPUtil.setMap(getContext(),"goodsid",goodsid);
+
                     Log.d("hmy","选删"+listId.size());
 
                     //添加进集合
@@ -317,22 +348,29 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                     @Override
                     public void onNext(ShopCarBean shopCarBean) {
                         hideDialog();
-                        List<ShopCarBean.DataBean> data = shopCarBean.getData();
+                        data = shopCarBean.getData();
                         //判断进货单数据是否为空 如果为空隐藏所有功能展示进货单为空图片
-                        if(data.size()>0&&data!=null){
+                        if(data.size()>0&& data !=null){
                             noshopcar.setVisibility(View.GONE);
                             llOrder.setVisibility(View.VISIBLE);
                             LinearLayoutManager manager = new LinearLayoutManager(getContext());
                             rcOrder.setLayoutManager(manager);
 
-
                             shopcarAdapter = new ShopcarAdapter(getContext());
-
                             list.addAll(data);
-
                             shopcarAdapter.setData(data);
-
                             rcOrder.setAdapter(shopcarAdapter);
+
+                            //将拿到的内容 存入sp
+
+                            LinkedHashMap<String,String> map = new LinkedHashMap<>();
+                            for (int i =0;i<data.size();i++){
+                                String id = data.get(i).getId();
+                                String name = data.get(i).getName();
+
+                                map.put(id,name);
+                            }
+                            SPUtil.setMap(getContext(),"mapkey",map);
 
                             rbCheckAll.setOnClickListener(new View.OnClickListener() {
                                 @Override

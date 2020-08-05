@@ -1,14 +1,12 @@
 package com.LianXiangKeJi.SupplyChain.wxapi;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.LianXiangKeJi.SupplyChain.R;
-import com.LianXiangKeJi.SupplyChain.paysuccess.PaySuccessActivity;
+import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessActivity;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;

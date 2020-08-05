@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,18 +24,23 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
+import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.common.custom.CustomDialog;
+import com.LianXiangKeJi.SupplyChain.order.adapter.OrderInfoAdapter;
+import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +86,9 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     @BindView(R.id.iv_haveaddress)
     ImageView ivHaveaddress;
     private PopupWindow mPopupWindow;
+    private int count=0;
+    private double price=0.0;
+    private List<OrderBean> orderlist;
 
     @Override
     protected int getResId() {
@@ -96,7 +105,30 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         rlSelectAddress.setOnClickListener(this);
         btConfirm.setOnClickListener(this);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        orderlist = (List<OrderBean>) bundle.getSerializable("orderlist");
+        //设置适配器
+        LinearLayoutManager manager = new LinearLayoutManager(ConfirmOrderActivity.this, RecyclerView.VERTICAL, false);
+        rcOrder.setLayoutManager(manager);
+        OrderInfoAdapter orderInfoAdapter = new OrderInfoAdapter(ConfirmOrderActivity.this, orderlist);
+        rcOrder.setAdapter(orderInfoAdapter);
 
+        for (int i = 0; i< orderlist.size(); i++){
+            int count = orderlist.get(i).getCount();
+            String price = orderlist.get(i).getPrice();
+            Float aFloat = Float.valueOf(price);
+
+            this.count +=count;
+            double itemprice = count * aFloat;
+
+            Log.d("hmy","条目价格为"+itemprice+"");
+            this.price +=itemprice;
+
+        }
+        tvCount.setText(orderlist.size()+"种共"+count+"件，");
+        Log.d("hmy","总价为"+price+"");
+        tvPrice.setText(price+"");
         // TODO: 2020/7/21 展示默认地址
         tvName.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
         tvAddress.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
@@ -177,6 +209,8 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         ImageView check2 = view.findViewById(R.id.pay_check2);
         TextView tvprice = view.findViewById(R.id.tv_price);
         Button startpay = view.findViewById(R.id.startpay);
+
+        tvprice.setText(" ￥"+price+"");
         ivclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,12 +246,20 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                 if (rb1.isChecked()) {
                     Log.d("hmy", "微信支付");
                     intent.putExtra("theway","微信支付");
+
+
                     startActivity(intent);
                 }
                 // TODO: 2020/7/21 支付宝支付
                 else {
                     Log.d("hmy", "支付宝支付");
+
+                    Intent intent = new Intent(ConfirmOrderActivity.this, ConfirmPaymentActivity.class);
                     intent.putExtra("theway","支付宝支付");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("orderlist", (Serializable)orderlist);
+                    intent.putExtras(bundle);
+
                     startActivity(intent);
                 }
             }
@@ -242,7 +284,10 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         super.onRestart();
         dismiss();
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void getIntent(IntentBean bean){
+        finish();
+    }
     // TODO: 2020/7/20 设置透明度
     public void setWindowAlpa(boolean isopen) {
         if (Build.VERSION.SDK_INT < 11) {

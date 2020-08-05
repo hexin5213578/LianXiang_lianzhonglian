@@ -1,9 +1,7 @@
-package com.LianXiangKeJi.SupplyChain.paysuccess;
+package com.LianXiangKeJi.SupplyChain.paysuccess.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,9 +13,13 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
+import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * @ClassName:PaySuccessActivity
@@ -53,6 +55,16 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.setStatusBarColor(PaySuccessActivity.this.getResources().getColor(R.color.title_paysuccess));
             }
+        Intent intent = getIntent();
+        String theway = intent.getStringExtra("theway");
+        long times = intent.getLongExtra("time",0);
+        String orderid = intent.getStringExtra("orderid");
+
+        tvBianhao.setText(orderid);
+        tvFangshi.setText(theway);
+        String date = new SimpleDateFormat("yyyy.MM.dd").format(
+                new java.util.Date(times));
+        tvTime.setText(date);
     }
 
     @Override
@@ -66,7 +78,7 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
             // TODO: 2020/7/22 跳转至主页
             case R.id.bt_back:
                 startActivity(new Intent(PaySuccessActivity.this, MainActivity.class));
-                finish();
+                EventBus.getDefault().postSticky(new IntentBean());
                 break;
             // TODO: 2020/7/22 查看订单
             case R.id.bt_seeorder:

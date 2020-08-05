@@ -90,8 +90,6 @@ public class SearchGoodsNoLoginAdapter extends RecyclerView.Adapter<RecyclerView
         TextView tvGoodsName;
         @BindView(R.id.tv_goods_yichengjiao)
         TextView tvGoodsYichengjiao;
-        @BindView(R.id.tv_goods_discount)
-        TextView tvGoodsDiscount;
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
         @BindView(R.id.jia)

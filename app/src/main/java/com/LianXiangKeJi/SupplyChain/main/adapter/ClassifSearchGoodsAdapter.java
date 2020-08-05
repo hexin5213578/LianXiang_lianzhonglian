@@ -24,6 +24,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.DeleteShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.recommend.adapter.HotsellAdapter;
+import com.LianXiangKeJi.SupplyChain.search.adapter.SearchGoodsAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
@@ -85,15 +86,29 @@ public class ClassifSearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView
 
             Integer count = Integer.valueOf(list.get(position).getAllSell());
 
-            ((ViewHolder)holder).tvGoodsYichengjiao.setText("成交"+count*price+"元");
+            ((ViewHolder)holder).tvGoodsYichengjiao.setText("成交"+count+"笔");
 
             Glide.with(context).load(list.get(position).getLittlePrintUrl()).into(((ViewHolder)holder).ivGoodsImage);
+            LinkedHashMap<String, String> map = SPUtil.getMap(context, "mapkey");
+
+            for (String key : map.keySet()) {
+                if(list.get(position).getId().equals(key)){
+                    integer=1;
+                    list.get(position).setPostion(integer);
+                    list.get(position).setPostion(integer);
+                    ((ViewHolder)holder).tvGoodsCount.setText(integer +"");
+                    ((ViewHolder)holder).tvGoodsCount.setVisibility(View.VISIBLE);
+                    ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
+                }
+            }
 
             ((ViewHolder)holder).jia.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                         integer = list.get(position).getPostion();
-                        integer++;
+                        if(integer==0){
+                            integer++;
+                        }
                         if(integer==1){
                             list.get(position).setPostion(integer);
 
@@ -263,7 +278,7 @@ public class ClassifSearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView
                 public void onClick(View view) {
                     GoodsDeatailsBean goodsDeatailsBean = new GoodsDeatailsBean();
                     goodsDeatailsBean.setImage(list.get(position).getLittlePrintUrl());
-                    goodsDeatailsBean.setName(list.get(position).getName()+list.get(position).getSpecs());
+                    goodsDeatailsBean.setName(list.get(position).getName());
                     goodsDeatailsBean.setPrice(list.get(position).getPrice());
                     goodsDeatailsBean.setStock(list.get(position).getStock());
                     goodsDeatailsBean.setMonthsell(list.get(position).getMonthSell()+"");
@@ -291,8 +306,6 @@ public class ClassifSearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView
         TextView tvGoodsName;
         @BindView(R.id.tv_goods_yichengjiao)
         TextView tvGoodsYichengjiao;
-        @BindView(R.id.tv_goods_discount)
-        TextView tvGoodsDiscount;
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
         @BindView(R.id.jia)

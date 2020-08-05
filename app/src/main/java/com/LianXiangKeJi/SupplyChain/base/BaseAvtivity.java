@@ -70,6 +70,21 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         mLoadingDialog.show();
     }
 
+    public void showDialogdelete() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new Dialog(this);
+            mLoadingDialog.setCancelable(false);
+            View v = View.inflate(this, R.layout.dialog_loading_delete, null);
+            ImageView iv = v.findViewById(R.id.iv_loading);
+            Glide.with(this).asGif().load(R.mipmap.loading).into(iv);
+
+            mLoadingDialog.addContentView(v,
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        mLoadingDialog.show();
+    }
     // TODO: 2020/7/25 隐藏loading圈
     public void hideDialog() {
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {

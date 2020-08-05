@@ -60,7 +60,21 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
         mLoadingDialog.show();
 
     }
+    public void showDialogdelete() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new Dialog(getActivity());
+            mLoadingDialog.setCancelable(false);
+            View v = View.inflate(getContext(), R.layout.dialog_loading_delete, null);
+            ImageView iv = v.findViewById(R.id.iv_loading);
+            Glide.with(this).asGif().load(R.mipmap.loading).into(iv);
 
+            mLoadingDialog.addContentView(v,
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        mLoadingDialog.show();
+    }
     public void hideDialog() {
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             mLoadingDialog.dismiss();

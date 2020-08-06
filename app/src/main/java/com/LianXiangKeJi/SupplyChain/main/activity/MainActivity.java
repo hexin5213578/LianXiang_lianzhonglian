@@ -102,7 +102,7 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
         rbs[1] = rbClassIf;
         rbs[2] = rbOrder;
         rbs[3] = rbMine;
-        // TODO: 2020/7/21 判断网络状态
+        //  判断网络状态
         boolean b = NetWork(MainActivity.this);
         if (b == false) {
             flContent.setVisibility(View.GONE);
@@ -144,7 +144,7 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
             Request();
         }*/
 
-        // TODO: 2020/7/23 开启服务
+        //  开启服务
         //startService(new Intent(this,LocationService.class));
 
 
@@ -154,7 +154,7 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
         return null;
     }
 
-    // TODO: 2020/7/24 拿到存入成功信息 取出经纬度
+    //  拿到存入成功信息 取出经纬度
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getSavaSuccess(SaveSuccessBean successBean){
 
@@ -284,7 +284,7 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
         switch(requestCode) {
             case 1:
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // TODO request success
+                    // request success
                 }
                 break;
         }

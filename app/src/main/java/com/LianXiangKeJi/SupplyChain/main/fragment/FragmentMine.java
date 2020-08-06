@@ -114,7 +114,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
 
         String username = SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.USER_NAME);
         String hearurl = SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.HEAD_URL);
-        // TODO: 2020/7/18 设置用户信息
+        // 设置用户信息
         if (!TextUtils.isEmpty(token)) {
 
             Glide.with(getContext()).load(hearurl).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivYuan);
@@ -124,7 +124,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
             tvUsername.setText(username);
         }
 
-        // TODO: 2020/7/18 创建跳转至订单页的Intent
+        // 创建跳转至订单页的Intent
         intent_order = new Intent(getContext(), OrderActivity.class);
     }
 
@@ -144,7 +144,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            // TODO: 2020/7/15 设置页面 
+            //  设置页面
             case R.id.setup:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -152,7 +152,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(new Intent(getContext(), SetUpActivity.class));
                 }
                 break;
-            // TODO: 2020/7/15 登录注册 
+            // 登录注册
             case R.id.tv_login:
                 if (!TextUtils.isEmpty(token)) {
                     return;
@@ -206,7 +206,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(intent_order);
                 }
                 break;
-            // TODO: 2020/7/15 常买商品页
+            //  常买商品页
             case R.id.rl_changmai:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -214,7 +214,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(new Intent(getContext(), AlwaysBuyActivity.class));
                 }
                 break;
-            // TODO: 2020/7/15 我的地址页
+            //  我的地址页
             case R.id.rl_myaddress:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -223,7 +223,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(intent);
                 }
                 break;
-            // TODO: 2020/7/15 绑定手机页
+            //  优惠券
             case R.id.rl_youhui:
                 startActivity(new Intent(getContext(), CouponActivity.class));
                 break;

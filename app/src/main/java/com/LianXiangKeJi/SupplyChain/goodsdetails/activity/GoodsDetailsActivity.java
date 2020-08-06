@@ -150,7 +150,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
             }
         }
 
-        // TODO: 2020/7/20 加载网络图片
+        //加载网络图片
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -249,14 +249,14 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
         }
     }
 
-    // TODO: 2020/7/21 重新进入时隐藏弹出框
+    //重新进入时隐藏弹出框
     @Override
     protected void onRestart() {
         super.onRestart();
         dismiss();
     }
 
-    // TODO: 2020/7/20 弹出选择规格
+    //弹出选择规格
     public void showSelect() {
         //创建popwiondow弹出框
         mPopupWindow = new PopupWindow();
@@ -264,7 +264,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         view1 = LayoutInflater.from(this).inflate(R.layout.dailog_select_spec,null);
 
-        // TODO: 2020/7/20 找控件处理操作
+        //找控件处理操作
         ImageView iv_touxiang = view1.findViewById(R.id.iv_touxiang);
         TextView tv_name  = view1.findViewById(R.id.tv_name);
         ImageView iv_close = view1.findViewById(R.id.iv_close);
@@ -292,7 +292,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
 
             tv_count.setText(count+"");
             tv_count_change.setText(count+"");
-            // TODO: 2020/7/20 计算总价
+            //计算总价
             String s = tv_price.getText().toString();
             String substring = s.substring(1);
             float price = Float.parseFloat(substring);
@@ -316,7 +316,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 count++;
                 tv_count.setText(count+"");
                 tv_count_change.setText(count+"");
-                // TODO: 2020/7/20 计算总价
+                //计算总价
                 String s = tv_price.getText().toString();
                 String substring = s.substring(1);
                 float price = Float.parseFloat(substring);
@@ -336,7 +336,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                     count--;
                     tv_count.setText(count+"");
                     tv_count_change.setText(count+"");
-                    // TODO: 2020/7/20 计算总价
+                    //计算总价
                     String s = tv_price.getText().toString();
                     String substring = s.substring(1);
                     float price = Float.parseFloat(substring);
@@ -348,13 +348,13 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 }
             }
         });
-        // TODO: 2020/7/20 加入进货单
+        //加入进货单
         bt_join.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
             public void onClick(View view) {
-                // TODO: 2020/7/20 处理选择配送方式
+                //处理选择配送方式
                 boolean checked = rb1.isChecked();
                 boolean checked1 = rb2.isChecked();
                 if(checked){
@@ -364,7 +364,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                     str=rb2.getText().toString();
                 }
 
-                // TODO: 2020/7/20 调用加入购物车数据
+                //调用加入购物车数据
                 if (TextUtils.isEmpty(token)){
                     Toast.makeText(GoodsDetailsActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
                 }else{
@@ -404,7 +404,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
 
                                     @Override
                                     public void onNext(ShopCarBean shopCarBean) {
-                                        // TODO: 2020/7/24 添加成功后处理
+                                        //添加成功后处理
                                         mPopupWindow1 = new PopupWindow();
                                         mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
                                         mPopupWindow1.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -455,11 +455,11 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 }
             }
         });
-        // TODO: 2020/7/20 立即订购
+        //立即订购
         bt_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 2020/7/20 处理选择配送方式
+                //处理选择配送方式
                 boolean checked = rb1.isChecked();
                 boolean checked1 = rb2.isChecked();
                 if(checked){
@@ -468,7 +468,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 if(checked1){
                     str=rb2.getText().toString();
                 }
-                // TODO: 2020/7/20 跳转至确认订单页  将所选择信息通过集合传递
+                //跳转至确认订单页  将所选择信息通过集合传递
                 if (TextUtils.isEmpty(token)){
                     Toast.makeText(GoodsDetailsActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
                 }else{
@@ -509,7 +509,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
 
     }
 
-    // TODO: 2020/7/20 设置透明度
+    //设置透明度
     public void setWindowAlpa(boolean isopen) {
         if (android.os.Build.VERSION.SDK_INT < 11) {
             return;

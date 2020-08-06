@@ -82,16 +82,16 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
         loginCode.setOnClickListener(this);
         regist.setOnClickListener(this);
 
-        // TODO: 2020/7/16 登錄按鈕
+        //登錄按鈕
 
         btLoginPwd.setOnClickListener(this);
         btLoginCode.setOnClickListener(this);
 
-        // TODO: 2020/7/16 忘記密碼 
+        //忘記密碼
         tvRememberpwd1.setOnClickListener(this);
         tvRememberpwd2.setOnClickListener(this);
 
-        // TODO: 2020/7/16 獲取驗證碼
+        //獲取驗證碼
         tvGetcode.setOnClickListener(this);
         setTitleColor(this);
 
@@ -122,9 +122,9 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                 startActivity(new Intent(LoginActivity.this, RegistActivity.class));
 
                 break;
-            // TODO: 2020/7/16 用戶名密碼登陸
+            // 用戶名密碼登陸
             case R.id.bt_login_pwd:
-                // TODO: 2020/7/16 獲取用戶名及密碼
+                //  獲取用戶名及密碼
                 String username = etUsername.getText().toString();
                 String pwd = etPwd.getText().toString();
 
@@ -185,9 +185,9 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                 }
 
                 break;
-            // TODO: 2020/7/16 驗證碼登陸
+            // 驗證碼登陸
             case R.id.bt_login_code:
-                // TODO: 2020/7/16 獲取手機號及驗證碼
+                // 獲取手機號及驗證碼
                 String codeusername = etUsernameCode.getText().toString();
                 String code = etCode.getText().toString();
                 if (StringUtil.checkPhoneNumber(codeusername)) {
@@ -245,18 +245,18 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                     }
                 }
                 break;
-            // TODO: 2020/7/16 忘記密碼
+            // 忘記密碼
             case R.id.tv_rememberpwd1:
             case R.id.tv_rememberpwd2:
                 startActivity(new Intent(LoginActivity.this, RememberPwdActivity.class));
                 break;
-            // TODO: 2020/7/16 發起獲取二維碼請求
+            // 發起獲取二維碼請求
             case R.id.tv_getcode:
                 String phone = etUsernameCode.getText().toString();
                 if (StringUtil.checkPhoneNumber(phone)) {
                     //调用倒计时
                     countDownTime();
-                    // TODO: 2020/7/28 发起获取验证码的网络请求
+                    // 发起获取验证码的网络请求
                     showDialog();
                     NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code",phone)
                             .subscribeOn(Schedulers.io())

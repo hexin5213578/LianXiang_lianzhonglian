@@ -208,7 +208,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
 
                 break;
             case R.id.bt_jiesuan:
-                // TODO: 2020/7/21 带数据去订单页发起结算
+                //  带数据去订单页发起结算
                 List<OrderBean> list_order  = new ArrayList<>();
 
                 for (int i=0;i<data.size();i++){

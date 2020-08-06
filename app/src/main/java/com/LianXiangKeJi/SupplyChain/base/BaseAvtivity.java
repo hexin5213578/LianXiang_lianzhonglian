@@ -53,7 +53,7 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         getData();
     }
 
-    // TODO: 2020/7/25 展示loading圈
+    // 展示loading圈
     public void showDialog() {
         if (mLoadingDialog == null) {
             mLoadingDialog = new Dialog(this);
@@ -85,7 +85,7 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
 
         mLoadingDialog.show();
     }
-    // TODO: 2020/7/25 隐藏loading圈
+    //  隐藏loading圈
     public void hideDialog() {
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             mLoadingDialog.dismiss();
@@ -105,7 +105,7 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         bind.unbind();
     }
 
-    // TODO: 2020/7/17 设置标题栏颜色
+    // 设置标题栏颜色
     public void setTitleColor(Activity activity){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             Window window = activity.getWindow();
@@ -131,7 +131,7 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         float dataOffloat1 = SPUtil.getInstance().getDataOffloat(this, SPUtil.FILE_NAME, SPUtil.LONGITUDE);
 
         if(dataOffloat!=0.0 && dataOffloat1!=0.0){
-            // TODO: 2020/7/23 获取经纬度
+            //  获取经纬度
 
             stopService(new Intent(this, LocationService.class));
             latitudeandlongitudeBean = new LatitudeandlongitudeBean();
@@ -140,7 +140,7 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         }
         return latitudeandlongitudeBean;
     }
-    // TODO: 2020/7/15 关闭软键盘
+    //  关闭软键盘
     public void closekeyboard(){
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE); //得到InputMethodManager的实例
         if (imm.isActive()) {//如果开启

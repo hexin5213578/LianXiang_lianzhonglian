@@ -71,7 +71,7 @@ public class BindPhoneActivity extends BaseAvtivity implements View.OnClickListe
             case R.id.bt_queding:
                 phone = etPhone.getText().toString();
                 String code = etCode.getText().toString();
-                // TODO: 2020/7/16 發起綁定手機號請求
+                // 發起綁定手機號請求
                 break;
             case R.id.back:
                 finish();

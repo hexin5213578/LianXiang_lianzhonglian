@@ -96,7 +96,6 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
     private String stringExtra;
     private String id;
     private File file;
-
     @Override
     protected int getResId() {
         return R.layout.activity_set_up;
@@ -124,12 +123,10 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
         if(headurl!=null && username!=null){
             Uri parse = Uri.parse(headurl);
             ivTouxiang.setImageURI(parse);
-
             tvMyname.setText(username);
         }
 
     }
-
     @Override
     protected BasePresenter initPresenter() {
         return null;
@@ -138,34 +135,33 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            // TODO: 2020/7/18  更换手机号
+            //更换手机号
             case R.id.rl_changephone:
                 startActivity(new Intent(SetUpActivity.this,ReplacePhoneActivity.class));
                 break;
-            // TODO: 2020/7/18 修改密码
+            // 修改密码
             case R.id.rl_changepwd:
                 startActivity(new Intent(SetUpActivity.this, ChangePwdActivity.class));
                 break;
-            // TODO: 2020/7/18 返回
+            //返回
             case R.id.back:
                 finish();
                 break;
-            // TODO: 2020/7/18 退出登录
+            //退出登录
             case R.id.exit_login:
                 SPUtil.unReg(App.getContext(), SPUtil.FILE_NAME);
                 startActivity(new Intent(SetUpActivity.this, MainActivity.class));
                 finish();
                 break;
-            // TODO: 2020/7/18 我的地址
+            //我的地址
             case R.id.rl_myaddress:
                 startActivity(new Intent(SetUpActivity.this, MyAddressActivity.class));
                 break;
-            // TODO: 2020/7/20 更换头像
+            //更换头像
             case R.id.rl_mytouxiang:
-
                 PictureSelector.create(SetUpActivity.this, PictureSelector.SELECT_REQUEST_CODE).selectPicture(true,200,200,1,1);
                 break;
-            // TODO: 2020/7/20 修改昵称
+            //修改昵称
             case R.id.rl_nicheng:
                 showSelect();
                 break;

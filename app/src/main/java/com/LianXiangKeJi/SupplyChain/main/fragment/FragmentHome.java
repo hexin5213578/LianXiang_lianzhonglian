@@ -103,7 +103,7 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
 
             }
         });
-        // TODO: 2020/7/21 测试分类标签栏
+        //测试分类标签栏
 
         NetUtils.getInstance().getApis().doGetHomeClassIf()
                 .subscribeOn(Schedulers.io())

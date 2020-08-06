@@ -80,13 +80,13 @@ public class LocationService extends Service implements AMapLocationListener {
                 SPUtil.getInstance().saveDataOffloat(this,SPUtil.FILE_NAME,SPUtil.LONGITUDE, (float) longitude);
                 SPUtil.getInstance().saveDataOffloat(this,SPUtil.FILE_NAME,SPUtil.LATITUDE, (float) latitude);
 
-                // TODO: 2020/7/24 判断是否存入成功
+                // 判断是否存入成功
                 float dataOffloat = SPUtil.getInstance().getDataOffloat(this, SPUtil.FILE_NAME, SPUtil.LATITUDE);
                 float dataOffloat1 = SPUtil.getInstance().getDataOffloat(this, SPUtil.FILE_NAME, SPUtil.LONGITUDE);
 
 
                 if(dataOffloat!=0.0 && dataOffloat1!=0.0){
-                    // TODO: 2020/7/24 发送标识
+                    //  发送标识
                     SaveSuccessBean saveSuccessBean = new SaveSuccessBean();
                     EventBus.getDefault().post(saveSuccessBean);
                 }

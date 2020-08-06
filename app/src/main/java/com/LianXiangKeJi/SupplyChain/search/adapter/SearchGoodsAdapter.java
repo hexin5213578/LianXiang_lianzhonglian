@@ -80,7 +80,7 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Integer count = Integer.valueOf(list.get(position).getAllSell());
         ((ViewHolder)holder).tvGoodsYichengjiao.setText("成交"+count+"笔");
 
-        LinkedHashMap<String, String> map = SPUtil.getMap(context, "mapkey");
+        LinkedHashMap<String, String> map = SPUtil.getMap(context, "goodsid");
 
         for (String key : map.keySet()) {
             if(list.get(position).getId().equals(key)){

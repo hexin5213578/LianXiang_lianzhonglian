@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.smarx.notchlib.INotchScreen;
 import com.smarx.notchlib.NotchScreenManager;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import static org.greenrobot.eventbus.EventBus.TAG;
 
@@ -26,7 +28,7 @@ import static org.greenrobot.eventbus.EventBus.TAG;
  */
 public class App extends Application {
     private static Context context;
-
+    private static IWXAPI mWXApi;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -34,10 +36,18 @@ public class App extends Application {
         MultiDex.install(this);
         Fresco.initialize(context);
         //沙箱测试
-        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
-
-
+        //EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+        initWX();
     }
+    private void initWX(){
+        mWXApi = WXAPIFactory.createWXAPI(context, null);
+        mWXApi.registerApp("wxacf956e14f407890");
+    }
+
+    public static IWXAPI getWXApi(){
+        return mWXApi;
+    }
+
     public static Context getContext() {
         return context;
     }

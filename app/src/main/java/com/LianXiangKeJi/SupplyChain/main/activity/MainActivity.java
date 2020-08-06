@@ -138,47 +138,14 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
             //设置状态栏颜色
             setTitleColor(this);
         }
-        String sdk = Build.VERSION.SDK; // SDK号
-        String model = Build.MODEL; // 手机型号
-        String release = Build.VERSION.RELEASE; // android系统版本号
-        String brand = Build.BRAND;//手机厂商
-        if (Build.VERSION.SDK_INT >= 23) {
-            int request = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-            if (request != PackageManager.PERMISSION_GRANTED)//缺少权限，进行权限申请
-            {
 
-                AlertDialog.Builder  builder = new AlertDialog.Builder(this)
-                        .setMessage("检测到当前未开启定位权限，是否开启？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                if (TextUtils.equals(brand.toLowerCase(), "redmi") || TextUtils.equals(brand.toLowerCase(), "xiaomi")) {
-                                    gotoMiuiPermission();//小米
-                                } else if (TextUtils.equals(brand.toLowerCase(), "meizu")) {
-                                    gotoMeizuPermission();
-                                } else if (TextUtils.equals(brand.toLowerCase(), "huawei") || TextUtils.equals(brand.toLowerCase(), "honor")) {
-                                    gotoHuaweiPermission();
-                                } else {
-                                    startActivity(getAppDetailSettingIntent());
-                                }
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //ToDo: 你想做的事情
-                                dialogInterface.dismiss();
-                            }
-                        });
-                builder.create().show();
-                return;
-            }
-        }
 
     /*    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Request();
         }*/
 
         // TODO: 2020/7/23 开启服务
-        startService(new Intent(this,LocationService.class));
+        //startService(new Intent(this,LocationService.class));
 
 
     }
@@ -288,79 +255,6 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
         }
     }
 
-
-
-    /**
-     * 跳转到miui的权限管理页面
-     */
-    private void gotoMiuiPermission() {
-        try { // MIUI 8
-            Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
-            localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
-            localIntent.putExtra("extra_pkgname", MainActivity.this.getPackageName());
-            MainActivity.this.startActivity(localIntent);
-        } catch (Exception e) {
-            try { // MIUI 5/6/7
-                Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
-                localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
-                localIntent.putExtra("extra_pkgname",  MainActivity.this.getPackageName());
-                MainActivity.this.startActivity(localIntent);
-            } catch (Exception e1) { // 否则跳转到应用详情
-                startActivity(getAppDetailSettingIntent());
-            }
-        }
-    }
-
-    /**
-     * 跳转到魅族的权限管理系统
-     */
-    private void gotoMeizuPermission() {
-        try {
-            Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
-            intent.addCategory(Intent.CATEGORY_DEFAULT);
-            intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-            startActivity(getAppDetailSettingIntent());
-        }
-    }
-
-    /**
-     * 华为的权限管理页面
-     */
-    private void gotoHuaweiPermission() {
-        try {
-            Intent intent = new Intent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ComponentName comp = new ComponentName("com.huawei.systemmanager", "com.huawei.permissionmanager.ui.MainActivity");//华为权限管理
-            intent.setComponent(comp);
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-            startActivity(getAppDetailSettingIntent());
-        }
-
-    }
-
-    /**
-     * 获取应用详情页面intent（如果找不到要跳转的界面，也可以先把用户引导到系统设置页面）
-     *
-     * @return
-     */
-    private Intent getAppDetailSettingIntent() {
-        Intent localIntent = new Intent();
-        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (Build.VERSION.SDK_INT >= 9) {
-            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-        } else if (Build.VERSION.SDK_INT <= 8) {
-            localIntent.setAction(Intent.ACTION_VIEW);
-            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
-            localIntent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
-        }
-        return localIntent;
-    }
 
         public void onTakeLocation1() {
         if (Build.VERSION.SDK_INT >= 23) {

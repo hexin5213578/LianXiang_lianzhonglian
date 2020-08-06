@@ -48,7 +48,7 @@ public class OrderInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         String price = orderBean.getPrice();
         Float aFloat = Float.valueOf(price);
 
-        ((ViewHolder)holder).tvAllprice.setText("小计：￥"+count*aFloat);
+        ((ViewHolder)holder).tvAllprice.setText("小计：￥"+Double.valueOf(count*aFloat));
     }
 
     @Override

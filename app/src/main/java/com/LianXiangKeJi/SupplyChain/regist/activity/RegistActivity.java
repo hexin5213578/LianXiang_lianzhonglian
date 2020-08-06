@@ -1,8 +1,12 @@
 package com.LianXiangKeJi.SupplyChain.regist.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -21,11 +25,13 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.LianXiangKeJi.SupplyChain.BuildConfig;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
+import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
 import com.LianXiangKeJi.SupplyChain.map.activity.MapActivity;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
@@ -128,13 +134,15 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
     protected BasePresenter initPresenter() {
         return null;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -186,6 +194,8 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                 break;
             // TODO: 2020/7/17 提交
             case R.id.bt_regist:
+
+
                 String phone = etPhone.getText().toString();
                 String code = etCode.getText().toString();
                 String pwd1 = etPwd1.getText().toString();
@@ -200,64 +210,81 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                                     if (!TextUtils.isEmpty(stringExtra1)) {
                                         if (pwd1.equals(pwd2)) {
                                             if (!TextUtils.isEmpty(username)) {
-                                                if(!TextUtils.isEmpty(address)){
-                                                    //发起解析地址的请求
-                                                    NetUtils.getInstance().getApis().doRegistLocation("https://restapi.amap.com/v3/geocode/geo","6002f521fac7009a462a76d33debdd4a",address,"JSON")
-                                                            .subscribeOn(Schedulers.io())
-                                                            .observeOn(AndroidSchedulers.mainThread())
-                                                            .subscribe(new Observer<RegistLogcationBean>() {
+                                                if (!TextUtils.isEmpty(address)) {
 
-
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                                                            .setMessage("收货地址填写后不可修改,是否继续提交").setPositiveButton("确定提交", new DialogInterface.OnClickListener() {
                                                                 @Override
-                                                                public void onSubscribe(Disposable d) {
-
-                                                                }
-
-                                                                @Override
-                                                                public void onNext(RegistLogcationBean registLogcationBean) {
-                                                                    List<RegistLogcationBean.GeocodesBean> geocodes = registLogcationBean.getGeocodes();
-                                                                    RegistLogcationBean.GeocodesBean geocodesBean = geocodes.get(0);
-                                                                    location = geocodesBean.getLocation();
-
-                                                                    ArrayList<File> list = new ArrayList<>();
-                                                                    HashMap<String, String> map = new HashMap<>();
-                                                                    map.put("username", username);
-                                                                    map.put("address",address);
-                                                                    map.put("scope",location);
-                                                                    map.put("password", pwd1);
-                                                                    map.put("phone", phone);
-                                                                    map.put("code", code);
-
-                                                                    list.add(file);
-                                                                    list.add(file1);
-
-                                                                    RequestBody requsetBody = NetUtils.getInstance().getRequsetBody(list, map);
-                                                                    showDialog();
-                                                                    NetUtils.getInstance().getApis().doRegist("http://192.168.0.143:8081/user/signIn", requsetBody)
+                                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                                    //发起解析地址的请求
+                                                                    NetUtils.getInstance().getApis().doRegistLocation("https://restapi.amap.com/v3/geocode/geo", "6002f521fac7009a462a76d33debdd4a", address, "JSON")
                                                                             .subscribeOn(Schedulers.io())
                                                                             .observeOn(AndroidSchedulers.mainThread())
-                                                                            .subscribe(new Observer<GetPhoneCodeBean>() {
+                                                                            .subscribe(new Observer<RegistLogcationBean>() {
+
+
                                                                                 @Override
                                                                                 public void onSubscribe(Disposable d) {
 
                                                                                 }
 
                                                                                 @Override
-                                                                                public void onNext(GetPhoneCodeBean getPhoneCodeBean) {
-                                                                                    hideDialog();
+                                                                                public void onNext(RegistLogcationBean registLogcationBean) {
+                                                                                    List<RegistLogcationBean.GeocodesBean> geocodes = registLogcationBean.getGeocodes();
+                                                                                    RegistLogcationBean.GeocodesBean geocodesBean = geocodes.get(0);
+                                                                                    location = geocodesBean.getLocation();
 
-                                                                                    if (getPhoneCodeBean.getData().equals("注册信息已提交")) {
-                                                                                        Toast.makeText(RegistActivity.this, "注册成功，等待管理员审核", Toast.LENGTH_SHORT).show();
+                                                                                    ArrayList<File> list = new ArrayList<>();
+                                                                                    HashMap<String, String> map = new HashMap<>();
+                                                                                    map.put("username", username);
+                                                                                    map.put("address", address);
+                                                                                    map.put("scope", location);
+                                                                                    map.put("password", pwd1);
+                                                                                    map.put("phone", phone);
+                                                                                    map.put("code", code);
 
-                                                                                        startActivity(new Intent(RegistActivity.this, LoginActivity.class));
-                                                                                        finish();
-                                                                                    }
+                                                                                    list.add(file);
+                                                                                    list.add(file1);
+
+                                                                                    RequestBody requsetBody = NetUtils.getInstance().getRequsetBody(list, map);
+                                                                                    showDialog();
+                                                                                    NetUtils.getInstance().getApis().doRegist("http://192.168.0.143:8081/user/signIn", requsetBody)
+                                                                                            .subscribeOn(Schedulers.io())
+                                                                                            .observeOn(AndroidSchedulers.mainThread())
+                                                                                            .subscribe(new Observer<GetPhoneCodeBean>() {
+                                                                                                @Override
+                                                                                                public void onSubscribe(Disposable d) {
+
+                                                                                                }
+
+                                                                                                @Override
+                                                                                                public void onNext(GetPhoneCodeBean getPhoneCodeBean) {
+                                                                                                    hideDialog();
+
+                                                                                                    if (getPhoneCodeBean.getData().equals("注册信息已提交")) {
+                                                                                                        Toast.makeText(RegistActivity.this, "注册成功，等待管理员审核", Toast.LENGTH_SHORT).show();
+
+                                                                                                        startActivity(new Intent(RegistActivity.this, LoginActivity.class));
+                                                                                                        finish();
+                                                                                                    }
+                                                                                                }
+
+                                                                                                @Override
+                                                                                                public void onError(Throwable e) {
+                                                                                                    hideDialog();
+                                                                                                    Toast.makeText(RegistActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                                                                                                }
+
+                                                                                                @Override
+                                                                                                public void onComplete() {
+
+                                                                                                }
+                                                                                            });
                                                                                 }
 
                                                                                 @Override
                                                                                 public void onError(Throwable e) {
-                                                                                    hideDialog();
-                                                                                    Toast.makeText(RegistActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+
                                                                                 }
 
                                                                                 @Override
@@ -265,21 +292,19 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
 
                                                                                 }
                                                                             });
-                                                                }
-
-                                                                @Override
-                                                                public void onError(Throwable e) {
 
                                                                 }
-
+                                                            }).setNegativeButton("前往修改", new DialogInterface.OnClickListener() {
                                                                 @Override
-                                                                public void onComplete() {
-
+                                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                                    //ToDo: 你想做的事情
+                                                                    dialogInterface.dismiss();
                                                                 }
                                                             });
+                                                    builder.create().show();
 
 
-                                                }else{
+                                                } else {
                                                     Toast.makeText(this, "店铺地址不能为空", Toast.LENGTH_SHORT).show();
                                                 }
                                             } else {
@@ -303,14 +328,51 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
 
                 break;
             case R.id.rl_location:
+                String sdk = Build.VERSION.SDK; // SDK号
+                String model = Build.MODEL; // 手机型号
+                String release = Build.VERSION.RELEASE; // android系统版本号
+                String brand = Build.BRAND;//手机厂商
+                if (Build.VERSION.SDK_INT >= 23) {
+                    int request = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+                    if (request != PackageManager.PERMISSION_GRANTED)//缺少权限，进行权限申请
+                    {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                                .setMessage("检测到当前未开启定位权限，是否跳转到设置页？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        if (TextUtils.equals(brand.toLowerCase(), "redmi") || TextUtils.equals(brand.toLowerCase(), "xiaomi")) {
+                                            gotoMiuiPermission();//小米
+                                        } else if (TextUtils.equals(brand.toLowerCase(), "meizu")) {
+                                            gotoMeizuPermission();
+                                        } else if (TextUtils.equals(brand.toLowerCase(), "huawei") || TextUtils.equals(brand.toLowerCase(), "honor")) {
+                                            gotoHuaweiPermission();
+                                        } else {
+                                            startActivity(getAppDetailSettingIntent());
+                                        }
+                                    }
+                                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        //ToDo: 你想做的事情
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                        builder.create().show();
+                        return;
+                    }
+                }
+
+
                 Intent intent = new Intent(RegistActivity.this, MapActivity.class);
                 startActivity(intent);
                 break;
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getAddress(PoiItem poiItem){
-        etAddress.setText(poiItem.getCityName()+poiItem.getAdName()+poiItem.getSnippet()+poiItem.getTitle());
+    public void getAddress(PoiItem poiItem) {
+        etAddress.setText(poiItem.getCityName() + poiItem.getAdName() + poiItem.getSnippet() + poiItem.getTitle());
     }
 
     @Override
@@ -379,7 +441,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         if (mTimer != null) {
             mTimer.cancel();
         }
-        if(EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
@@ -409,4 +471,77 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
+    /**
+     * 跳转到miui的权限管理页面
+     */
+    private void gotoMiuiPermission() {
+        try { // MIUI 8
+            Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+            localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
+            localIntent.putExtra("extra_pkgname", RegistActivity.this.getPackageName());
+            RegistActivity.this.startActivity(localIntent);
+        } catch (Exception e) {
+            try { // MIUI 5/6/7
+                Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+                localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
+                localIntent.putExtra("extra_pkgname", RegistActivity.this.getPackageName());
+                RegistActivity.this.startActivity(localIntent);
+            } catch (Exception e1) { // 否则跳转到应用详情
+                startActivity(getAppDetailSettingIntent());
+            }
+        }
+    }
+
+    /**
+     * 跳转到魅族的权限管理系统
+     */
+    private void gotoMeizuPermission() {
+        try {
+            Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+    }
+
+    /**
+     * 华为的权限管理页面
+     */
+    private void gotoHuaweiPermission() {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ComponentName comp = new ComponentName("com.huawei.systemmanager", "com.huawei.permissionmanager.ui.MainActivity");//华为权限管理
+            intent.setComponent(comp);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+
+    }
+
+    /**
+     * 获取应用详情页面intent（如果找不到要跳转的界面，也可以先把用户引导到系统设置页面）
+     *
+     * @return
+     */
+    private Intent getAppDetailSettingIntent() {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
+        }
+        return localIntent;
+    }
+
 }

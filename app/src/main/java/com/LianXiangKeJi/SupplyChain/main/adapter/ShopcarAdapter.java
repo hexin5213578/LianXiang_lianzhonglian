@@ -52,7 +52,7 @@ public class ShopcarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ShopCarBean.DataBean dataBean = mShoppingCartList.get(position);
         ((ViewHolder)holder).tvName.setText(dataBean.getName());
         ((ViewHolder)holder).tvGuige.setText(dataBean.getSpecs());
-        ((ViewHolder)holder).tvPrice.setText("¥"+dataBean.getPrice());
+        ((ViewHolder)holder).tvPrice.setText("¥"+Double.valueOf(dataBean.getPrice()));
         Glide.with(context).load(dataBean.getLittlePrintUrl()).into(((ViewHolder)holder).ivImage);
 
 

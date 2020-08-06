@@ -36,10 +36,15 @@ import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
+import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -100,7 +105,21 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
     protected int getResId() {
         return R.layout.activity_goods_details;
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
     @Override
     protected void getData() {
         token = Common.getToken();
@@ -202,7 +221,12 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
     protected BasePresenter initPresenter() {
         return null;
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getIntent(IntentBean bean) {
+        if (bean.getStr().equals("关闭")) {
+            finish();
+        }
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -306,18 +330,22 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
         iv_jian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                count--;
-                tv_count.setText(count+"");
-                tv_count_change.setText(count+"");
-                // TODO: 2020/7/20 计算总价
-                String s = tv_price.getText().toString();
-                String substring = s.substring(1);
-                float price = Float.parseFloat(substring);
+                if(count==1){
+                    Toast.makeText(GoodsDetailsActivity.this, "数量不能为0", Toast.LENGTH_SHORT).show();
+                }else{
+                    count--;
+                    tv_count.setText(count+"");
+                    tv_count_change.setText(count+"");
+                    // TODO: 2020/7/20 计算总价
+                    String s = tv_price.getText().toString();
+                    String substring = s.substring(1);
+                    float price = Float.parseFloat(substring);
 
-                double allprice = count*price;
-                DecimalFormat df = new DecimalFormat("#.00");
-                df.format((float) allprice);
-                tv_allprice.setText("¥"+df.format((float) allprice));
+                    double allprice = count*price;
+                    DecimalFormat df = new DecimalFormat("#.00");
+                    df.format((float) allprice);
+                    tv_allprice.setText("¥"+df.format((float) allprice));
+                }
             }
         });
         // TODO: 2020/7/20 加入进货单

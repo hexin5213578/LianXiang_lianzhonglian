@@ -22,7 +22,7 @@
                 android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
-                android:layout_height="@dimen/dp_69">
+                android:layout_height="@dimen/dp_73">
                 <ImageView
                     android:layout_width="@dimen/dp_22"
                     android:src="@mipmap/order_address"
@@ -97,11 +97,37 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
                 android:background="@drawable/confirmorder_bg"
-                android:layout_height="@dimen/dp_120">
+                android:layout_height="@dimen/dp_180">
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_120">
+                    android:layout_height="match_parent">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:id="@+id/rl_select_coupon"
+                        android:layout_weight="1">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="优惠券"
+                            android:gravity="center"
+                            android:layout_marginLeft="@dimen/dp_8"
+                            android:textSize="@dimen/sp_14"
+                            android:textColor="#333333"
+                            android:layout_height="match_parent">
+                        </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textSize="@dimen/sp_12"
+                            android:id="@+id/tv_coupon"
+                            android:textColor="#666666"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/dp_9"
+                            android:text="请选择优惠券"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                    </RelativeLayout>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_1"
@@ -165,7 +191,7 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:gravity="center"
@@ -175,7 +201,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_marginLeft="@dimen/dp_80"
-            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dp_20"
+            android:layout_toLeftOf="@id/bt_confirm"
+            android:layout_centerInParent="true"
             android:layout_height="@dimen/dp_20">
             <TextView
                 android:layout_width="wrap_content"
@@ -213,10 +241,10 @@
             android:textSize="@dimen/sp_16"
             android:textColor="@color/white"
             android:id="@+id/bt_confirm"
-            android:layout_marginLeft="@dimen/dp_29"
-            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_centerVertical="true"
             android:background="@drawable/confirmorder_bt_bg"
             android:layout_height="@dimen/dp_40">
         </Button>
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

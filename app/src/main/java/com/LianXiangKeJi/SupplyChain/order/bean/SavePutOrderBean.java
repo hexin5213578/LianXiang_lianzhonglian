@@ -5,10 +5,19 @@ import java.util.List;
 public class SavePutOrderBean {
     private List<ResultBean> goodsList;
     private String userCouponId;
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public static class ResultBean{
         private String shopGoodsId;
         private String number;
-        private String remark;
 
         public String getShopGoodsId() {
             return shopGoodsId;
@@ -24,14 +33,6 @@ public class SavePutOrderBean {
 
         public void setNumber(String number) {
             this.number = number;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
         }
     }
 

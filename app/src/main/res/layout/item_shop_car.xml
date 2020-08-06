@@ -73,7 +73,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_toRightOf="@id/tv_price"
-        android:layout_below="@+id/tv"
+        android:layout_below="@id/tv_guige"
         android:layout_marginTop="@dimen/dp_3"
         android:text="/箱"
         android:layout_marginLeft="@dimen/dp_1"

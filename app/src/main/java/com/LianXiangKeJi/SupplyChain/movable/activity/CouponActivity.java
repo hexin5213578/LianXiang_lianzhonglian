@@ -13,8 +13,10 @@ import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.movable.adapter.CouPonAdapter;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
+import com.LianXiangKeJi.SupplyChain.movable.bean.SaveCouponIdBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -48,7 +50,7 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
         title.setText("我的优惠券");
         tvRight.setVisibility(View.GONE);
         setTitleColor(CouponActivity.this);
-
+        showDialog();
         NetUtils.getInstance().getApis().doGetMyCoupon()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -62,6 +64,7 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
                     public void onNext(CouponBean couponBean) {
                         List<CouponBean.DataBean> data = couponBean.getData();
                         if(data!=null && data.size()>0){
+                            hideDialog();
                             LinearLayoutManager manager = new LinearLayoutManager(CouponActivity.this,RecyclerView.VERTICAL,false);
                             rcCoupon.setLayoutManager(manager);
                             CouPonAdapter couPonAdapter = new CouPonAdapter(CouponActivity.this, data);
@@ -85,12 +88,30 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
     protected BasePresenter initPresenter() {
         return null;
     }
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void getString(String str){
-        if(str.equals("关闭界面")){
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getbean(SaveCouponIdBean bean){
+        if(bean.getClose().equals("关闭界面")){
             finish();
         }
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){

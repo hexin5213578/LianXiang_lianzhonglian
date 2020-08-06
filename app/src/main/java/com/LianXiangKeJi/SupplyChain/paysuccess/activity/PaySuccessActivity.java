@@ -2,6 +2,8 @@ package com.LianXiangKeJi.SupplyChain.paysuccess.activity;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,12 +14,15 @@ import android.widget.TextView;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
+import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -39,6 +44,10 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
     Button btBack;
     @BindView(R.id.bt_seeorder)
     Button btSeeorder;
+    private List<OrderBean> orderlist;
+    private String theway;
+    private long times;
+    private String orderid;
 
     @Override
     protected int getResId() {
@@ -56,9 +65,14 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
                 window.setStatusBarColor(PaySuccessActivity.this.getResources().getColor(R.color.title_paysuccess));
             }
         Intent intent = getIntent();
-        String theway = intent.getStringExtra("theway");
-        long times = intent.getLongExtra("time",0);
-        String orderid = intent.getStringExtra("orderid");
+        theway = intent.getStringExtra("theway");
+        times = intent.getLongExtra("time",0);
+        orderid = intent.getStringExtra("orderid");
+
+        Bundle bundle = intent.getExtras();
+        orderlist = (List<OrderBean>) bundle.getSerializable("orderlist");
+        Log.d("hmyn",orderlist.size()+"");
+
 
         tvBianhao.setText(orderid);
         tvFangshi.setText(theway);
@@ -77,12 +91,24 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
         switch (view.getId()){
             // TODO: 2020/7/22 跳转至主页
             case R.id.bt_back:
-                startActivity(new Intent(PaySuccessActivity.this, MainActivity.class));
-                EventBus.getDefault().postSticky(new IntentBean());
+
+                finish();
+                IntentBean intentBean = new IntentBean();
+                intentBean.setStr("关闭");
+                EventBus.getDefault().post(intentBean);
                 break;
             // TODO: 2020/7/22 查看订单
             case R.id.bt_seeorder:
+                Intent intent = new Intent(PaySuccessActivity.this, PaySuccessOrderActivity.class);
+                Bundle bundle = new Bundle();
 
+                bundle.putSerializable("orderlist", (Serializable) orderlist);
+
+                intent.putExtras(bundle);
+                intent.putExtra("theway",theway);
+                intent.putExtra("time",times);
+                intent.putExtra("orderid",orderid);
+                startActivity(intent);
                 break;
         }
     }

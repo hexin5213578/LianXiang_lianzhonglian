@@ -105,18 +105,19 @@
                 android:layout_width="wrap_content"
                 android:text="合计："
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
                 android:layout_marginLeft="@dimen/dp_20"
+                android:layout_toLeftOf="@id/money"
                 android:textColor="#AEAEAE"
                 android:id="@+id/heji"
                 android:layout_height="wrap_content">
             </TextView>
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_toRightOf="@id/heji"
                 android:id="@+id/money"
+                android:layout_toLeftOf="@id/bt_jiesuan"
                 android:layout_centerVertical="true"
                 android:text="¥ 0.00"
+                android:layout_marginRight="@dimen/dp_10"
                 android:textColor="#E25428"
                 android:layout_height="wrap_content">
             </TextView>

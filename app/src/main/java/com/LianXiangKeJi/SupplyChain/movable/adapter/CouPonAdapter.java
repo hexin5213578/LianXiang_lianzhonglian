@@ -2,18 +2,18 @@ package com.LianXiangKeJi.SupplyChain.movable.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
-import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
+import com.LianXiangKeJi.SupplyChain.movable.bean.SaveCouponIdBean;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -58,16 +58,23 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         long time = System.currentTimeMillis();
 
         //结束时间跟当前时间对比 小于24小时提示即将到期
-        if(overTime-time<8640000){
-            ((ViewHolder)holder).Expiring.setVisibility(View.VISIBLE);
+        if (overTime - time < 8640000) {
+            ((ViewHolder) holder).Expiring.setVisibility(View.VISIBLE);
         }
-        ((ViewHolder)holder).ivUse.setOnClickListener(new View.OnClickListener() {
+
+        ((ViewHolder)holder).rlSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, MainActivity.class));
-                EventBus.getDefault().postSticky("关闭界面");
+
+                SaveCouponIdBean saveCouponIdBean = new SaveCouponIdBean();
+                saveCouponIdBean.setClose("关闭界面");
+                saveCouponIdBean.setCouponId(list.get(position).getId());
+                saveCouponIdBean.setFull(list.get(position).getFull()+"");
+                saveCouponIdBean.setJian(list.get(position).getMinus()+"");
+                EventBus.getDefault().post(saveCouponIdBean);
             }
         });
+
     }
 
     @Override
@@ -88,6 +95,9 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ImageView ivUse;
         @BindView(R.id.Expiring)
         ImageView Expiring;
+        @BindView(R.id.rl_select)
+        RelativeLayout rlSelect;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

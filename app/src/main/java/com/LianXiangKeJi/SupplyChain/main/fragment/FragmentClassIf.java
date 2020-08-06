@@ -66,7 +66,6 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     List<ClassIfBean.DataBean> list = new ArrayList<>();
     private GridLayoutManager manager;
     private String token;
-
     @Override
     public void onResume() {
         super.onResume();
@@ -141,6 +140,12 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getclassIfGoods("4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797");
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) {
@@ -187,7 +192,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         Gson gson = new Gson();
 
         String json = gson.toJson(saveIdBean);
-
+        Log.d("hmy","json为"+json);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
 
         //调用查询接口

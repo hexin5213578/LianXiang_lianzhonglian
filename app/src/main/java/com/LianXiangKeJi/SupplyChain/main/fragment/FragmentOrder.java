@@ -144,6 +144,32 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        listId.clear();
+        list.clear();
+
+        tvFinish.setVisibility(View.GONE);
+        tvManager.setVisibility(View.VISIBLE);
+        heji.setVisibility(View.VISIBLE);
+        money.setVisibility(View.VISIBLE);
+        btJiesuan.setVisibility(View.VISIBLE);
+        btDelete.setVisibility(View.GONE);
+
+        rbCheckAll.setChecked(false);
+        SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+        saveShopCarBean.setState(true);
+        Gson gson = new Gson();
+        String json = gson.toJson(saveShopCarBean);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        //查询购物车
+
+        doShopCar(requestBody);
+    }
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
         listId.clear();
         list.clear();
@@ -329,7 +355,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
             EventBus.getDefault().unregister(this);
         }
     }
-
     /**
      *  处理购物车
      * @param body
@@ -401,7 +426,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                             Toast.makeText(getContext(), "连接超时", Toast.LENGTH_SHORT).show();
                             rbCheckAll.setChecked(false);
                         }else{
-                            Toast.makeText(getContext(), "购物车为空", Toast.LENGTH_SHORT).show();
                             noshopcar.setVisibility(View.VISIBLE);
                             llOrder.setVisibility(View.GONE);
                             tvManager.setVisibility(View.GONE);

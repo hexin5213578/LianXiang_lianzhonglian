@@ -54,7 +54,7 @@
                         android:paddingLeft="10dp"
                         android:id="@+id/et_address"
                         android:background="@null"
-                        android:hint="请输入店铺地址"
+                        android:hint="请输入店铺收货地址"
                         android:textSize="@dimen/sp_15"
                         android:textColor="#999999"
                         android:layout_height="match_parent">

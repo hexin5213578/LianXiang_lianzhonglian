@@ -89,7 +89,7 @@ public class ClassifSearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView
             ((ViewHolder)holder).tvGoodsYichengjiao.setText("成交"+count+"笔");
 
             Glide.with(context).load(list.get(position).getLittlePrintUrl()).into(((ViewHolder)holder).ivGoodsImage);
-            LinkedHashMap<String, String> map = SPUtil.getMap(context, "mapkey");
+            LinkedHashMap<String, String> map = SPUtil.getMap(context, "goodsid");
 
             for (String key : map.keySet()) {
                 if(list.get(position).getId().equals(key)){

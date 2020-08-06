@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,6 +31,8 @@ import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.common.custom.CustomDialog;
+import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
+import com.LianXiangKeJi.SupplyChain.movable.bean.SaveCouponIdBean;
 import com.LianXiangKeJi.SupplyChain.order.adapter.OrderInfoAdapter;
 import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
@@ -41,7 +42,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,7 +50,7 @@ import butterknife.ButterKnife;
 /**
  * @ClassName:ConfirmOrderActivity
  * @Author:hmy
- * @Description:java类作用描述  确认订单
+ * @Description:java类作用描述 确认订单
  */
 public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickListener {
     @BindView(R.id.back)
@@ -85,11 +85,15 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     TextView tvHavenoaddress;
     @BindView(R.id.iv_haveaddress)
     ImageView ivHaveaddress;
+    @BindView(R.id.tv_coupon)
+    TextView tvCoupon;
+    @BindView(R.id.rl_select_coupon)
+    RelativeLayout rlSelectCoupon;
     private PopupWindow mPopupWindow;
-    private int count=0;
-    private double price=0.0;
+    private int count = 0;
+    private double price = 0.00;
     private List<OrderBean> orderlist;
-
+    String counponId  ="";
     @Override
     protected int getResId() {
         return R.layout.activity_confirm_order;
@@ -104,6 +108,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         back.setOnClickListener(this);
         rlSelectAddress.setOnClickListener(this);
         btConfirm.setOnClickListener(this);
+        rlSelectCoupon.setOnClickListener(this);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -114,21 +119,21 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         OrderInfoAdapter orderInfoAdapter = new OrderInfoAdapter(ConfirmOrderActivity.this, orderlist);
         rcOrder.setAdapter(orderInfoAdapter);
 
-        for (int i = 0; i< orderlist.size(); i++){
+        for (int i = 0; i < orderlist.size(); i++) {
             int count = orderlist.get(i).getCount();
             String price = orderlist.get(i).getPrice();
             Float aFloat = Float.valueOf(price);
 
-            this.count +=count;
+            this.count += count;
             double itemprice = count * aFloat;
 
-            Log.d("hmy","条目价格为"+itemprice+"");
-            this.price +=itemprice;
+            Log.d("hmy", "条目价格为" + itemprice + "");
+            this.price += itemprice;
 
         }
-        tvCount.setText(orderlist.size()+"种共"+count+"件，");
-        Log.d("hmy","总价为"+price+"");
-        tvPrice.setText(price+"");
+        tvCount.setText(orderlist.size() + "种共" + count + "件，");
+        Log.d("hmy", "总价为" + price + "");
+        tvPrice.setText(price + "");
         // TODO: 2020/7/21 展示默认地址
         tvName.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
         tvAddress.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
@@ -146,16 +151,16 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
             case R.id.back:
                 finish();
                 break;
-                //选择地址
+            //选择地址
             case R.id.rl_select_address:
 
                 break;
             // TODO: 2020/7/21 提交订单
             case R.id.bt_confirm:
                 String name = tvName.getText().toString();
-                if(!TextUtils.isEmpty(name)){
+                if (!TextUtils.isEmpty(name)) {
                     showSelect();
-                }else{
+                } else {
                     CustomDialog.Builder builder = new CustomDialog.Builder(ConfirmOrderActivity.this);
                     builder.setPositiveButton("去填写", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -164,7 +169,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                         }
                     });
                     builder.setNegativeButton("取消",
-                            new android.content.DialogInterface.OnClickListener() {
+                            new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
@@ -173,25 +178,42 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     builder.create().show();
                 }
                 break;
+            case R.id.rl_select_coupon:
+                startActivity(new Intent(ConfirmOrderActivity.this, CouponActivity.class));
+
+                break;
             default:
                 break;
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getCouponBean(SaveCouponIdBean bean){
+        String couponId = bean.getCouponId();
 
+        counponId=couponId;
+        int full = Integer.valueOf(bean.getFull());
+        int jian = Integer.valueOf(bean.getJian());
+        if(price>=full){
+            price = this.price - jian;
+            tvPrice.setText(price + "");
+        }
+
+        tvCoupon.setText("满"+full+"元减"+jian+"元");
+    }
     @Override
     protected void onResume() {
         super.onResume();
-      /*  if (!EventBus.getDefault().isRegistered(this)) {
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
-        }*/
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       /* if (EventBus.getDefault().isRegistered(this)) {
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
-        }*/
+        }
     }
 
     public void showSelect() {
@@ -210,7 +232,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         TextView tvprice = view.findViewById(R.id.tv_price);
         Button startpay = view.findViewById(R.id.startpay);
 
-        tvprice.setText(" ￥"+price+"");
+        tvprice.setText(" ￥" + price + "");
         ivclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -245,7 +267,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                 // TODO: 2020/7/21 微信支付
                 if (rb1.isChecked()) {
                     Log.d("hmy", "微信支付");
-                    intent.putExtra("theway","微信支付");
+                    intent.putExtra("theway", "微信支付");
 
 
                     startActivity(intent);
@@ -255,9 +277,12 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     Log.d("hmy", "支付宝支付");
 
                     Intent intent = new Intent(ConfirmOrderActivity.this, ConfirmPaymentActivity.class);
-                    intent.putExtra("theway","支付宝支付");
+                    intent.putExtra("theway", "支付宝支付");
+
+                    intent.putExtra("remark", etRemarks.getText().toString());
+                    intent.putExtra("couponid",counponId);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("orderlist", (Serializable)orderlist);
+                    bundle.putSerializable("orderlist", (Serializable) orderlist);
                     intent.putExtras(bundle);
 
                     startActivity(intent);
@@ -284,10 +309,14 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         super.onRestart();
         dismiss();
     }
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void getIntent(IntentBean bean){
-        finish();
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getIntent(IntentBean bean) {
+        if (bean.getStr().equals("关闭")) {
+            finish();
+        }
     }
+
     // TODO: 2020/7/20 设置透明度
     public void setWindowAlpa(boolean isopen) {
         if (Build.VERSION.SDK_INT < 11) {
@@ -334,5 +363,12 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

@@ -121,10 +121,13 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
         String username = SPUtil.getInstance().getData(SetUpActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME);
         id = SPUtil.getInstance().getData(SetUpActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ID);
 
-        Uri parse = Uri.parse(headurl);
-        ivTouxiang.setImageURI(parse);
+        if(headurl!=null && username!=null){
+            Uri parse = Uri.parse(headurl);
+            ivTouxiang.setImageURI(parse);
 
-        tvMyname.setText(username);
+            tvMyname.setText(username);
+        }
+
     }
 
     @Override

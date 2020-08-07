@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <meta-data
         android:name="design_width_in_dp"
@@ -146,6 +146,14 @@
 
         <!-- 待付款订单详情-->
         <activity android:name=".paysuccess.activity.OrderWaitPayActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 已完成订单详情-->
+        <activity android:name=".paysuccess.activity.OrderFinishActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 已取消订单详情-->
+        <activity android:name=".paysuccess.activity.OrderCancleActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".wxapi.WXPayEntryActivity"

@@ -2,6 +2,7 @@ package com.LianXiangKeJi.SupplyChain.main.fragment;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -9,17 +10,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.address.activity.MyAddressActivity;
 import com.LianXiangKeJi.SupplyChain.alwaysbuy.activity.AlwaysBuyActivity;
 import com.LianXiangKeJi.SupplyChain.base.BaseFragment;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.base.Common;
-import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
 import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.order.activity.OrderActivity;
+import com.LianXiangKeJi.SupplyChain.order.adapter.AllOrderAdapter;
+import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.setup.activity.SetUpActivity;
+import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -30,8 +36,13 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @ClassName:FragmentHome
@@ -43,13 +54,13 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.ll_seeMore)
     LinearLayout llSeeMore;
     @BindView(R.id.daifukuan)
-    LinearLayout daifukuan;
+    RelativeLayout daifukuan;
     @BindView(R.id.daifahuo)
-    LinearLayout daifahuo;
+    RelativeLayout daifahuo;
     @BindView(R.id.daishouhuo)
-    LinearLayout daishouhuo;
+    RelativeLayout daishouhuo;
     @BindView(R.id.yiwancheng)
-    LinearLayout yiwancheng;
+    RelativeLayout yiwancheng;
     @BindView(R.id.setup)
     ImageView setup;
     @BindView(R.id.iv_yuan)
@@ -64,9 +75,20 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
     TextView tvUsername;
     @BindView(R.id.rl_youhui)
     RelativeLayout rlYouhui;
+    @BindView(R.id.tv_daifukuan)
+    TextView tvDaifukuan;
+    @BindView(R.id.tv_daifahuo)
+    TextView tvDaifahuo;
+    @BindView(R.id.tv_daishouhuo)
+    TextView tvDaishouhuo;
+    @BindView(R.id.tv_yiwancheng)
+    TextView tvYiwancheng;
     private Intent intent_order;
     private String token;
-
+    int a = 0;
+    int b = 0;
+    int c = 0;
+    int d = 0;
     @Override
     protected void getid(View view) {
 
@@ -88,6 +110,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        getDataBean();
     }
 
     @Override
@@ -126,6 +149,8 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
 
         // 创建跳转至订单页的Intent
         intent_order = new Intent(getContext(), OrderActivity.class);
+
+        getDataBean();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -139,6 +164,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         tvUsername.setText(SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.USER_NAME));
+        getDataBean();
     }
 
     @Override
@@ -169,7 +195,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(intent_order);
                 }
                 break;
-            // TODO: 2020/7/15 查看待付款订单 
+            // TODO: 2020/7/15 查看待付款订单
             case R.id.daifukuan:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -231,4 +257,68 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                 break;
         }
     }
+
+    public void getDataBean(){
+        NetUtils.getInstance().getApis()
+                .getUserOrder()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UserOrderBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(UserOrderBean userOrderBean) {
+                        List<UserOrderBean.DataBean> data = userOrderBean.getData();
+                        for (int i = 0;i<data.size();i++){
+                            UserOrderBean.DataBean dataBean = data.get(i);
+                            int orderState = dataBean.getOrderState();
+                            if(orderState==0){
+                                a++;
+                            }else if(orderState==1){
+                                b++;
+                            }else if(orderState==3){
+                                c++;
+                            }else if(orderState==4){
+                                d++;
+                            }
+                        }
+                        if(a==0){
+                            tvDaifukuan.setVisibility(View.GONE);
+                        }
+                        if(b==0){
+                            tvDaifahuo.setVisibility(View.GONE);
+                        }
+                        if(c==0){
+                            tvDaishouhuo.setVisibility(View.GONE);
+                        }
+                        if(d==0){
+                            tvYiwancheng.setVisibility(View.GONE);
+                        }
+
+                        tvDaifukuan.setText(a+"");
+                        tvDaifahuo.setText(b+"");
+                        tvDaishouhuo.setText(c+"");
+                        tvYiwancheng.setText(d+"");
+                        a=0;
+                        b=0;
+                        c=0;
+                        d=0;
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
 }

@@ -12,7 +12,10 @@ import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
 import com.LianXiangKeJi.SupplyChain.movable.bean.GetCouponBean;
 import com.LianXiangKeJi.SupplyChain.movable.bean.MovableBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.ConfirmGetGoodsBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.GenerOrdersBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
@@ -121,4 +124,17 @@ public interface Apis {
     //查询热门搜索
     @GET("category/hotSeek")
     Observable<SearchHotBean> GetSearchHot();
+
+    //查询所有订单
+    @GET("order/super/findOrders")
+    Observable<UserOrderBean> getUserOrder();
+
+    //删除订单
+    @POST("order/super/delOrdersOne")
+    Observable<DeleteOrCancleOrderBean> cancleOrder(@Body RequestBody body);
+
+    //确认收货
+    @POST("order/super/confirmOrders")
+    Observable<ConfirmGetGoodsBean> doConfirmGetGoods(@Body RequestBody body);
+
 }

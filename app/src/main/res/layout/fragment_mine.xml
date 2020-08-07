@@ -49,16 +49,28 @@
           android:layout_marginLeft="@dimen/dp_25"
           android:layout_marginRight="@dimen/dp_25"
           android:layout_height="match_parent">
-         <LinearLayout
+         <RelativeLayout
              android:id="@+id/daifukuan"
              android:orientation="vertical"
              android:layout_width="0dp"
-            android:layout_weight="1"
+             android:layout_weight="1"
              android:layout_height="match_parent">
+            <TextView
+                android:layout_width="@dimen/dp_10"
+                android:text="1"
+                android:textSize="@dimen/dp_7"
+                android:background="@drawable/text_bg_color"
+                android:gravity="center"
+                android:id="@+id/tv_daifukuan"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_42"
+                android:layout_height="@dimen/dp_10">
+            </TextView>
             <ImageView
                 android:layout_width="@dimen/dp_23"
                 android:layout_height="@dimen/dp_24"
-                android:layout_gravity="center"
+                android:id="@+id/iv_rl1"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dp_10"
                 android:src="@mipmap/daifukuan">
             </ImageView>
@@ -66,81 +78,126 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/iv_rl1"
                 android:text="待付款"
                 android:layout_marginTop="@dimen/dp_9"
+                android:layout_centerHorizontal="true"
                 android:textColor="@color/more_font"
                 android:layout_gravity="center"
                 android:textSize="@dimen/sp_12" />
-         </LinearLayout>
-         <LinearLayout
+         </RelativeLayout>
+         <RelativeLayout
              android:id="@+id/daifahuo"
              android:orientation="vertical"
              android:layout_width="0dp"
              android:layout_weight="1"
              android:layout_height="match_parent">
+
             <ImageView
                 android:layout_width="@dimen/dp_23"
                 android:layout_height="@dimen/dp_24"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/iv_rl2"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_10"
                 android:src="@mipmap/daifahuo">
             </ImageView>
-
+            <TextView
+                android:layout_width="@dimen/dp_10"
+                android:text="1"
+                android:textSize="@dimen/dp_7"
+                android:background="@drawable/text_bg_color"
+                android:gravity="center"
+                android:id="@+id/tv_daifahuo"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_42"
+                android:layout_height="@dimen/dp_10">
+            </TextView>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="待发货"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/iv_rl2"
                 android:layout_marginTop="@dimen/dp_9"
                 android:textColor="@color/more_font"
                 android:layout_gravity="center"
                 android:textSize="@dimen/sp_12" />
-         </LinearLayout>
-         <LinearLayout
+         </RelativeLayout>
+         <RelativeLayout
              android:id="@+id/daishouhuo"
              android:orientation="vertical"
              android:layout_width="0dp"
              android:layout_weight="1"
              android:layout_height="match_parent">
+
+
             <ImageView
                 android:layout_width="@dimen/dp_23"
                 android:layout_height="@dimen/dp_24"
-                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/iv_rl3"
                 android:layout_marginTop="@dimen/dp_10"
                 android:src="@mipmap/daishouhuo">
             </ImageView>
-
+            <TextView
+                android:layout_width="@dimen/dp_10"
+                android:text="1"
+                android:textSize="@dimen/dp_7"
+                android:background="@drawable/text_bg_color"
+                android:gravity="center"
+                android:id="@+id/tv_daishouhuo"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_42"
+                android:layout_height="@dimen/dp_10">
+            </TextView>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="待收货"
+                android:layout_below="@id/iv_rl3"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dp_9"
                 android:textColor="@color/more_font"
-                android:layout_gravity="center"
                 android:textSize="@dimen/sp_12" />
-         </LinearLayout>
-         <LinearLayout
+         </RelativeLayout>
+         <RelativeLayout
              android:id="@+id/yiwancheng"
              android:orientation="vertical"
              android:layout_width="0dp"
              android:layout_weight="1"
              android:layout_height="match_parent">
+
+
             <ImageView
                 android:layout_width="@dimen/dp_23"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/iv_rl4"
                 android:layout_height="@dimen/dp_24"
-                android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_10"
                 android:src="@mipmap/finish">
             </ImageView>
-
+            <TextView
+                android:layout_width="@dimen/dp_10"
+                android:text="1"
+                android:textSize="@dimen/dp_7"
+                android:background="@drawable/text_bg_color"
+                android:gravity="center"
+                android:id="@+id/tv_yiwancheng"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginLeft="@dimen/dp_42"
+                android:layout_height="@dimen/dp_10">
+            </TextView>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已完成"
                 android:layout_marginTop="@dimen/dp_9"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/iv_rl4"
                 android:textColor="@color/more_font"
-                android:layout_gravity="center"
                 android:textSize="@dimen/sp_12" />
-         </LinearLayout>
+         </RelativeLayout>
       </LinearLayout>
    </RelativeLayout>
 

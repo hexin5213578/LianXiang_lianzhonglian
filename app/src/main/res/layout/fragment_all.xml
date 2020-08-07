@@ -13,14 +13,14 @@
                    <androidx.recyclerview.widget.RecyclerView
                        android:layout_width="match_parent"
                        android:id="@+id/rc_order"
-                       android:visibility="gone"
                        android:background="@drawable/dialog_bg"
-                       android:layout_height="match_parent">
+                       android:layout_height="wrap_content">
                    </androidx.recyclerview.widget.RecyclerView>
                    <RelativeLayout
                        android:layout_width="match_parent"
                        android:background="@drawable/dialog_bg"
                        android:id="@+id/rl_noorder"
+                       android:visibility="gone"
                        android:layout_height="wrap_content">
                        <ImageView
                            android:layout_width="match_parent"

@@ -22,21 +22,21 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+
 /**
- * @ClassName:OrderWaitPayActivity
+ * @ClassName:OrderShippedActivity
  * @Author:hmy
- * @Description:java类作用描述 等待支付订单详情
+ * @Description:java类作用描述 已取消订单
  */
-public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickListener {
+public class OrderCancleActivity extends BaseAvtivity implements View.OnClickListener {
+
+
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
-    @BindView(R.id.rl1)
-    RelativeLayout rl1;
     @BindView(R.id.iv_haveaddress)
     ImageView ivHaveaddress;
     @BindView(R.id.tv_name)
@@ -55,27 +55,27 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
     TextView tvTheway;
     @BindView(R.id.tv_time1)
     TextView tvTime1;
-    @BindView(R.id.to_pay)
-    Button toPay;
+
 
     @Override
     protected int getResId() {
-        return R.layout.activity_order_wait_pay;
+        return R.layout.activity_order_cancle;
     }
 
     @Override
     protected void getData() {
         back.setOnClickListener(this);
-        setTitleColor(OrderWaitPayActivity.this);
+        setTitleColor(OrderCancleActivity.this);
         title.setText("订单详情");
         tvRight.setVisibility(View.GONE);
 
         //展示默认地址
-        tvName.setText(SPUtil.getInstance().getData(OrderWaitPayActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
-        tvAddress.setText(SPUtil.getInstance().getData(OrderWaitPayActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
-        tvPhone.setText(SPUtil.getInstance().getData(OrderWaitPayActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_PHONE));
 
+        tvName.setText(SPUtil.getInstance().getData(OrderCancleActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
+        tvAddress.setText(SPUtil.getInstance().getData(OrderCancleActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
+        tvPhone.setText(SPUtil.getInstance().getData(OrderCancleActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_PHONE));
         Intent intent = getIntent();
+
 
         //获取订单信息
         String theway = intent.getStringExtra("theway");
@@ -92,11 +92,10 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
         tvTheway.setText(theway);
         tvOrderNumber.setText(orderid);
 
-        LinearLayoutManager manager = new LinearLayoutManager(OrderWaitPayActivity.this, RecyclerView.VERTICAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(OrderCancleActivity.this, RecyclerView.VERTICAL, false);
         rcOrderList.setLayoutManager(manager);
-        OrderInfoAdapter orderInfoAdapter = new OrderInfoAdapter(OrderWaitPayActivity.this, orderlist);
+        OrderInfoAdapter orderInfoAdapter = new OrderInfoAdapter(OrderCancleActivity.this, orderlist);
         rcOrderList.setAdapter(orderInfoAdapter);
-
     }
 
     @Override
@@ -104,14 +103,13 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
         return null;
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.back:
                 finish();
                 break;
-            case R.id.to_pay:
+            case R.id.bt_confirm:
 
                 break;
         }

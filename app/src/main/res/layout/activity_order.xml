@@ -4,56 +4,11 @@
     android:background="#F7F7F7"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-            <RelativeLayout
-                android:id="@+id/rl_title"
-                android:layout_width="match_parent"
-                android:background="@color/title"
-                android:layout_height="@dimen/dp_50">
-                <ImageView
-                    android:layout_width="@dimen/dp_12"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:id="@+id/back"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/arrow_left"
-                    android:layout_height="@dimen/dp_25">
-                </ImageView>
-                <EditText
-                    android:background="@drawable/search_bg"
-                    android:layout_toRightOf="@id/back"
-                    android:layout_marginLeft="@dimen/dp_13"
-                    android:paddingLeft="@dimen/dp_34"
-                    android:textColorHint="@color/white"
-                    android:textSize="@dimen/sp_13"
-                    android:id="@+id/et_search"
-                    android:paddingTop="@dimen/dp_1"
-                    android:layout_centerVertical="true"
-                    android:hint="搜索我的订单"
-                    android:layout_width="@dimen/dp_282"
-                    android:layout_height="@dimen/dp_30">
-                </EditText>
-                <ImageView
-                    android:layout_width="@dimen/dp_14"
-                    android:layout_height="@dimen/dp_14"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dp_48"
-                    android:src="@mipmap/search">
-                </ImageView>
+    <include layout="@layout/title" android:id="@+id/include">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_14"
-                    android:id="@+id/tv_search"
-                    android:layout_marginLeft="@dimen/dp_12"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_toRightOf="@id/et_search"
-                    android:text="搜索">
-                </TextView>
-            </RelativeLayout>
+    </include>
             <com.google.android.material.tabs.TabLayout
-                android:layout_below="@id/rl_title"
+                android:layout_below="@id/include"
                 android:background="@color/title"
                 android:id="@+id/tab"
                 app:tabTextColor="@color/white"
@@ -72,10 +27,9 @@
                 android:id="@+id/vp"
                 android:layout_height="match_parent">
             </androidx.viewpager.widget.ViewPager>
-    <com.liaoinstan.springview.widget.SpringView
+  <!--  <com.liaoinstan.springview.widget.SpringView
         android:layout_width="match_parent"
         android:id="@+id/sv"
-        android:visibility="gone"
         android:layout_below="@id/rl_title"
         android:layout_height="match_parent">
         <androidx.core.widget.NestedScrollView
@@ -161,5 +115,5 @@
 
         </androidx.core.widget.NestedScrollView>
     </com.liaoinstan.springview.widget.SpringView>
-
+-->
 </RelativeLayout>

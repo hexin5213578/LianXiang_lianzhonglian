@@ -316,7 +316,7 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                 if(pay_theway.equals("微信支付")){
                     // TODO: 2020/7/31 调起微信支付
                     PayReq request = new PayReq();
-
+                    request.appId="wxacf956e14f407890";
                     App.getWXApi().sendReq(request);
 
                 }else{

@@ -36,7 +36,9 @@ public class App extends Application {
         MultiDex.install(this);
         Fresco.initialize(context);
         //沙箱测试
+
         //EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+
         initWX();
     }
     private void initWX(){

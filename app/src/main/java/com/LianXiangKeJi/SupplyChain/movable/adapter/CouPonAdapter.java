@@ -2,6 +2,7 @@ package com.LianXiangKeJi.SupplyChain.movable.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -56,9 +57,8 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ((ViewHolder) holder).tvCouponTime.setText("有效期至 " + date);
         //获取系统时间
         long time = System.currentTimeMillis();
-
         //结束时间跟当前时间对比 小于24小时提示即将到期
-        if (overTime - time < 8640000) {
+        if (overTime - time < 86400000 && overTime-time>0) {
             ((ViewHolder) holder).Expiring.setVisibility(View.VISIBLE);
         }
 

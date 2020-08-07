@@ -1,6 +1,7 @@
 package com.LianXiangKeJi.SupplyChain.paysuccess.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -61,7 +62,12 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
         back.setOnClickListener(this);
         title.setText("订单详情");
         tvRight.setVisibility(View.GONE);
-
+ /*       llCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callPhone("13253353293");
+            }
+        });*/
         //展示默认地址
         tvName.setText(SPUtil.getInstance().getData(PaySuccessOrderActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
         tvAddress.setText(SPUtil.getInstance().getData(PaySuccessOrderActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
@@ -72,7 +78,7 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
         //获取订单信息
         String theway = intent.getStringExtra("theway");
         String orderid = intent.getStringExtra("orderid");
-        long time = intent.getLongExtra("time",0);
+        long time = intent.getLongExtra("time", 0);
 
         Bundle bundle = intent.getExtras();
         //获取订单中的商品
@@ -101,4 +107,6 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
     public void onClick(View view) {
 
     }
+
+
 }

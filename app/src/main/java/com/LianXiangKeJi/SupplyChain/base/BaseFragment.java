@@ -29,13 +29,14 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
     private Unbinder bind;
     Dialog mLoadingDialog;
     public boolean mViewInflateFinished;
-    String title;
+    private View view;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = View.inflate(getContext(),getResId(),null);
+        view = View.inflate(getContext(),getResId(),null);
         presenter  = initPresenter();
-        bind = ButterKnife.bind(this,view);
+        bind = ButterKnife.bind(this, view);
         getid(view);
         mViewInflateFinished = true;
         return view;

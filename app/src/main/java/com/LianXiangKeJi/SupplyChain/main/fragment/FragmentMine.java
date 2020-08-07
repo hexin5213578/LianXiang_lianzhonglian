@@ -251,7 +251,11 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                 break;
             //  优惠券
             case R.id.rl_youhui:
-                startActivity(new Intent(getContext(), CouponActivity.class));
+                if (TextUtils.isEmpty(token)) {
+                    Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
+                } else {
+                    startActivity(new Intent(getContext(), CouponActivity.class));
+                }
                 break;
             default:
                 break;

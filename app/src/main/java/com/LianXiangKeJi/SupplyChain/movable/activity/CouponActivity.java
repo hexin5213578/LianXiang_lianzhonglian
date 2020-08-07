@@ -74,7 +74,7 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
 
                     @Override
                     public void onError(Throwable e) {
-
+                        hideDialog();
                     }
 
                     @Override

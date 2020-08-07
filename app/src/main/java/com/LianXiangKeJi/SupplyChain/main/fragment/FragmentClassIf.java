@@ -142,7 +142,12 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     @Override
     public void onStart() {
         super.onStart();
-        getclassIfGoods("4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797");
+        if(!TextUtils.isEmpty(token)){
+            getclassIfGoods("4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797");
+
+        }else{
+            getclassIfGoodsnoLogin("4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797");
+        }
     }
 
     @Override
@@ -210,7 +215,6 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
 
                         List<List<ClassIfSearchGoodsBean.DataBean>> data = classIfSearchGoodsBean.getData();
 
-
                         //处理返回的数据
                         if(data.size()>0 && data!=null){
 
@@ -263,14 +267,23 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
                     @Override
                     public void onNext(ClassIfSearchGoodsNoLoginBean bean) {
                         //处理返回的数据
-                        List<ClassIfSearchGoodsNoLoginBean.DataBean> data = bean.getData();
-                        LinearLayoutManager manager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
-                        rcSearchGoodss.setLayoutManager(manager);
+                        List<List<ClassIfSearchGoodsNoLoginBean.DataBean>> data = bean.getData();
 
-                        ClassifSearchGoodsNologinAdapter adapter = new ClassifSearchGoodsNologinAdapter(getContext(), data);
+                        if(data.size()>0 &&data!=null){
+                            for (int i =0;i<data.size();i++){
+                                List<ClassIfSearchGoodsNoLoginBean.DataBean> dataBeans = data.get(i);
+                                if(dataBeans.size()>0 && dataBeans!=null){
+                                    LinearLayoutManager manager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
+                                    rcSearchGoodss.setLayoutManager(manager);
 
-                        rcSearchGoodss.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
+                                    ClassifSearchGoodsNologinAdapter adapter = new ClassifSearchGoodsNologinAdapter(getContext(), dataBeans);
+
+                                    rcSearchGoodss.setAdapter(adapter);
+                                }
+                            }
+                        }
+
+
                     }
 
                     @Override

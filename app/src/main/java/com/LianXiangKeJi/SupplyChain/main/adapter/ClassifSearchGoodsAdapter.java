@@ -75,8 +75,6 @@ public class ClassifSearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView
         String token = Common.getToken();
         if(TextUtils.isEmpty(token)){
             ((ViewHolder)holder).tvGoodsPrice.setText("￥？");
-
-
         }
         else{
             ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());

@@ -26,7 +26,7 @@
         </TextView>
         <TextView
             android:layout_width="wrap_content"
-            android:text="成交5740笔"
+            android:text="成交0笔"
             android:textSize="@dimen/sp_12"
             android:textColor="#8B8B8B"
             android:layout_toRightOf="@id/iv_goods_image"

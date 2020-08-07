@@ -8,7 +8,7 @@ public class ClassIfSearchGoodsNoLoginBean {
      * flag : true
      * code : 200
      * message : success
-     * data : [{"id":"416178a0-f785-453d-8a07-7649bda626f66635","name":"康师傅矿泉水","url":"http://47.114.1.170/lianxiangguanwang/pics/38fb0ede-cde8-43fd-bb6f-ea18462932167351.png","introduce":"","type":"3","allSell":0,"monthSell":0,"ccId":"7191692c-18f2-408e-a449-8223c1d686ba6882","cid":"3d63f060-b91b-4034-87b4-37f50efd8a9d7989","cname":"康师傅矿泉水"},{"id":"d3b28ed8-eefa-42ab-aacd-556c394acda11571","name":"1233","url":"123","introduce":"","type":"3","allSell":0,"monthSell":0,"ccId":"4498cd58-9979-40f8-a0de-d62ef5d775545030","cid":"aff31e28-c69b-42dc-8be4-0d170e06f9608178","cname":"1233"}]
+     * data : [[{"id":"85e0bc1f-4050-4c98-8d49-f66ac4e82ecc4429","name":"百事可乐碳酸饮料330mlx24","url":"http://47.114.1.170/lianxiangguanwang/pics/911bedbc-47e2-485e-8092-d05bdbf860c83455.png","introduce":"","type":"3","allSell":null,"monthSell":null,"ccId":null,"cid":null,"cname":null}]]
      * url : null
      */
 
@@ -16,7 +16,7 @@ public class ClassIfSearchGoodsNoLoginBean {
     private int code;
     private String message;
     private Object url;
-    private List<DataBean> data;
+    private List<List<DataBean>> data;
 
     public boolean isFlag() {
         return flag;
@@ -50,26 +50,26 @@ public class ClassIfSearchGoodsNoLoginBean {
         this.url = url;
     }
 
-    public List<DataBean> getData() {
+    public List<List<DataBean>> getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(List<List<DataBean>> data) {
         this.data = data;
     }
 
     public static class DataBean {
         /**
-         * id : 416178a0-f785-453d-8a07-7649bda626f66635
-         * name : 康师傅矿泉水
-         * url : http://47.114.1.170/lianxiangguanwang/pics/38fb0ede-cde8-43fd-bb6f-ea18462932167351.png
+         * id : 85e0bc1f-4050-4c98-8d49-f66ac4e82ecc4429
+         * name : 百事可乐碳酸饮料330mlx24
+         * url : http://47.114.1.170/lianxiangguanwang/pics/911bedbc-47e2-485e-8092-d05bdbf860c83455.png
          * introduce :
          * type : 3
-         * allSell : 0
-         * monthSell : 0
-         * ccId : 7191692c-18f2-408e-a449-8223c1d686ba6882
-         * cid : 3d63f060-b91b-4034-87b4-37f50efd8a9d7989
-         * cname : 康师傅矿泉水
+         * allSell : null
+         * monthSell : null
+         * ccId : null
+         * cid : null
+         * cname : null
          */
 
         private String id;
@@ -77,11 +77,11 @@ public class ClassIfSearchGoodsNoLoginBean {
         private String url;
         private String introduce;
         private String type;
-        private int allSell;
-        private int monthSell;
-        private String ccId;
-        private String cid;
-        private String cname;
+        private Object allSell;
+        private Object monthSell;
+        private Object ccId;
+        private Object cid;
+        private Object cname;
 
         public String getId() {
             return id;
@@ -123,43 +123,43 @@ public class ClassIfSearchGoodsNoLoginBean {
             this.type = type;
         }
 
-        public int getAllSell() {
+        public Object getAllSell() {
             return allSell;
         }
 
-        public void setAllSell(int allSell) {
+        public void setAllSell(Object allSell) {
             this.allSell = allSell;
         }
 
-        public int getMonthSell() {
+        public Object getMonthSell() {
             return monthSell;
         }
 
-        public void setMonthSell(int monthSell) {
+        public void setMonthSell(Object monthSell) {
             this.monthSell = monthSell;
         }
 
-        public String getCcId() {
+        public Object getCcId() {
             return ccId;
         }
 
-        public void setCcId(String ccId) {
+        public void setCcId(Object ccId) {
             this.ccId = ccId;
         }
 
-        public String getCid() {
+        public Object getCid() {
             return cid;
         }
 
-        public void setCid(String cid) {
+        public void setCid(Object cid) {
             this.cid = cid;
         }
 
-        public String getCname() {
+        public Object getCname() {
             return cname;
         }
 
-        public void setCname(String cname) {
+        public void setCname(Object cname) {
             this.cname = cname;
         }
     }

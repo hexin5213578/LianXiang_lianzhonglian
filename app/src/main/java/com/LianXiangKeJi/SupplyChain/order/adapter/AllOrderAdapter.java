@@ -27,8 +27,13 @@ import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmPaymentActivity;
 import com.LianXiangKeJi.SupplyChain.order.bean.ConfirmGetGoodsBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveGetPayDataBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrderListBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrdersidBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.WechatOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.WxBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderCancleActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderFinishActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderShippedActivity;
@@ -36,8 +41,10 @@ import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderWaitPayActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessOrderActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -209,14 +216,105 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
             String orderid = list.get(position).getId();
 
-            if(list.get(position).getPayWay()==0){
-                //调用微信支付
+            ((ViewHolder)holder).btPay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(list.get(position).getPayWay()==1){
+                        //调用微信支付
+                        SaveGetPayDataBean saveGetPayDataBean = new SaveGetPayDataBean();
+                        saveGetPayDataBean.setOrdersId(orderid);
+                        saveGetPayDataBean.setPayWay("1");
+
+                        Gson gson = new Gson();
+                        String json = gson.toJson(saveGetPayDataBean);
+
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+                        NetUtils.getInstance().getApis().doGetWxData(requestBody)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<WxBean>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(WxBean wxBean) {
+                                        WxBean.DataBean data = wxBean.getData();
+                                        SaveOrderListBean saveOrderListBean = new SaveOrderListBean();
+
+                                        //设置标记跳转支付成功页
+                                        saveOrderListBean.setFlag(1);
+                                        Gson gson = new Gson();
+                                        String json = gson.toJson(saveOrderListBean);
+                                        SPUtil.getInstance().saveData(context,SPUtil.FILE_NAME,"orderinfo",json);
 
 
-            }else{
-                //调用支付宝支付
+                                        PayReq request = new PayReq();
+                                        WxBean.DataBean.ReturnmapBean returnmap = data.getReturnmap();
+                                        request.appId=returnmap.getAppid();
+                                        request.partnerId=returnmap.getPartnerId();
+                                        request.prepayId=returnmap.getPrepayId();
+                                        request.nonceStr =returnmap.getNonceStr();
+                                        request.timeStamp=returnmap.getTimeStamp();
+                                        request.packageValue=returnmap.getPackageX();
+                                        request.sign= returnmap.getSign();
+                                        request.extData			= "app data"; // optional
+                                        App.getWXApi().sendReq(request);
 
-            }
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+
+                    }else{
+                        //调用支付宝支付
+                        SaveGetPayDataBean saveGetPayDataBean = new SaveGetPayDataBean();
+                        saveGetPayDataBean.setOrdersId(orderid);
+                        saveGetPayDataBean.setPayWay("0");
+
+                        Gson gson = new Gson();
+                        String json = gson.toJson(saveGetPayDataBean);
+
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                        NetUtils.getInstance().getApis().doGetZfbData(requestBody)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<ZfbBean>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(ZfbBean zfbBean) {
+                                        if(zfbBean!=null){
+                                            EventBus.getDefault().post(zfbBean);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+                    }
+                }
+            });
 
         } else if (orderState == 1) {
             List<UserOrderBean.DataBean.OrdersDetailListBean> ordersDetailList = list.get(position).getOrdersDetailList();

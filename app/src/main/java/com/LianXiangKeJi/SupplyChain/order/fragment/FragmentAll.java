@@ -21,6 +21,7 @@ import com.LianXiangKeJi.SupplyChain.order.adapter.AllOrderAdapter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.Near_HotSellAdapter;
 import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.alipay.sdk.app.PayTask;
 import com.liaoinstan.springview.container.DefaultFooter;
@@ -153,7 +154,20 @@ public class FragmentAll extends BaseFragment {
                 }, 1000);
             }
         });
-/*        //调用支付宝支付
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(String str){
+        if (str.equals("刷新界面")){
+            getDataBean();
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getZfbData(ZfbBean bean){
+                //调用支付宝支付
+        String info = bean.getData().getBody();
         Runnable payRunnable = new Runnable() {
             @Override
             public void run() {
@@ -168,17 +182,8 @@ public class FragmentAll extends BaseFragment {
         };
         // 必须异步调用
         Thread payThread = new Thread(payRunnable);
-        payThread.start();*/
-
+        payThread.start();
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refresh(String str){
-        if (str.equals("刷新界面")){
-            getDataBean();
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();

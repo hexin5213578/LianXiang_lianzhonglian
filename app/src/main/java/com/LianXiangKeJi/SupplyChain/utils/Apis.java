@@ -17,6 +17,8 @@ import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.GenerOrdersBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.WechatOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.WxBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
@@ -141,4 +143,11 @@ public interface Apis {
     @POST("order/super/confirmOrders")
     Observable<ConfirmGetGoodsBean> doConfirmGetGoods(@Body RequestBody body);
 
+    //通过订单号获取微信支付数据
+    @POST("order/super/payOne")
+    Observable<WxBean> doGetWxData(@Body RequestBody body);
+
+    //通过订单号获取支付宝支付数据
+    @POST("order/super/payOne")
+    Observable<ZfbBean> doGetZfbData(@Body RequestBody body);
 }

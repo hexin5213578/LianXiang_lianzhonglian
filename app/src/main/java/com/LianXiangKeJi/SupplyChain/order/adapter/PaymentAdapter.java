@@ -17,13 +17,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
+import com.LianXiangKeJi.SupplyChain.base.App;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveGetPayDataBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrderListBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrdersidBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.WxBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean1;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderWaitPayActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.google.gson.Gson;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -171,6 +179,115 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 context.startActivity(intent);
             }
         });
+
+        String orderid = list.get(position).getId();
+
+        ((ViewHolder)holder).btPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(list.get(position).getPayWay()==1){
+                    //调用微信支付
+                    SaveGetPayDataBean saveGetPayDataBean = new SaveGetPayDataBean();
+                    saveGetPayDataBean.setOrdersId(orderid);
+                    saveGetPayDataBean.setPayWay("1");
+
+                    Gson gson = new Gson();
+                    String json = gson.toJson(saveGetPayDataBean);
+
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+                    NetUtils.getInstance().getApis().doGetWxData(requestBody)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<WxBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(WxBean wxBean) {
+                                    WxBean.DataBean data = wxBean.getData();
+                                    SaveOrderListBean saveOrderListBean = new SaveOrderListBean();
+
+                                    //设置标记跳转支付成功页
+                                    saveOrderListBean.setFlag(1);
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(saveOrderListBean);
+                                    SPUtil.getInstance().saveData(context,SPUtil.FILE_NAME,"orderinfo",json);
+
+
+                                    PayReq request = new PayReq();
+                                    WxBean.DataBean.ReturnmapBean returnmap = data.getReturnmap();
+                                    request.appId=returnmap.getAppid();
+                                    request.partnerId=returnmap.getPartnerId();
+                                    request.prepayId=returnmap.getPrepayId();
+                                    request.nonceStr =returnmap.getNonceStr();
+                                    request.timeStamp=returnmap.getTimeStamp();
+                                    request.packageValue=returnmap.getPackageX();
+                                    request.sign= returnmap.getSign();
+                                    request.extData			= "app data"; // optional
+                                    App.getWXApi().sendReq(request);
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+
+                }else{
+                    //调用支付宝支付
+                    SaveGetPayDataBean saveGetPayDataBean = new SaveGetPayDataBean();
+                    saveGetPayDataBean.setOrdersId(orderid);
+                    saveGetPayDataBean.setPayWay("0");
+
+                    Gson gson = new Gson();
+                    String json = gson.toJson(saveGetPayDataBean);
+
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                    NetUtils.getInstance().getApis().doGetZfbData(requestBody)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<ZfbBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(ZfbBean zfbBean) {
+                                    if(zfbBean!=null){
+                                        ZfbBean1 zfbBean1 = new ZfbBean1();
+                                        ZfbBean1.DataBean dataBean = new ZfbBean1.DataBean();
+                                        String body = zfbBean.getData().getBody();
+                                        dataBean.setBody(body);
+                                        zfbBean1.setData(dataBean);
+
+                                        EventBus.getDefault().post(zfbBean1);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
+            }
+        });
+
     }
 
     @Override

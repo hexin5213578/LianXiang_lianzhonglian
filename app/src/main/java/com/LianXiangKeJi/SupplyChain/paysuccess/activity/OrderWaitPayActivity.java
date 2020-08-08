@@ -1,9 +1,13 @@
 package com.LianXiangKeJi.SupplyChain.paysuccess.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,22 +19,33 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
+import com.LianXiangKeJi.SupplyChain.base.App;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.order.adapter.AllOrderAdapter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.OrderInfoAdapter;
+import com.LianXiangKeJi.SupplyChain.order.adapter.PaymentAdapter;
 import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveGetPayDataBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrderListBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrdersidBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.WxBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean1;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +55,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+
+import static com.LianXiangKeJi.SupplyChain.base.App.getContext;
 
 /**
  * @ClassName:OrderWaitPayActivity
@@ -77,15 +94,46 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
     Button toPay;
     @BindView(R.id.bt_cancle)
     Button btCancle;
+    private String theway;
+    private String orderid;
+    private static final int SDK_PAY_FLAG = 1;
 
     @Override
     protected int getResId() {
         return R.layout.activity_order_wait_pay;
     }
-
+    private Handler mHandler = new Handler() {
+        @SuppressLint("HandlerLeak")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    //这里接收支付宝的回调信息
+                    //需要注意的是，支付结果一定要调用自己的服务端来确定，不能通过支付宝的回调结果来判断
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                    /**
+                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                        Toast.makeText(getContext(), "支付成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        Toast.makeText(getContext(), "支付失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
     @Override
     protected void getData() {
         back.setOnClickListener(this);
+        toPay.setOnClickListener(this);
         setTitleColor(OrderWaitPayActivity.this);
         title.setText("订单详情");
         tvRight.setVisibility(View.GONE);
@@ -98,8 +146,8 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
         Intent intent = getIntent();
 
         //获取订单信息
-        String theway = intent.getStringExtra("theway");
-        String orderid = intent.getStringExtra("orderid");
+        theway = intent.getStringExtra("theway");
+        orderid = intent.getStringExtra("orderid");
         long time = intent.getLongExtra("time", 0);
 
         Bundle bundle = intent.getExtras();
@@ -170,7 +218,6 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
             }
         });
 
-
     }
 
     @Override
@@ -186,16 +233,119 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.to_pay:
+                if(theway.equals("微信支付")){
+                    //调用微信支付
+                    SaveGetPayDataBean saveGetPayDataBean = new SaveGetPayDataBean();
+                    saveGetPayDataBean.setOrdersId(orderid);
+                    saveGetPayDataBean.setPayWay("1");
 
+                    Gson gson = new Gson();
+                    String json = gson.toJson(saveGetPayDataBean);
+
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+                    NetUtils.getInstance().getApis().doGetWxData(requestBody)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<WxBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(WxBean wxBean) {
+                                    WxBean.DataBean data = wxBean.getData();
+                                    SaveOrderListBean saveOrderListBean = new SaveOrderListBean();
+
+                                    //设置标记跳转支付成功页
+                                    saveOrderListBean.setFlag(1);
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(saveOrderListBean);
+                                    SPUtil.getInstance().saveData(OrderWaitPayActivity.this,SPUtil.FILE_NAME,"orderinfo",json);
+
+
+                                    PayReq request = new PayReq();
+                                    WxBean.DataBean.ReturnmapBean returnmap = data.getReturnmap();
+                                    request.appId=returnmap.getAppid();
+                                    request.partnerId=returnmap.getPartnerId();
+                                    request.prepayId=returnmap.getPrepayId();
+                                    request.nonceStr =returnmap.getNonceStr();
+                                    request.timeStamp=returnmap.getTimeStamp();
+                                    request.packageValue=returnmap.getPackageX();
+                                    request.sign= returnmap.getSign();
+                                    request.extData			= "app data"; // optional
+                                    App.getWXApi().sendReq(request);
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+
+                }else{
+                    //调用支付宝支付
+                    SaveGetPayDataBean saveGetPayDataBean = new SaveGetPayDataBean();
+                    saveGetPayDataBean.setOrdersId(orderid);
+                    saveGetPayDataBean.setPayWay("0");
+
+                    Gson gson = new Gson();
+                    String json = gson.toJson(saveGetPayDataBean);
+
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                    NetUtils.getInstance().getApis().doGetZfbData(requestBody)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<ZfbBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(ZfbBean zfbBean) {
+                                    ZfbBean.DataBean data = zfbBean.getData();
+                                    String info = data.getBody();
+                                    //调用支付宝支付
+                                    Runnable payRunnable = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            PayTask alipay = new PayTask(OrderWaitPayActivity.this);
+                                            Map<String,String> result = alipay.payV2(info,true);
+
+                                            Message msg = new Message();
+                                            msg.what = SDK_PAY_FLAG;
+                                            msg.obj = result;
+                                            mHandler.sendMessage(msg);
+                                        }
+                                    };
+                                    // 必须异步调用
+                                    Thread payThread = new Thread(payRunnable);
+                                    payThread.start();
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Toast.makeText(OrderWaitPayActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
 
                 break;
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

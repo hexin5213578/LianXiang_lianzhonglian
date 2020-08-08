@@ -105,7 +105,7 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         ((ViewHolder)holder).tvGoodsCount.setText(integer +"");
                         ((ViewHolder)holder).tvGoodsCount.setVisibility(View.VISIBLE);
                         ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
-                        // TODO: 2020/7/21 拿到商品信息 以count为数量加入购物车
+                        //拿到商品信息 以count为数量加入购物车
                         String id = list.get(position).getId();
                         String name = list.get(position).getName();
                         List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
@@ -260,7 +260,7 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
         });
-        // TODO: 2020/7/21 条目点击去商品详情
+        //条目点击去商品详情
         ((ViewHolder)holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

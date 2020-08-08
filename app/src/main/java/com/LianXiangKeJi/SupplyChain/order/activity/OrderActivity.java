@@ -128,7 +128,7 @@ public class OrderActivity extends BaseAvtivity implements View.OnClickListener{
         Intent intent = getIntent();
         int flag = intent.getIntExtra("flag", 0);
         Log.d("hmy", "当前跳转到的页面为" + flag);
-        // TODO: 2020/7/18 通过标记判断需要展示的页面
+        //通过标记判断需要展示的页面
         if (flag == 0) {
             vp.setCurrentItem(0);
         } else if (flag == 1) {
@@ -158,7 +158,7 @@ public class OrderActivity extends BaseAvtivity implements View.OnClickListener{
     }
 
 
-    // TODO: 2020/7/18 创建viewpager适配器
+    //创建viewpager适配器
     public class MyAdapter extends FragmentPagerAdapter {
 
 

@@ -186,7 +186,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(new Intent(getContext(), LoginActivity.class));
                 }
                 break;
-            // TODO: 2020/7/15 查看全部订单 
+            //查看全部订单
             case R.id.ll_seeMore:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -195,7 +195,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(intent_order);
                 }
                 break;
-            // TODO: 2020/7/15 查看待付款订单
+            //查看待付款订单
             case R.id.daifukuan:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -205,7 +205,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                 }
 
                 break;
-            // TODO: 2020/7/15 查看待发货订单 
+            //查看待发货订单
             case R.id.daifahuo:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -214,7 +214,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(intent_order);
                 }
                 break;
-            // TODO: 2020/7/15 查看待收货订单 
+            //查看待收货订单
             case R.id.daishouhuo:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -223,7 +223,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     startActivity(intent_order);
                 }
                 break;
-            // TODO: 2020/7/15 查看已完成订单
+            //查看已完成订单
             case R.id.yiwancheng:
                 if (TextUtils.isEmpty(token)) {
                     Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
@@ -291,15 +291,26 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                         }
                         if(a==0){
                             tvDaifukuan.setVisibility(View.GONE);
+                        }else{
+                            tvDaifukuan.setVisibility(View.VISIBLE);
                         }
                         if(b==0){
                             tvDaifahuo.setVisibility(View.GONE);
+                        }else{
+                            tvDaifahuo.setVisibility(View.VISIBLE);
+
                         }
                         if(c==0){
                             tvDaishouhuo.setVisibility(View.GONE);
+                        }else{
+                            tvDaishouhuo.setVisibility(View.VISIBLE);
+
                         }
                         if(d==0){
                             tvYiwancheng.setVisibility(View.GONE);
+                        }else{
+                            tvYiwancheng.setVisibility(View.VISIBLE);
+
                         }
 
                         tvDaifukuan.setText(a+"");

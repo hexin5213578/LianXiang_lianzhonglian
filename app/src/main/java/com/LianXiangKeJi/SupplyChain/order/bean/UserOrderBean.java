@@ -75,7 +75,7 @@ public class UserOrderBean {
         private String phone;
         private double money;
         private long gmtCreate;
-        private Object gmtPayment;
+        private String gmtPayment;
         private long gmtClose;
         private int orderState;
         private String address;
@@ -133,11 +133,11 @@ public class UserOrderBean {
             this.gmtCreate = gmtCreate;
         }
 
-        public Object getGmtPayment() {
+        public String getGmtPayment() {
             return gmtPayment;
         }
 
-        public void setGmtPayment(Object gmtPayment) {
+        public void setGmtPayment(String gmtPayment) {
             this.gmtPayment = gmtPayment;
         }
 

@@ -62,9 +62,9 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
 
                     @Override
                     public void onNext(CouponBean couponBean) {
+                        hideDialog();
                         List<CouponBean.DataBean> data = couponBean.getData();
                         if(data!=null && data.size()>0){
-                            hideDialog();
                             LinearLayoutManager manager = new LinearLayoutManager(CouponActivity.this,RecyclerView.VERTICAL,false);
                             rcCoupon.setLayoutManager(manager);
                             CouPonAdapter couPonAdapter = new CouPonAdapter(CouponActivity.this, data);

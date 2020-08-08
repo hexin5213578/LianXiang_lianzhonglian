@@ -46,8 +46,6 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
     TextView tvTheway;
     @BindView(R.id.tv_time1)
     TextView tvTime1;
-    @BindView(R.id.tv_time2)
-    TextView tvTime2;
     @BindView(R.id.ll_call)
     LinearLayout llCall;
 
@@ -79,7 +77,6 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
         String theway = intent.getStringExtra("theway");
         String orderid = intent.getStringExtra("orderid");
         long time = intent.getLongExtra("time", 0);
-
         Bundle bundle = intent.getExtras();
         //获取订单中的商品
         List<OrderBean> orderlist = (List<OrderBean>) bundle.getSerializable("orderlist");
@@ -87,7 +84,6 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
                 new java.util.Date(time));
         tvTime1.setText(date);
-        tvTime2.setText(date);
         tvTheway.setText(theway);
         tvOrderNumber.setText(orderid);
 
@@ -105,7 +101,11 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()){
+            case R.id.back:
+                finish();
+                break;
+        }
     }
 
 

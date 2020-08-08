@@ -6,6 +6,15 @@ public class SavePutOrderBean {
     private List<ResultBean> goodsList;
     private String userCouponId;
     private String remark;
+    private int payWay;
+
+    public int getPayWay() {
+        return payWay;
+    }
+
+    public void setPayWay(int payWay) {
+        this.payWay = payWay;
+    }
 
     public String getRemark() {
         return remark;

@@ -122,7 +122,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //ToDo: 你想做的事情
+                                //你想做的事情
                                 dialogInterface.dismiss();
                             }
                         });

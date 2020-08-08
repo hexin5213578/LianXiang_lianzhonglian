@@ -82,13 +82,13 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            // TODO: 2020/7/18 获取验证码
+            //  获取验证码
             case R.id.bt_getcode:
                 String phon = etPhone.getText().toString();
                 if (StringUtil.checkPhoneNumber(phon)) {
                     //调用倒计时
                     countDownTime();
-                    // TODO: 2020/7/28 发起获取验证码的网络请求
+                    // 发起获取验证码的网络请求
                     showDialog();
                     NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code",phon)
                             .subscribeOn(Schedulers.io())
@@ -117,7 +117,7 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
                             });
                 }
                 break;
-            // TODO: 2020/7/18 确定 拿到输入框的内容 发起更改手机号请求
+            //  确定 拿到输入框的内容 发起更改手机号请求
             case R.id.bt_queding:
                 String phone = etPhone.getText().toString();
                 String code = etCode.getText().toString();

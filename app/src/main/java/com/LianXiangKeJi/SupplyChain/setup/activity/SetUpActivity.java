@@ -216,13 +216,13 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
 
                             }
                         });
-                // TODO: 2020/7/22 将获取到的图片展示
+                // 将获取到的图片展示
                 Glide.with(SetUpActivity.this).load(file).apply(RequestOptions.bitmapTransform(new CircleCrop())).into(ivTouxiang);
             }
         }
     }
 
-    // TODO: 2020/7/20 弹出选择规格
+    // 弹出选择规格
     public void showSelect() {
         //创建popwiondow弹出框
         mPopupWindow = new PopupWindow();
@@ -250,7 +250,7 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
        btsave.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               // TODO: 2020/7/22 调用更换昵称接口
+               // 调用更换昵称接口
                //获取到当前输入框的文字
                String name = etname.getText().toString();
                if(TextUtils.isEmpty(name)){
@@ -319,7 +319,7 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
         show(view);
     }
 
-    // TODO: 2020/7/20 设置透明度
+    // 设置透明度
     public void setWindowAlpa(boolean isopen) {
         if (android.os.Build.VERSION.SDK_INT < 11) {
             return;

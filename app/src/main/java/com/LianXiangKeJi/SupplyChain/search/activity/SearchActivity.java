@@ -282,7 +282,7 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
     }
 
 
-    // TODO: 2020/7/15 调用搜索接口
+    //  调用搜索接口
 
     /**
      * @param str 要搜索的内容
@@ -385,7 +385,7 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
+        // add setContentView(...) invocation
         ButterKnife.bind(this);
     }
 }

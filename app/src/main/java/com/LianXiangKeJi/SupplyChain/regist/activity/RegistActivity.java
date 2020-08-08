@@ -146,14 +146,14 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            // TODO: 2020/7/17 获取验证码
+            //获取验证码
             case R.id.bt_getcode:
                 //发送延时事件
                 String phon = etPhone.getText().toString();
                 if (StringUtil.checkPhoneNumber(phon)) {
                     //调用倒计时
                     countDownTime();
-                    // TODO: 2020/7/28 发起获取验证码的网络请求
+                    //发起获取验证码的网络请求
                     showDialog();
                     NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code", phon)
                             .subscribeOn(Schedulers.io())
@@ -182,17 +182,17 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                             });
                 }
                 break;
-            // TODO: 2020/7/17 门头照
+            // 门头照
             case R.id.rl_mentou:
                 onTakePhoto();
                 PictureSelector.create(RegistActivity.this, 100).selectPicture(true);
                 break;
-            // TODO: 2020/7/17 店铺营业执照
+            //  店铺营业执照
             case R.id.rl_yingye:
                 onTakePhoto();
                 PictureSelector.create(RegistActivity.this, 101).selectPicture(false, 500, 300, 200, 200);
                 break;
-            // TODO: 2020/7/17 提交
+            // 提交
             case R.id.bt_regist:
 
 
@@ -297,7 +297,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                                                             }).setNegativeButton("前往修改", new DialogInterface.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                                    //ToDo: 你想做的事情
+                                                                    //你想做的事情
                                                                     dialogInterface.dismiss();
                                                                 }
                                                             });
@@ -354,7 +354,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        //ToDo: 你想做的事情
+                                        // 你想做的事情
                                         dialogInterface.dismiss();
                                     }
                                 });
@@ -402,7 +402,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         }
     }
 
-    // TODO: 2020/7/17 开启相机相册动态权限
+    //开启相机相册动态权限
     public void onTakePhoto() {
         if (Build.VERSION.SDK_INT >= 23) {
             int request = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);

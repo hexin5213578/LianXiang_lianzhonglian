@@ -134,7 +134,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         tvCount.setText(orderlist.size() + "种共" + count + "件，");
         Log.d("hmy", "总价为" + price + "");
         tvPrice.setText(price + "");
-        // TODO: 2020/7/21 展示默认地址
+        // 展示默认地址
         tvName.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
         tvAddress.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
         tvPhone.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_PHONE));
@@ -155,7 +155,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
             case R.id.rl_select_address:
 
                 break;
-            // TODO: 2020/7/21 提交订单
+            //提交订单
             case R.id.bt_confirm:
                 String name = tvName.getText().toString();
                 if (!TextUtils.isEmpty(name)) {
@@ -165,7 +165,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     builder.setPositiveButton("去填写", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            // TODO: 2020/7/21 设置你的操作
+                            //设置你的操作
                         }
                     });
                     builder.setNegativeButton("取消",
@@ -257,22 +257,25 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                 rb1.setChecked(false);
             }
         });
-        // TODO: 2020/7/21 tvprice赋值
 
-        Intent intent = new Intent(ConfirmOrderActivity.this, ConfirmPaymentActivity.class);
-        // TODO: 2020/7/21 立即支付 判断微信支付宝选中状态决定调起哪种支付方式
+        //立即支付 判断微信支付宝选中状态决定调起哪种支付方式
         startpay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 2020/7/21 微信支付
+                // 微信支付
                 if (rb1.isChecked()) {
+                    Intent intent = new Intent(ConfirmOrderActivity.this, ConfirmPaymentActivity.class);
                     Log.d("hmy", "微信支付");
                     intent.putExtra("theway", "微信支付");
 
-
+                    intent.putExtra("remark", etRemarks.getText().toString());
+                    intent.putExtra("couponid",counponId);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("orderlist", (Serializable) orderlist);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
-                // TODO: 2020/7/21 支付宝支付
+                //支付宝支付
                 else {
                     Log.d("hmy", "支付宝支付");
 
@@ -317,7 +320,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         }
     }
 
-    // TODO: 2020/7/20 设置透明度
+    //设置透明度
     public void setWindowAlpa(boolean isopen) {
         if (Build.VERSION.SDK_INT < 11) {
             return;
@@ -368,7 +371,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
+        //add setContentView(...) invocation
         ButterKnife.bind(this);
     }
 }

@@ -85,7 +85,7 @@ public class ChangePwdActivity extends BaseAvtivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            // TODO: 2020/7/18 确定 拿到输入框的内容 发起更改手机号请求
+            // 确定 拿到输入框的内容 发起更改手机号请求
             case R.id.bt_queding:
                 String oldpwd = etOldPwd.getText().toString();
                 String newpwd1 = etNewPwd1.getText().toString();

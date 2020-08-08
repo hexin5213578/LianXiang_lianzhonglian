@@ -1,10 +1,14 @@
 package com.LianXiangKeJi.SupplyChain.order.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,9 +21,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
+import com.LianXiangKeJi.SupplyChain.base.App;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
+import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmPaymentActivity;
 import com.LianXiangKeJi.SupplyChain.order.bean.ConfirmGetGoodsBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
 import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrdersidBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderCancleActivity;
@@ -29,6 +36,7 @@ import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderWaitPayActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessOrderActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,6 +44,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +58,6 @@ import okhttp3.RequestBody;
 public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     private final List<UserOrderBean.DataBean> list;
-
 
     private Double price = 0.0;
 
@@ -150,7 +158,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    //ToDo: 你想做的事情
+                                    //你想做的事情
                                     dialogInterface.dismiss();
                                 }
                             });
@@ -199,6 +207,17 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     context.startActivity(intent);
                 }
             });
+            String orderid = list.get(position).getId();
+
+            if(list.get(position).getPayWay()==0){
+                //调用微信支付
+
+
+            }else{
+                //调用支付宝支付
+
+            }
+
         } else if (orderState == 1) {
             List<UserOrderBean.DataBean.OrdersDetailListBean> ordersDetailList = list.get(position).getOrdersDetailList();
             LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
@@ -249,9 +268,11 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                     long times = list.get(position).getGmtCreate();
                     String orderid = list.get(position).getId();
+                    String gmtPayment = list.get(position).getGmtPayment();
 
                     intent.putExtra("theway",theway);
                     intent.putExtra("time",times);
+                    intent.putExtra("time1",gmtPayment);
                     intent.putExtra("orderid",orderid);
                     context.startActivity(intent);
                 }
@@ -315,7 +336,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    //ToDo: 你想做的事情
+                                    //你想做的事情
                                     dialogInterface.dismiss();
                                 }
                             });
@@ -425,7 +446,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    //ToDo: 你想做的事情
+                                    // 你想做的事情
                                     dialogInterface.dismiss();
                                 }
                             });
@@ -535,7 +556,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    //ToDo: 你想做的事情
+                                    //你想做的事情
                                     dialogInterface.dismiss();
                                 }
                             });

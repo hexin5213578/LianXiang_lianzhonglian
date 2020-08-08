@@ -1,5 +1,7 @@
 package com.LianXiangKeJi.SupplyChain.paysuccess.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,14 +18,29 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
+import com.LianXiangKeJi.SupplyChain.order.adapter.AllOrderAdapter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.OrderInfoAdapter;
+import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrdersidBean;
+import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
 /**
  * @ClassName:OrderWaitPayActivity
  * @Author:hmy
@@ -57,6 +75,8 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
     TextView tvTime1;
     @BindView(R.id.to_pay)
     Button toPay;
+    @BindView(R.id.bt_cancle)
+    Button btCancle;
 
     @Override
     protected int getResId() {
@@ -87,7 +107,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
         List<OrderBean> orderlist = (List<OrderBean>) bundle.getSerializable("orderlist");
 
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
-                new java.util.Date(time));
+                new Date(time));
         tvTime1.setText(date);
         tvTheway.setText(theway);
         tvOrderNumber.setText(orderid);
@@ -96,6 +116,60 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
         rcOrderList.setLayoutManager(manager);
         OrderInfoAdapter orderInfoAdapter = new OrderInfoAdapter(OrderWaitPayActivity.this, orderlist);
         rcOrderList.setAdapter(orderInfoAdapter);
+
+        SaveOrdersidBean saveOrdersidBean = new SaveOrdersidBean();
+        saveOrdersidBean.setId(orderid);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(saveOrdersidBean);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        //取消订单
+        btCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(OrderWaitPayActivity.this)
+                        .setMessage("是否确认取消订单").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                NetUtils.getInstance().getApis().cancleOrder(requestBody)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Observer<DeleteOrCancleOrderBean>() {
+                                            @Override
+                                            public void onSubscribe(Disposable d) {
+
+                                            }
+
+                                            @Override
+                                            public void onNext(DeleteOrCancleOrderBean deleteOrCancleOrderBean) {
+                                                Toast.makeText(OrderWaitPayActivity.this, "" + deleteOrCancleOrderBean.getData(), Toast.LENGTH_SHORT).show();
+                                                finish();
+                                                EventBus.getDefault().post("刷新界面");
+
+                                            }
+
+                                            @Override
+                                            public void onError(Throwable e) {
+
+                                            }
+
+                                            @Override
+                                            public void onComplete() {
+
+                                            }
+                                        });
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //ToDo: 你想做的事情
+                                dialogInterface.dismiss();
+                            }
+                        });
+                builder.create().show();
+            }
+        });
+
 
     }
 
@@ -107,13 +181,21 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.back:
                 finish();
                 break;
             case R.id.to_pay:
 
+
                 break;
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

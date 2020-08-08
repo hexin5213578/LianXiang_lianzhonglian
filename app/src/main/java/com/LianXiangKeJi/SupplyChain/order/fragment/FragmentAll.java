@@ -1,6 +1,9 @@
 package com.LianXiangKeJi.SupplyChain.order.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -11,12 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
+import com.LianXiangKeJi.SupplyChain.base.App;
 import com.LianXiangKeJi.SupplyChain.base.BaseFragment;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.AllOrderAdapter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.Near_HotSellAdapter;
+import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.alipay.sdk.app.PayTask;
 import com.liaoinstan.springview.container.DefaultFooter;
 import com.liaoinstan.springview.container.DefaultHeader;
 import com.liaoinstan.springview.widget.SpringView;
@@ -27,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
@@ -48,6 +55,7 @@ public class FragmentAll extends BaseFragment {
     RecyclerView rcHotSell;
     @BindView(R.id.sv)
     SpringView sv;
+    private static final int SDK_PAY_FLAG = 1;
     private List<UserOrderBean.DataBean> list;
     private List<String> textlist = new ArrayList<>();
     private LinearLayoutManager manager;
@@ -59,7 +67,34 @@ public class FragmentAll extends BaseFragment {
         sv = view.findViewById(R.id.sv);
         rlNoorder = view.findViewById(R.id.rl_noorder);
     }
-
+    private Handler mHandler = new Handler() {
+        @SuppressLint("HandlerLeak")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    //这里接收支付宝的回调信息
+                    //需要注意的是，支付结果一定要调用自己的服务端来确定，不能通过支付宝的回调结果来判断
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                    /**
+                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                        Toast.makeText(getContext(), "支付成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        Toast.makeText(getContext(), "支付失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
     @Override
     protected int getResId() {
         return R.layout.fragment_all;
@@ -118,6 +153,22 @@ public class FragmentAll extends BaseFragment {
                 }, 1000);
             }
         });
+/*        //调用支付宝支付
+        Runnable payRunnable = new Runnable() {
+            @Override
+            public void run() {
+                PayTask alipay = new PayTask(getActivity());
+                Map<String,String> result = alipay.payV2(info,true);
+
+                Message msg = new Message();
+                msg.what = SDK_PAY_FLAG;
+                msg.obj = result;
+                mHandler.sendMessage(msg);
+            }
+        };
+        // 必须异步调用
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();*/
 
     }
 

@@ -24,7 +24,7 @@ public class WelcomeActivity extends BaseAvtivity{
 
     @Override
     protected void getData() {
-        // TODO: 2020/7/17 设置标题栏颜色
+        // 设置标题栏颜色
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                 Window window = WelcomeActivity.this.getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

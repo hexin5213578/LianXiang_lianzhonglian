@@ -63,7 +63,7 @@ public class SearchGoodsNoLoginAdapter extends RecyclerView.Adapter<RecyclerView
                 Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
             }
         });
-        // TODO: 2020/7/21 条目点击去商品详情
+        //条目点击去商品详情
         ((ViewHolder)holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

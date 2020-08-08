@@ -67,7 +67,7 @@ public class ShipAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         ((ViewHolder) holder).rcOrdergoods.setLayoutManager(manager);
 
-        OrderGoodsListAdapterTwo adapter = new OrderGoodsListAdapterTwo(context, ordersDetailList);
+        OrderGoodsListAdapter adapter = new OrderGoodsListAdapter(context, ordersDetailList);
 
         ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
 

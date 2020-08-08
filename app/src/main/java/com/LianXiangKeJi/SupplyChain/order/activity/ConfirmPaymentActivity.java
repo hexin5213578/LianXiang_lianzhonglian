@@ -22,11 +22,14 @@ import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.GenerOrdersBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrderListBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.SavePutOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.WechatOrderBean;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.wxapi.WXPayEntryActivity;
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
@@ -59,7 +62,7 @@ import okhttp3.RequestBody;
  * @Author:hmy
  * @Description:java类作用描述
  */
-public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClickListener, IWXAPIEventHandler {
+public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClickListener {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
@@ -84,6 +87,7 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
     private GenerOrdersBean.DataBean data;
     private String remark;
     private String couponid;
+    private WechatOrderBean.DataBean data1;
 
     @Override
     protected int getResId() {
@@ -105,6 +109,7 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
         Bundle bundle = intent.getExtras();
         orderlist = (List<OrderBean>) bundle.getSerializable("orderlist");
 
+        //生成支付宝订单
         if(theway.equals("支付宝支付")){
             SavePutOrderBean savePutOrderBean = new SavePutOrderBean();
             List<SavePutOrderBean.ResultBean> list = new ArrayList<>();
@@ -127,17 +132,134 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
             }else{
                 savePutOrderBean.setRemark("");
             }
+            savePutOrderBean.setPayWay(0);
             Gson gson = new Gson();
             String json = gson.toJson(savePutOrderBean);
 
             Log.d("hmy",json);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
 
-
+            showDialogdelete();
             NetUtils.getInstance().getApis().doGenerOrder(requestBody)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<GenerOrdersBean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(GenerOrdersBean generOrdersBean) {
+                            hideDialog();
+                            data = generOrdersBean.getData();
+                            tvOrderNumber.setText(data.getOrdersId());
+                            info = data.getBody();
+                            tvOrderPrice.setText("￥"+ data.getMoney()+"");
+                            tvOrderPayTheway.setText(data.getPayment());
+                            String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
+                                    new java.util.Date(data.getGmtCreate()));
+                            tvOrderTime.setText(date);
+
+                            LinkedHashMap<String, String> map = SPUtil.getMap(ConfirmPaymentActivity.this, "goodsid");
+
+                            for (int i=0;i<orderlist.size();i++){
+                                String goodsid = orderlist.get(i).getGoodsid();
+                                for (int j =0;j<map.size();j++){
+                                    map.remove(goodsid);
+                                }
+                            }
+                            //创建订单后从购物车删除
+                            List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
+                            SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                            saveShopCarBean.setState(false);
+                            SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                            //添加进集合
+                            //遍历map集合的键
+                            for (String key : map.keySet()) {
+                                resultBean.setShopGoodsId(key);
+                                shoplist.add(resultBean);
+
+                            }
+                            saveShopCarBean.setShoppingCartList(shoplist);
+
+                            Gson gson = new Gson();
+                            String json = gson.toJson(saveShopCarBean);
+                            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+                            NetUtils.getInstance().getApis().doShopCar(requestBody)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Observer<ShopCarBean>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(ShopCarBean shopCarBean) {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
+                                        }
+                                    });
+                            SPUtil.setMap(ConfirmPaymentActivity.this,"goodsid",map);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            hideDialog();
+                            Toast.makeText(ConfirmPaymentActivity.this, "订单生成失败", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        }else{
+            //生成微信订单
+            SavePutOrderBean savePutOrderBean = new SavePutOrderBean();
+            List<SavePutOrderBean.ResultBean> list = new ArrayList<>();
+            for (int i = 0; i< orderlist.size(); i++){
+                String goodsid = orderlist.get(i).getGoodsid();
+                int count = orderlist.get(i).getCount();
+                SavePutOrderBean.ResultBean resultBean = new SavePutOrderBean.ResultBean();
+                resultBean.setNumber(count+"");
+                resultBean.setShopGoodsId(goodsid);
+                list.add(resultBean);
+            }
+            savePutOrderBean.setGoodsList(list);
+            if(couponid!=null){
+                savePutOrderBean.setUserCouponId(couponid);
+            }else{
+                savePutOrderBean.setUserCouponId("");
+            }
+            if(remark!=null){
+                savePutOrderBean.setRemark(remark);
+            }else{
+                savePutOrderBean.setRemark("");
+            }
+            savePutOrderBean.setPayWay(1);
+            Gson gson = new Gson();
+            String json = gson.toJson(savePutOrderBean);
+
+            Log.d("hmy",json);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+            
+            showDialogdelete();
+            NetUtils.getInstance().getApis().doWXGenerOrder(requestBody)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<WechatOrderBean>() {
 
 
                         @Override
@@ -146,14 +268,15 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                         }
 
                         @Override
-                        public void onNext(GenerOrdersBean generOrdersBean) {
-                            data = generOrdersBean.getData();
-                            tvOrderNumber.setText(data.getOrdersId());
-                            info = data.getBody();
-                            tvOrderPrice.setText("￥"+ data.getMoney()+"");
-                            tvOrderPayTheway.setText(data.getPayment());
+                        public void onNext(WechatOrderBean bean) {
+                            hideDialog();
+                            data1 = bean.getData();
+                            tvOrderNumber.setText(data1.getOrdersId());
+
+                            tvOrderPrice.setText("￥"+data1.getMoney()+"");
+                            tvOrderPayTheway.setText(data1.getPayment());
                             String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
-                                    new java.util.Date(data.getGmtCreate()));
+                                    new java.util.Date(data1.getGmtCreate()));
                             tvOrderTime.setText(date);
 
 
@@ -212,7 +335,8 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
 
                         @Override
                         public void onError(Throwable e) {
-
+                            hideDialog();
+                            Toast.makeText(ConfirmPaymentActivity.this, "订单生成失败", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -220,18 +344,11 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
 
                         }
                     });
-        }else{
-            // TODO: 2020/8/5 生成微信订单
-            Toast.makeText(this, "微信支付", Toast.LENGTH_SHORT).show();
+
 
 
         }
-
-
         tvOrderPayTheway.setText(theway);
-        // TODO: 2020/7/24 赋值
-
-
         back.setOnClickListener(this);
         btConfirm.setOnClickListener(this);
     }
@@ -261,8 +378,6 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         Toast.makeText(ConfirmPaymentActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
-
-
 
                        Intent intent = new Intent(ConfirmPaymentActivity.this, PaySuccessActivity.class);
 
@@ -314,13 +429,39 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
             case R.id.bt_confirm:
                 String pay_theway = tvOrderPayTheway.getText().toString();
                 if(pay_theway.equals("微信支付")){
-                    // TODO: 2020/7/31 调起微信支付
+                    //调起微信支付
+
+                    SaveOrderListBean saveOrderListBean = new SaveOrderListBean();
+                    saveOrderListBean.setOrderlist(orderlist);
+                    saveOrderListBean.setTheway(theway);
+                    saveOrderListBean.setOrderid(data1.getOrdersId());
+                    saveOrderListBean.setTime(data1.getGmtCreate());
+                    if(!data1.getPayment().equals("null")){
+                        saveOrderListBean.setTime1(data1.getPayment());
+                    }
+                    //设置标记跳转支付成功页
+                    saveOrderListBean.setFlag(0);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(saveOrderListBean);
+                    SPUtil.getInstance().saveData(ConfirmPaymentActivity.this,SPUtil.FILE_NAME,"orderinfo",json);
+
+
+
                     PayReq request = new PayReq();
-                    request.appId="wxacf956e14f407890";
+                    WechatOrderBean.DataBean.ReturnmapBean returnmap = data1.getReturnmap();
+                    request.appId=returnmap.getAppid();
+                    request.partnerId=returnmap.getPartnerId();
+                    request.prepayId=returnmap.getPrepayId();
+                    request.nonceStr =returnmap.getNonceStr();
+                    request.timeStamp=returnmap.getTimeStamp();
+                    request.packageValue=returnmap.getPackageX();
+                    request.sign= returnmap.getSign();
+                    request.extData			= "app data"; // optional
                     App.getWXApi().sendReq(request);
 
+
                 }else{
-                    // TODO: 2020/7/31 调起支付宝支付
+                    //调起支付宝支付
                     Runnable payRunnable = new Runnable() {
                         @Override
                         public void run() {
@@ -339,37 +480,6 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
 
                 }
                 break;
-        }
-    }
-
-    @Override
-    public void onReq(BaseReq req) {
-
-    }
-    //处理微信回调
-    @Override
-    public void onResp(BaseResp resp) {
-        Log.d("hmy", "onPayFinish, errCode = " + resp.errCode);
-
-        if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-            if(resp.errCode == 0) {
-                Toast.makeText(this, "支付成功", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(ConfirmPaymentActivity.this, PaySuccessActivity.class);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("orderlist", (Serializable) orderlist);
-
-                intent.putExtras(bundle);
-                intent.putExtra("theway",theway);
-                intent.putExtra("time",data.getGmtCreate());
-                intent.putExtra("orderid",data.getOrdersId());
-                startActivity(intent);
-
-            }else{
-                Toast.makeText(this, "支付失败，请重试", Toast.LENGTH_SHORT).show();
-
-            }
         }
     }
 }

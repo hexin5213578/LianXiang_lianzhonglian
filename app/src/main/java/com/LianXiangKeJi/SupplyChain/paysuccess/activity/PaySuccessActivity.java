@@ -16,9 +16,12 @@ import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
+import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrderListBean;
 import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -48,17 +51,19 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
     private String theway;
     private long times;
     private String orderid;
+    private long time1;
 
     @Override
     protected int getResId() {
         return R.layout.activity_paysuccess;
     }
 
+
     @Override
     protected void getData() {
         btBack.setOnClickListener(this);
         btSeeorder.setOnClickListener(this);
-        // TODO: 2020/7/17 设置标题栏颜色
+        //设置标题栏颜色
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                 Window window = PaySuccessActivity.this.getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -68,7 +73,6 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
         theway = intent.getStringExtra("theway");
         times = intent.getLongExtra("time",0);
         orderid = intent.getStringExtra("orderid");
-
         Bundle bundle = intent.getExtras();
         orderlist = (List<OrderBean>) bundle.getSerializable("orderlist");
         Log.d("hmyn",orderlist.size()+"");
@@ -89,15 +93,14 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            // TODO: 2020/7/22 跳转至主页
+            // 跳转至主页
             case R.id.bt_back:
-
                 finish();
                 IntentBean intentBean = new IntentBean();
                 intentBean.setStr("关闭");
                 EventBus.getDefault().post(intentBean);
                 break;
-            // TODO: 2020/7/22 查看订单
+            //查看订单
             case R.id.bt_seeorder:
                 Intent intent = new Intent(PaySuccessActivity.this, PaySuccessOrderActivity.class);
                 Bundle bundle = new Bundle();
@@ -113,4 +116,5 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
                 break;
         }
     }
+
 }

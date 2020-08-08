@@ -16,6 +16,7 @@ import com.LianXiangKeJi.SupplyChain.order.bean.ConfirmGetGoodsBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.GenerOrdersBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.WechatOrderBean;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
@@ -120,6 +121,9 @@ public interface Apis {
     //生成订单
     @POST("order/foundOrder")
     Observable<GenerOrdersBean> doGenerOrder(@Body RequestBody body);
+    //生成微信订单
+    @POST("order/foundOrder")
+    Observable<WechatOrderBean> doWXGenerOrder(@Body RequestBody body);
 
     //查询热门搜索
     @GET("category/hotSeek")

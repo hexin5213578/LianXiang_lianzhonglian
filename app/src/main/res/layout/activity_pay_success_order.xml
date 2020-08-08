@@ -183,31 +183,8 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:text="付款时间："
-                        android:layout_below="@id/tv4"
-                        android:textColor="#333333"
-                        android:id="@+id/tv5"
-                        android:textSize="@dimen/sp_12"
-                        android:layout_marginTop="@dimen/dp_9"
-                        android:layout_marginLeft="@dimen/dp_8"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:text="2020-08-02 14:20:43"
-                        android:textColor="#333333"
-                        android:id="@+id/tv_time2"
-                        android:textSize="@dimen/sp_12"
-                        android:layout_toRightOf="@id/tv5"
-                        android:layout_marginLeft="@dimen/dp_50"
-                        android:layout_below="@id/tv4"
-                        android:layout_marginTop="@dimen/dp_9"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
                         android:text="收  款  方："
-                        android:layout_below="@id/tv5"
+                        android:layout_below="@id/tv4"
                         android:textColor="#333333"
                         android:id="@+id/tv6"
                         android:textSize="@dimen/sp_12"
@@ -222,7 +199,7 @@
                         android:textSize="@dimen/sp_12"
                         android:layout_toRightOf="@id/tv6"
                         android:layout_marginLeft="@dimen/dp_50"
-                        android:layout_below="@id/tv5"
+                        android:layout_below="@id/tv4"
                         android:layout_marginTop="@dimen/dp_9"
                         android:layout_height="wrap_content">
                     </TextView>

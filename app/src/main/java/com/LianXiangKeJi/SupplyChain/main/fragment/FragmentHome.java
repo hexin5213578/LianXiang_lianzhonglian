@@ -151,8 +151,6 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
                         sv.onFinishFreshAndLoad();
                     }
                 }, 1000);
-                // TODO: 2020/7/23 刷新适配器
-                //home_hotSellAdapter.notifyDataSetChanged();
             }
 
             @Override

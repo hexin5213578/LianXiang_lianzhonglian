@@ -1,8 +1,7 @@
-package com.LianXiangKeJi.SupplyChain.search.adapter;
+package com.LianXiangKeJi.SupplyChain.recommend.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,12 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
-import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
-import com.LianXiangKeJi.SupplyChain.search.activity.SearchActivity;
-import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
-import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
+import com.LianXiangKeJi.SupplyChain.recommend.bean.HotSellNoLoginBean;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -29,16 +25,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * @ClassName:SearchGoodsAdapter
+ * @ClassName:HotsellAdapter
  * @Author:hmy
  * @Description:java类作用描述
  */
-public class SearchGoodsNoLoginAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
+public class HotsellNoLoginAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
-    private final List<SearchGoodsNoLoginBean.DataBean> list;
+    private final List<HotSellNoLoginBean.DataBean> list;
 
-    public SearchGoodsNoLoginAdapter(Context context, List<SearchGoodsNoLoginBean.DataBean> list) {
+    public HotsellNoLoginAdapter(Context context, List<HotSellNoLoginBean.DataBean> list) {
 
         this.context = context;
         this.list = list;
@@ -47,36 +42,39 @@ public class SearchGoodsNoLoginAdapter extends RecyclerView.Adapter<RecyclerView
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(context, R.layout.item_searchgoods, null);
+        View view = View.inflate(context, R.layout.item_hotsell_details, null);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-    
+        ((ViewHolder) holder).tvGoodsPrice.setText("￥？");
         Glide.with(context).load(list.get(position).getUrl()).into(((ViewHolder)holder).ivGoodsImage);
         ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
-        ((ViewHolder)holder).tvGoodsPrice.setText("￥?");
+        // TODO: 2020/7/21 条目点击去商品详情
+        ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GoodsDeatailsBean goodsDeatailsBean = new GoodsDeatailsBean();
+                goodsDeatailsBean.setPrice("?");
+                goodsDeatailsBean.setImage(list.get(position).getUrl());
+                goodsDeatailsBean.setName(list.get(position).getName() + "");
+                goodsDeatailsBean.setMonthsell(list.get(position).getMonthSell() + "");
+                goodsDeatailsBean.setId(list.get(position).getId() + "");
 
+                Intent intent = new Intent(context, GoodsDetailsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("goods", goodsDeatailsBean);
+                context.startActivity(intent);
+            }
+        });
         ((ViewHolder)holder).jia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
             }
         });
-        //条目点击去商品详情
-        ((ViewHolder)holder).rlItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                GoodsDeatailsBean bean = new GoodsDeatailsBean();
-                bean.setPrice("？");
-                bean.setImage(list.get(position).getUrl());
-                bean.setName(list.get(position).getName());
-                Intent intent = new Intent(context, GoodsDetailsActivity.class);
-                intent.putExtra("goods",bean);
-                context.startActivity(intent);
-            }
-        });
+
     }
 
     @Override
@@ -97,10 +95,9 @@ public class SearchGoodsNoLoginAdapter extends RecyclerView.Adapter<RecyclerView
         Button jia;
         @BindView(R.id.rl_item)
         RelativeLayout rlItem;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

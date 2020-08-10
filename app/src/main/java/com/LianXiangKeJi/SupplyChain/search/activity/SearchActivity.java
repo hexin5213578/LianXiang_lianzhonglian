@@ -1,7 +1,9 @@
 package com.LianXiangKeJi.SupplyChain.search.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -94,42 +96,9 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
 
     @Override
     protected void getData() {
-        sv.setHeader(new DefaultHeader(SearchActivity.this));
-        sv.setFooter(new DefaultFooter(SearchActivity.this));
-
-        //上拉刷新下拉加载监听
-        sv.setListener(new SpringView.OnFreshListener() {
-            @Override
-            public void onRefresh() {
-
-            }
-
-            @Override
-            public void onLoadmore() {
-
-            }
-        });
-        setTitleColor(this);
-        back.setOnClickListener(this);
-        tvSearch.setOnClickListener(this);
-        delete.setOnClickListener(this);
-        rlHistory.setVisibility(View.VISIBLE);
-        sv.setVisibility(View.GONE);
-
-        etSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rlHistory.setVisibility(View.VISIBLE);
-                sv.setVisibility(View.GONE);
-            }
-        });
         token = Common.getToken();
-        if (!TextUtils.isEmpty(token)) {
-            doSearch("");
-        } else {
-            doSearchNoLogin("");
-        }
 
+        //获取热门搜索
         NetUtils.getInstance().getApis().GetSearchHot()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -146,6 +115,13 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
                             String name = data1.get(i).getName();
                             list_searchhot.add(name);
                         }
+                        GridLayoutManager manager = new GridLayoutManager(SearchActivity.this, 4);
+                        rcSearchHot.setLayoutManager(manager);
+                        searchHistoryAdapter = new SearchHistoryAdapter(SearchActivity.this, list_searchhot);
+                        rcSearchHot.setAdapter(searchHistoryAdapter);
+
+                        //刷新适配器
+                        searchHistoryAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -158,11 +134,59 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
 
                     }
                 });
-        GridLayoutManager manager = new GridLayoutManager(SearchActivity.this, 4);
-        rcSearchHot.setLayoutManager(manager);
-        searchHistoryAdapter = new SearchHistoryAdapter(SearchActivity.this, list_searchhot);
-        rcSearchHot.setAdapter(searchHistoryAdapter);
 
+        sv.setHeader(new DefaultHeader(SearchActivity.this));
+        sv.setFooter(new DefaultFooter(SearchActivity.this));
+
+        //上拉刷新下拉加载监听
+        sv.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        sv.onFinishFreshAndLoad();
+                        if (!TextUtils.isEmpty(token)) {
+                            doSearch("");
+                        } else {
+                            doSearchNoLogin("");
+                        }
+                    }
+                }, 1000);
+            }
+            @Override
+            public void onLoadmore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        sv.onFinishFreshAndLoad();
+                    }
+                }, 1000);
+            }
+        });
+        setTitleColor(this);
+        back.setOnClickListener(this);
+        tvSearch.setOnClickListener(this);
+        delete.setOnClickListener(this);
+
+        rlHistory.setVisibility(View.VISIBLE);
+        sv.setVisibility(View.GONE);
+
+        rcSearchHistory.setVisibility(View.VISIBLE);
+        rcSearchHot.setVisibility(View.VISIBLE);
+
+        etSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rlHistory.setVisibility(View.VISIBLE);
+                sv.setVisibility(View.GONE);
+            }
+        });
+        if (!TextUtils.isEmpty(token)) {
+            doSearch("");
+        } else {
+            doSearchNoLogin("");
+        }
 
         //从sp取出
         Gson gson = new Gson();
@@ -261,6 +285,7 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getString(String str) {
+        Log.d("hmy",str);
         sv.setVisibility(View.VISIBLE);
         rlHistory.setVisibility(View.GONE);
         closekeyboard();
@@ -334,7 +359,7 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
     }
 
     /**
-     * @param str 要搜索的内容
+     * @param str 未登录要搜索的内容
      */
     public void doSearchNoLogin(String str) {
         SaveKeywordBean saveKeywordBean = new SaveKeywordBean();
@@ -382,10 +407,4 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

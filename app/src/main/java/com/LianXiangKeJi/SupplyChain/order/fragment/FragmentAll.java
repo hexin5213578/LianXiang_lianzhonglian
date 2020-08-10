@@ -22,6 +22,7 @@ import com.LianXiangKeJi.SupplyChain.order.adapter.Near_HotSellAdapter;
 import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
+import com.LianXiangKeJi.SupplyChain.recommend.bean.HotSellBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.alipay.sdk.app.PayTask;
 import com.liaoinstan.springview.container.DefaultFooter;
@@ -58,15 +59,11 @@ public class FragmentAll extends BaseFragment {
     SpringView sv;
     private static final int SDK_PAY_FLAG = 1;
     private List<UserOrderBean.DataBean> list;
-    private List<String> textlist = new ArrayList<>();
     private LinearLayoutManager manager;
 
     @Override
     protected void getid(View view) {
-        rcOrder = view.findViewById(R.id.rc_order);
-        rcHotSell = view.findViewById(R.id.rc_hotSell);
-        sv = view.findViewById(R.id.sv);
-        rlNoorder = view.findViewById(R.id.rl_noorder);
+
     }
     private Handler mHandler = new Handler() {
         @SuppressLint("HandlerLeak")
@@ -109,23 +106,49 @@ public class FragmentAll extends BaseFragment {
     @Override
     protected void getData() {
 
-        for (int i = 0; i < 10; i++) {
-            textlist.add("第" + i);
-        }
         rcHotSell.getParent().requestDisallowInterceptTouchEvent(true);
 
         // TODO: 2020/7/21 测试热销展示的四条商品
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        rcHotSell.setLayoutManager(gridLayoutManager);
 
-        Near_HotSellAdapter adapter = new Near_HotSellAdapter(getContext(), textlist);
-        rcHotSell.setAdapter(adapter);
+        //获取热销商品
+        NetUtils.getInstance().getApis()
+                .doGetHotSell()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HotSellBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(HotSellBean hotSellBean) {
+                        List<HotSellBean.DataBean> data = hotSellBean.getData();
+                        if(data.size()>0&&data!=null){
+                            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+                            rcHotSell.setLayoutManager(gridLayoutManager);
+
+                            Near_HotSellAdapter adapter = new Near_HotSellAdapter(getContext(), data);
+                            rcHotSell.setAdapter(adapter);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
 
         getDataBean();
 
         sv.setHeader(new DefaultHeader(getContext()));
-        sv.setFooter(new DefaultFooter(getContext()));
 
         sv.setListener(new SpringView.OnFreshListener() {
             @Override

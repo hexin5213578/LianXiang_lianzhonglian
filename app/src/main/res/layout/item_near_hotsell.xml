@@ -9,7 +9,7 @@
         <ImageView
             android:layout_width="@dimen/dp_125"
             android:src="@mipmap/cola"
-            android:id="@+id/tv_goods_image"
+            android:id="@+id/iv_goods_image"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dp_16"
             android:layout_height="@dimen/dp_125">
@@ -18,7 +18,7 @@
             android:layout_marginTop="@dimen/dp_2"
             android:layout_width="wrap_content"
             android:text="青岛啤酒罐装醇香精酿330ml*24罐"
-            android:layout_below="@id/tv_goods_image"
+            android:layout_below="@id/iv_goods_image"
             android:layout_marginLeft="@dimen/dp_7"
             android:layout_marginRight="@dimen/dp_9"
             android:textSize="@dimen/sp_13"
@@ -29,9 +29,9 @@
         <TextView
             android:layout_marginLeft="@dimen/dp_7"
             android:layout_width="wrap_content"
-            android:layout_below="@id/tv_goods_name"
+            android:layout_below="@id/iv_goods_image"
             android:text="1箱起批"
-            android:layout_marginTop="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_39"
             android:textSize="@dimen/sp_10"
             android:textColor="#999999"
             android:id="@+id/tv_goods_buycount"
@@ -40,9 +40,9 @@
         <TextView
             android:layout_marginLeft="@dimen/dp_7"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/tv_goods_buycount"
+            android:layout_below="@+id/iv_goods_image"
             android:text="￥50.00"
-            android:layout_marginTop="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_55"
             android:id="@+id/tv_goods_price"
             android:textSize="@dimen/sp_12"
             android:textColor="#FF6666"
@@ -51,14 +51,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:text="/箱"
-            android:layout_marginTop="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_55"
             android:textSize="@dimen/sp_12"
             android:textColor="#999999"
             android:layout_toRightOf="@id/tv_goods_price"
-            android:layout_below="@id/tv_goods_buycount"
+            android:layout_below="@id/iv_goods_image"
             android:layout_height="wrap_content">
         </TextView>
-
+        <Button
+            android:layout_width="@dimen/dp_40"
+            android:layout_below="@id/tv_goods_buycount"
+            android:layout_alignParentRight="true"
+            android:textColor="#FFA36A"
+            android:id="@+id/jia"
+            android:background="@drawable/join_order"
+            android:text="加入进货单"
+            android:layout_marginRight="@dimen/dp_5"
+            android:textSize="@dimen/sp_6"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_height="@dimen/dp_20">
+        </Button>
     </RelativeLayout>
     <View
         android:layout_below="@id/rl_hotsellgoods"

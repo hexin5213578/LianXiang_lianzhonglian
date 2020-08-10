@@ -1,15 +1,14 @@
-package com.LianXiangKeJi.SupplyChain.search.bean;
+package com.LianXiangKeJi.SupplyChain.recommend.bean;
 
 import java.util.List;
 
-public class SearchGoodsBean {
-
+public class HotSellBean {
 
     /**
      * flag : true
      * code : 200
      * message : success
-     * data : [{"id":"20d0fbaa-8cc4-4107-b187-b04678c4559f2591","name":"阿萨姆奶茶","price":"4.00","cost":"3.00","supplierId":"46d89724-0cbf-4b38-bab6-f0b9e2aecb8f1122","specs":"500ml","allSell":0,"monthSell":0,"stock":"888","status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png","salePrice":null,"cid":"a8fc0f1b-c5a0-4b11-a29c-eef796c687f78050"},{"id":"dfdfbdf7-86b2-4dba-b841-82b5dc84d0387252","name":"康师傅矿泉水","price":"1","cost":"0.6","supplierId":"46d89724-0cbf-4b38-bab6-f0b9e2aecb8f1122","specs":"500ml","allSell":0,"monthSell":0,"stock":"100","status":0,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/38fb0ede-cde8-43fd-bb6f-ea18462932167351.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/38fb0ede-cde8-43fd-bb6f-ea18462932167351.png","salePrice":null,"cid":"3d63f060-b91b-4034-87b4-37f50efd8a9d7989"}]
+     * data : [{"id":"f6a0d0a5-3849-40e3-ba7e-c99a3922f7c47385","name":"百岁山矿泉水570mlx24","price":"150","cost":"120","supplierId":"7f9959b4-5719-4bc8-acd3-2ecca11d7d74","specs":"570mlx24","allSell":110,"monthSell":110,"stock":1112,"status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/8bc194c9-2df6-4552-95f3-26fbef587cc61054.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/8bc194c9-2df6-4552-95f3-26fbef587cc61054.png","salePrice":null,"cid":"8ddf8387-e089-40d2-ac7d-9e9e871611046088"},{"id":"ee926294-0584-49d8-8665-298f39a666822281","name":"农夫山泉矿泉水","price":"120","cost":"100","supplierId":"7f9959b4-5719-4bc8-acd3-2ecca11d7d74","specs":"380ml","allSell":90,"monthSell":90,"stock":1112,"status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/ab65d828-ace3-4a3e-9c49-55d8ce4b6fee4166.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/ab65d828-ace3-4a3e-9c49-55d8ce4b6fee4166.png","salePrice":null,"cid":"8ddf8387-e089-40d2-ac7d-9e9e871611046088"},{"id":"d7b9324f-c519-4603-a2cf-0c6e62eba9cd8313","name":"汇源100分百橙味果汁1LX12","price":"133","cost":"122","supplierId":"7f9959b4-5719-4bc8-acd3-2ecca11d7d74","specs":"汇源100分百橙味果汁1LX12","allSell":70,"monthSell":70,"stock":1502,"status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/f10d5306-0b36-4a9a-9176-9507147fdb2d6102.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/f10d5306-0b36-4a9a-9176-9507147fdb2d6102.png","salePrice":null,"cid":"4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797"},{"id":"527bb89b-835c-48b3-ba66-01a481bca9733343","name":"阿萨姆奶茶500mlx15","price":"222.00","cost":"111.00","supplierId":"7f9959b4-5719-4bc8-acd3-2ecca11d7d74","specs":"500ml*15瓶","allSell":50,"monthSell":50,"stock":121,"status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/893a9f34-69e9-4a94-b825-7222deab30cf9295.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/893a9f34-69e9-4a94-b825-7222deab30cf9295.png","salePrice":null,"cid":"80ebe7f7-f296-40b4-9854-656de828930c489"},{"id":"5ce69644-4318-4f35-a4fe-c03ac65d1e2f1597","name":"百事可乐碳酸饮料330mlx24","price":"200","cost":"100","supplierId":"7f9959b4-5719-4bc8-acd3-2ecca11d7d74","specs":"330mlx24","allSell":30,"monthSell":30,"stock":121,"status":1,"saleName":null,"littlePrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/911bedbc-47e2-485e-8092-d05bdbf860c83455.png","bigPrintUrl":"http://47.114.1.170/lianxiangguanwang/pics/911bedbc-47e2-485e-8092-d05bdbf860c83455.png","salePrice":null,"cid":"7f3959d6-cffa-465b-bb33-a9d8772d7c889021"}]
      * url : null
      */
 
@@ -61,21 +60,21 @@ public class SearchGoodsBean {
 
     public static class DataBean {
         /**
-         * id : 20d0fbaa-8cc4-4107-b187-b04678c4559f2591
-         * name : 阿萨姆奶茶
-         * price : 4.00
-         * cost : 3.00
-         * supplierId : 46d89724-0cbf-4b38-bab6-f0b9e2aecb8f1122
-         * specs : 500ml
-         * allSell : 0
-         * monthSell : 0
-         * stock : 888
+         * id : f6a0d0a5-3849-40e3-ba7e-c99a3922f7c47385
+         * name : 百岁山矿泉水570mlx24
+         * price : 150
+         * cost : 120
+         * supplierId : 7f9959b4-5719-4bc8-acd3-2ecca11d7d74
+         * specs : 570mlx24
+         * allSell : 110
+         * monthSell : 110
+         * stock : 1112
          * status : 1
          * saleName : null
-         * littlePrintUrl : http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png
-         * bigPrintUrl : http://47.114.1.170/lianxiangguanwang/pics/90639f04-846e-4e14-ac7a-bca035e0e30e993.png
+         * littlePrintUrl : http://47.114.1.170/lianxiangguanwang/pics/8bc194c9-2df6-4552-95f3-26fbef587cc61054.png
+         * bigPrintUrl : http://47.114.1.170/lianxiangguanwang/pics/8bc194c9-2df6-4552-95f3-26fbef587cc61054.png
          * salePrice : null
-         * cid : a8fc0f1b-c5a0-4b11-a29c-eef796c687f78050
+         * cid : 8ddf8387-e089-40d2-ac7d-9e9e871611046088
          */
 
         private String id;
@@ -86,7 +85,7 @@ public class SearchGoodsBean {
         private String specs;
         private int allSell;
         private int monthSell;
-        private String stock;
+        private int stock;
         private int status;
         private Object saleName;
         private String littlePrintUrl;
@@ -158,11 +157,11 @@ public class SearchGoodsBean {
             this.monthSell = monthSell;
         }
 
-        public String getStock() {
+        public int getStock() {
             return stock;
         }
 
-        public void setStock(String stock) {
+        public void setStock(int stock) {
             this.stock = stock;
         }
 

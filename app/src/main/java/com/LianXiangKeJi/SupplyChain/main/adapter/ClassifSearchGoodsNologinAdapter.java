@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -87,7 +88,7 @@ public class ClassifSearchGoodsNologinAdapter extends RecyclerView.Adapter<Recyc
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
         @BindView(R.id.jia)
-        ImageView jia;
+        Button jia;
         @BindView(R.id.rl_item)
         RelativeLayout rlItem;
 

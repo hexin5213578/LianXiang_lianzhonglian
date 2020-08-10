@@ -135,7 +135,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 tvGoodsKucun.setVisibility(View.INVISIBLE);
                 tvGoodsYunfei.setVisibility(View.INVISIBLE);
             }
-            if(bean.getMonthsell()!=null && !bean.getMonthsell().equals("null")){
+            if(bean.getMonthsell()!=null && !bean.getMonthsell().equals("null") && Integer.valueOf(bean.getMonthsell())!=0){
                 tvGoodsXiaoliang.setText("月销:"+ bean.getMonthsell()+"件");
             }else{
                 tvGoodsXiaoliang.setVisibility(View.INVISIBLE);

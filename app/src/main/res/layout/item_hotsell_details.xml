@@ -4,10 +4,10 @@
     <RelativeLayout
         android:id="@+id/rl_item"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_114">
+        android:layout_height="@dimen/dp_90">
         <ImageView
             android:layout_width="@dimen/dp_64"
-            android:src="@mipmap/logo1"
+            android:src="@mipmap/juice"
             android:id="@+id/iv_goods_image"
             android:layout_marginTop="@dimen/dp_18"
             android:layout_marginLeft="@dimen/dp_10"
@@ -26,7 +26,7 @@
         </TextView>
         <TextView
             android:layout_width="wrap_content"
-            android:text="成交5740元"
+            android:text="成交0笔"
             android:textSize="@dimen/sp_12"
             android:textColor="#8B8B8B"
             android:layout_toRightOf="@id/iv_goods_image"
@@ -36,28 +36,13 @@
             android:layout_marginTop="@dimen/dp_7"
             android:layout_height="wrap_content">
         </TextView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="满200减"
-            android:textSize="11sp"
-            android:paddingLeft="@dimen/dp_6"
-            android:paddingRight="@dimen/dp_6"
-            android:id="@+id/tv_goods_discount"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/dp_8"
-            android:background="@drawable/goods_zhekou_bg"
-            android:textColor="#FF6666"
-            android:layout_below="@id/tv_goods_yichengjiao"
-            android:layout_toRightOf="@id/iv_goods_image"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:layout_height="@dimen/dp_17">
-        </TextView>
+
         <TextView
             android:layout_width="wrap_content"
             android:text="￥32.00"
             android:textSize="@dimen/sp_12"
             android:textColor="#FD3C3E"
-            android:layout_below="@id/tv_goods_discount"
+            android:layout_below="@id/tv_goods_yichengjiao"
             android:layout_marginLeft="@dimen/dp_8"
             android:id="@+id/tv_goods_price"
             android:layout_marginTop="@dimen/dp_8"
@@ -69,46 +54,25 @@
             android:text="/箱"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12"
-            android:layout_below="@id/tv_goods_discount"
+            android:layout_below="@id/tv_goods_yichengjiao"
             android:layout_marginTop="@dimen/dp_8"
-            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_3"
             android:layout_toRightOf="@id/tv_goods_price"
             android:layout_height="@dimen/dp_14">
         </TextView>
-        <ImageView
-            android:layout_width="@dimen/dp_17"
-            android:src="@mipmap/jia_bg"
+        <Button
+            android:layout_width="@dimen/dp_60"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
+            android:textColor="#FFA36A"
             android:id="@+id/jia"
-            android:layout_marginBottom="@dimen/dp_14"
+            android:background="@drawable/join_order"
+            android:text="加入进货单"
+            android:textSize="@dimen/sp_10"
+            android:layout_marginBottom="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_20"
-            android:layout_height="@dimen/dp_17">
-        </ImageView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:text="1"
-            android:textSize="@dimen/sp_14"
-            android:textColor="#333333"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/tv_goods_count"
-            android:visibility="gone"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/dp_43"
-            android:layout_marginBottom="@dimen/dp_14"
-            android:layout_height="wrap_content">
-        </TextView>
-        <ImageView
-            android:layout_width="@dimen/dp_17"
-            android:src="@mipmap/jian_bg"
-            android:layout_alignParentRight="true"
-            android:id="@+id/jian"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone"
-            android:layout_marginBottom="@dimen/dp_14"
-            android:layout_marginRight="@dimen/dp_56"
-            android:layout_height="@dimen/dp_17">
-        </ImageView>
+            android:layout_height="@dimen/dp_25">
+        </Button>
     </RelativeLayout>
     <View
         android:layout_below="@id/rl_item"

@@ -7,6 +7,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfSearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfSearchGoodsNoLoginBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.DeleteShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.HomeClassIfBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.HomeLunboBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
@@ -19,6 +20,8 @@ import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.WechatOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.WxBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
+import com.LianXiangKeJi.SupplyChain.recommend.bean.HotSellBean;
+import com.LianXiangKeJi.SupplyChain.recommend.bean.HotSellNoLoginBean;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
@@ -150,4 +153,16 @@ public interface Apis {
     //通过订单号获取支付宝支付数据
     @POST("order/super/payOne")
     Observable<ZfbBean> doGetZfbData(@Body RequestBody body);
+
+    //查询热门商品
+    @GET("category/hotShopGoods")
+    Observable<HotSellBean> doGetHotSell();
+
+    //查询未登录热门商品
+    @GET("category/hotShopGoods")
+    Observable<HotSellNoLoginBean> doGetHotNoLoginSell();
+
+    //首页轮播图
+    @GET("category/findSlideshow")
+    Observable<HomeLunboBean> doGetLunboImage();
 }

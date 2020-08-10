@@ -30,5 +30,6 @@
     <color name="welcome_title">#DBF6ED</color>
 
     <color name="activity_title">#141476</color>
+    <color name="join_order">#FFA36A</color>
 
 </resources>

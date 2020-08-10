@@ -1,4 +1,4 @@
-package com.LianXiangKeJi.SupplyChain.order.adapter;
+package com.LianXiangKeJi.SupplyChain.main.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,11 +21,11 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
-import com.LianXiangKeJi.SupplyChain.main.adapter.HotsellAdapter_home;
 import com.LianXiangKeJi.SupplyChain.main.bean.DeleteShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.recommend.bean.HotSellBean;
+import com.LianXiangKeJi.SupplyChain.search.adapter.SearchGoodsAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
@@ -46,17 +46,17 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 /**
- * @ClassName:Home_HotSellAdapter
+ * @ClassName:HotsellAdapter
  * @Author:hmy
  * @Description:java类作用描述
  */
-public class Near_HotSellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HotsellAdapter_home extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
 
     private final Context context;
     private final List<HotSellBean.DataBean> list;
-
     private boolean checked = true;
-    public Near_HotSellAdapter(Context context, List<HotSellBean.DataBean> list) {
+    public HotsellAdapter_home(Context context, List<HotSellBean.DataBean> list) {
 
         this.context = context;
         this.list = list;
@@ -65,17 +65,21 @@ public class Near_HotSellAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(context, R.layout.item_near_hotsell, null);
+        View view = View.inflate(context, R.layout.item_hotsell, null);
         return new ViewHolder(view);
     }
 
     @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+        String token = Common.getToken();
+        if(TextUtils.isEmpty(token)){
+            ((ViewHolder)holder).tvGoodsPrice.setText("￥？");
+        }
         Glide.with(context).load(list.get(position).getLittlePrintUrl()).into(((ViewHolder)holder).ivGoodsImage);
         ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
 
+        ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
         ((ViewHolder)holder).tvGoodsPrice.setText("￥"+Float.valueOf(list.get(position).getPrice()));
 
 
@@ -244,7 +248,7 @@ public class Near_HotSellAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
         //条目点击去商品详情
-        ((ViewHolder)holder).rlHotsellgoods.setOnClickListener(new View.OnClickListener() {
+        ((ViewHolder)holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 GoodsDeatailsBean goodsDeatailsBean = new GoodsDeatailsBean();
@@ -261,6 +265,7 @@ public class Near_HotSellAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 context.startActivity(intent);
             }
         });
+
     }
 
     @Override
@@ -273,17 +278,15 @@ public class Near_HotSellAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView ivGoodsImage;
         @BindView(R.id.tv_goods_name)
         TextView tvGoodsName;
-        @BindView(R.id.tv_goods_buycount)
-        TextView tvGoodsBuycount;
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
         @BindView(R.id.jia)
         Button jia;
-        @BindView(R.id.rl_hotsellgoods)
-        RelativeLayout rlHotsellgoods;
+        @BindView(R.id.rl_item)
+        RelativeLayout rlItem;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this,itemView);
         }
     }
 }

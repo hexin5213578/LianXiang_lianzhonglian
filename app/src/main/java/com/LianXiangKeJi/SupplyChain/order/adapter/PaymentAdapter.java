@@ -77,13 +77,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
 
-        //计算总价
-        for (int i = 0; i < ordersDetailList.size(); i++) {
-            double a = ordersDetailList.get(i).getNumber() * ordersDetailList.get(i).getPrice();
-            price += a;
-        }
-        ((ViewHolder) holder).tvPrice.setText("总价：￥" + price);
-        price = 0.0;
+        ((ViewHolder) holder).tvPrice.setText("总价：￥" + list.get(position).getMoney());
 
         SaveOrdersidBean saveOrdersidBean = new SaveOrdersidBean();
         saveOrdersidBean.setId(list.get(position).getId());

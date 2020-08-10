@@ -105,8 +105,11 @@ public class RecommendActivity extends BaseAvtivity {
         return null;
     }
 
+    /**
+     * 获取热销商品
+     * @param token
+     */
     public void getData(String token){
-        //获取热销商品
         if(!TextUtils.isEmpty(token)){
             NetUtils.getInstance().getApis().doGetHotSell()
                     .subscribeOn(Schedulers.io())
@@ -121,7 +124,6 @@ public class RecommendActivity extends BaseAvtivity {
                         public void onNext(HotSellBean hotSellBean) {
                             List<HotSellBean.DataBean> data = hotSellBean.getData();
                             if(data.size()>0&&data!=null){
-                                //热销展示的四条商品
                                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
                                 rcRecommend.setLayoutManager(linearLayoutManager);
                                 HotsellAdapter home_hotSellAdapter = new HotsellAdapter(getContext(), data);

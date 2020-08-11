@@ -54,7 +54,6 @@ public class FirstListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }else{
             ((ViewHolder)holder).rlFirst.setBackground(context.getResources().getDrawable(R.drawable.rl_first_bg2));
             ((ViewHolder)holder).tvName.setTextColor(context.getResources().getColor(R.color.more_font));
-
         }
         ((ViewHolder) holder).tvName.setText(list.get(position).getName());
         ((ViewHolder) holder).rlFirst.setOnClickListener(new View.OnClickListener() {

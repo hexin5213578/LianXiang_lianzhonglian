@@ -24,6 +24,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfSearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfSearchGoodsNoLoginBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveIdBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.SaveSecondItemBean;
 import com.LianXiangKeJi.SupplyChain.main.contract.ClassIfContract;
 import com.LianXiangKeJi.SupplyChain.main.presenter.ClassIfPresenter;
 import com.LianXiangKeJi.SupplyChain.search.activity.SearchActivity;
@@ -66,6 +67,9 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     List<ClassIfBean.DataBean> list = new ArrayList<>();
     private GridLayoutManager manager;
     private String token;
+    private ClassifSearchGoodsAdapter adapter;
+    private SecondListAdapter secondListAdapter;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -119,24 +123,26 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
 
         manager = new GridLayoutManager(getContext(),3);
         rcSecondList.setLayoutManager(manager);
-        SecondListAdapter secondListAdapter = new SecondListAdapter(getContext(),children);
+        secondListAdapter = new SecondListAdapter(getContext(),children);
         rcSecondList.setAdapter(secondListAdapter);
 
         //刷新UI
         firstListAdapter.notifyDataSetChanged();
         secondListAdapter.notifyDataSetChanged();
 
-
     }
     //获取点击条目的id 查询id下的商品
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getSearchID(String id){
-        if(!TextUtils.isEmpty(token)){
-            getclassIfGoods(id);
-        }else{
-            getclassIfGoodsnoLogin(id);
-        }
+    public void getSearchID(SaveSecondItemBean bean){
 
+        secondListAdapter.getId(bean.getIds());
+        secondListAdapter.notifyDataSetChanged();
+
+        if(!TextUtils.isEmpty(token)){
+            getclassIfGoods(bean.getId());
+        }else{
+            getclassIfGoodsnoLogin(bean.getId());
+        }
     }
 
     @Override
@@ -223,7 +229,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
                             LinearLayoutManager manager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
                             rcSearchGoodss.setLayoutManager(manager);
 
-                            ClassifSearchGoodsAdapter adapter = new ClassifSearchGoodsAdapter(getContext(), dataBeans1);
+                            adapter = new ClassifSearchGoodsAdapter(getContext(), dataBeans1);
 
                             rcSearchGoodss.setAdapter(adapter);
                             adapter.notifyDataSetChanged();

@@ -210,7 +210,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
             case R.id.bt_jiesuan:
                 //  带数据去订单页发起结算
                 List<OrderBean> list_order  = new ArrayList<>();
-
                 for (int i=0;i<data.size();i++){
                     ShopCarBean.DataBean dataBean = data.get(i);
                     if(dataBean.isPersonChecked()==true){
@@ -225,12 +224,16 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                         list_order.add(orderBean);
                     }
                 }
+                if(list_order!=null &&list_order.size()>0){
+                    Intent intent = new Intent(getContext(), ConfirmOrderActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("orderlist", (Serializable) list_order);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(getContext(), "请先选购商品", Toast.LENGTH_SHORT).show();
+                }
 
-                Intent intent = new Intent(getContext(), ConfirmOrderActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("orderlist", (Serializable) list_order);
-                intent.putExtras(bundle);
-                startActivity(intent);
 
                 break;
             case R.id.tv_finish:

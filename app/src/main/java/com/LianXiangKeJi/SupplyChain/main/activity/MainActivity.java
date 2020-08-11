@@ -97,7 +97,6 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
         //存储map集合存放商品Id
        /* LinkedHashMap map = new LinkedHashMap<String,String>();
         SPUtil.getInstance().setMap(MainActivity.this,"goodsid",map);*/
-
         rbs[0] = rbHome;
         rbs[1] = rbClassIf;
         rbs[2] = rbOrder;

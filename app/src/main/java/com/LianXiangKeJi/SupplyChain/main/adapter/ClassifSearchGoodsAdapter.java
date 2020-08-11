@@ -74,6 +74,9 @@ public class ClassifSearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView
     @SuppressLint({"SetTextI18n", "NewApi"})
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+
+
         String token = Common.getToken();
         if(TextUtils.isEmpty(token)){
             ((ViewHolder)holder).tvGoodsPrice.setText("￥？");

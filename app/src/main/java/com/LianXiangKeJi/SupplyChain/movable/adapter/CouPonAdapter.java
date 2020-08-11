@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,10 +52,14 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ((ViewHolder) holder).tvCouponJian.setText(dataBean.getMinus() + "");
 
         long overTime = dataBean.getOverTime();
+        long beginTime = list.get(position).getBeginTime();
 
         String date = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(
                 new Date(overTime));
         ((ViewHolder) holder).tvCouponTime.setText("有效期至 " + date);
+
+        String date1 = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(
+                new Date(beginTime));
         //获取系统时间
         long time = System.currentTimeMillis();
         //结束时间跟当前时间对比 小于24小时提示即将到期
@@ -65,13 +70,22 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ((ViewHolder)holder).rlSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int couponState = list.get(position).getCouponState();
+                if(couponState==0){
+                    Toast.makeText(context, "开始使用时间为"+beginTime, Toast.LENGTH_SHORT).show();
+                }else if(couponState==1){
+                    SaveCouponIdBean saveCouponIdBean = new SaveCouponIdBean();
+                    saveCouponIdBean.setClose("关闭界面");
+                    saveCouponIdBean.setCouponId(list.get(position).getId());
+                    saveCouponIdBean.setFull(list.get(position).getFull()+"");
+                    saveCouponIdBean.setJian(list.get(position).getMinus()+"");
+                    EventBus.getDefault().post(saveCouponIdBean);
+                }else if(couponState==2){
+                    Toast.makeText(context, "此优惠券已被使用", Toast.LENGTH_SHORT).show();
+                }else if(couponState==3){
+                    Toast.makeText(context, "此优惠券已过期", Toast.LENGTH_SHORT).show();
 
-                SaveCouponIdBean saveCouponIdBean = new SaveCouponIdBean();
-                saveCouponIdBean.setClose("关闭界面");
-                saveCouponIdBean.setCouponId(list.get(position).getId());
-                saveCouponIdBean.setFull(list.get(position).getFull()+"");
-                saveCouponIdBean.setJian(list.get(position).getMinus()+"");
-                EventBus.getDefault().post(saveCouponIdBean);
+                }
             }
         });
 

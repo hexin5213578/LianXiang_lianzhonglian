@@ -125,6 +125,7 @@ dependencies {
 
     //关联图片选择器模块
     implementation project(':pictureselector')
+    implementation project(':ocr_ui')
 
     // 支付宝支付
     implementation (name: 'alipaySdk-15.7.9-20200727142846', ext: 'aar')

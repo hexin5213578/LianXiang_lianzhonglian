@@ -30,7 +30,7 @@ import okhttp3.RequestBody;
 /**
  * @ClassName:ReplacePhoneActivity
  * @Author:hmy
- * @Description:java类作用描述
+ * @Description:java类作用描述  修改手机号
  */
 public class ReplacePhoneActivity extends BaseAvtivity implements View.OnClickListener {
     @BindView(R.id.back)
@@ -106,6 +106,7 @@ public class ReplacePhoneActivity extends BaseAvtivity implements View.OnClickLi
                                 hideDialog();
                                 Toast.makeText(ReplacePhoneActivity.this, ""+updateImageBean.getData(), Toast.LENGTH_SHORT).show();
                                 if(updateImageBean.getData().equals("修改成功")){
+                                    SPUtil.getInstance().saveData(ReplacePhoneActivity.this,SPUtil.FILE_NAME,SPUtil.KEY_PHONE,phone);
                                     finish();
                                 }
                             }

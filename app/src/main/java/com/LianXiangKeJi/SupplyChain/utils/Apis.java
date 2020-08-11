@@ -27,11 +27,15 @@ import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsNoLoginBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchHotBean;
 import com.LianXiangKeJi.SupplyChain.setup.bean.UpdateImageBean;
+import com.LianXiangKeJi.SupplyChain.utils.bean.IdentifyYingyeBean;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
@@ -165,4 +169,9 @@ public interface Apis {
     //首页轮播图
     @GET("category/findSlideshow")
     Observable<HomeLunboBean> doGetLunboImage();
+
+    //营业执照识别
+    @POST()
+    @Headers({"Content-Type:application/x-www-form-urlencoded;charset=UTF-8"})
+    Observable<IdentifyYingyeBean> IdentifyYingye(@Url String url, @Query("access_token") String token, @Field("image")String image, @Field("detect_direction")String direction);
 }

@@ -112,6 +112,7 @@ public class UpdataAddressActivity extends BaseAvtivity implements View.OnClickL
                 break;
             case R.id.tv_delete:
                 CustomDialog.Builder builder = new CustomDialog.Builder(UpdataAddressActivity.this);
+
                 builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

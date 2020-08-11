@@ -4,11 +4,12 @@ import java.util.List;
 
 public class CouponBean {
 
+
     /**
      * flag : true
      * code : 200
      * message : success
-     * data : [{"id":"23d754b3-8624-4eff-a312-a5988cacfdce796","name":"123","saleType":"满减券","number":100,"already":0,"residue":100,"employ":0,"state":"123","norm":5,"type":"全场通用","beginTime":1596193775000,"overTime":1597230575000,"fixedTime":null,"full":100,"minus":1},{"id":"70b34b4d-6014-42ed-861b-f8a3b337af584059","name":"双十一优惠券","saleType":"满减券","number":500,"already":5,"residue":495,"employ":0,"state":"...","norm":5,"type":"全场通用","beginTime":1596107849000,"overTime":1596712649000,"fixedTime":null,"full":50,"minus":10},{"id":"9b58ea8d-9965-4dd8-b2c2-91eafec10fa62370","name":"618满减","saleType":"满减券","number":500,"already":5,"residue":495,"employ":0,"state":"...","norm":5,"type":"全场通用","beginTime":null,"overTime":null,"fixedTime":3,"full":50,"minus":10}]
+     * data : [{"id":"3c43af03-0d94-463d-8f15-5c6814105c38217","userId":"6f9c51b0-b246-468c-b5f0-6ff4fa4a4c7d8428","couponId":"2c3f6e4e-f974-42d9-87db-c8058e22948b2987","couponState":2,"name":"双11","saleType":"满减券","state":"123123123","beginTime":1596816000000,"overTime":1601481599000,"full":100,"minus":10},{"id":"be538aaa-ca57-4169-a1ed-6fcac4c93e582230","userId":"6f9c51b0-b246-468c-b5f0-6ff4fa4a4c7d8428","couponId":"9f48f3e4-b807-45af-b767-90e31cdbc1f11500","couponState":1,"name":"618","saleType":"满减券","state":"123123","beginTime":1596816000000,"overTime":1601049599000,"full":100,"minus":11}]
      * url : null
      */
 
@@ -60,36 +61,28 @@ public class CouponBean {
 
     public static class DataBean {
         /**
-         * id : 23d754b3-8624-4eff-a312-a5988cacfdce796
-         * name : 123
+         * id : 3c43af03-0d94-463d-8f15-5c6814105c38217
+         * userId : 6f9c51b0-b246-468c-b5f0-6ff4fa4a4c7d8428
+         * couponId : 2c3f6e4e-f974-42d9-87db-c8058e22948b2987
+         * couponState : 2
+         * name : 双11
          * saleType : 满减券
-         * number : 100
-         * already : 0
-         * residue : 100
-         * employ : 0
-         * state : 123
-         * norm : 5
-         * type : 全场通用
-         * beginTime : 1596193775000
-         * overTime : 1597230575000
-         * fixedTime : null
+         * state : 123123123
+         * beginTime : 1596816000000
+         * overTime : 1601481599000
          * full : 100
-         * minus : 1
+         * minus : 10
          */
 
         private String id;
+        private String userId;
+        private String couponId;
+        private int couponState;
         private String name;
         private String saleType;
-        private int number;
-        private int already;
-        private int residue;
-        private int employ;
         private String state;
-        private int norm;
-        private String type;
         private long beginTime;
         private long overTime;
-        private Object fixedTime;
         private int full;
         private int minus;
 
@@ -99,6 +92,30 @@ public class CouponBean {
 
         public void setId(String id) {
             this.id = id;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public String getCouponId() {
+            return couponId;
+        }
+
+        public void setCouponId(String couponId) {
+            this.couponId = couponId;
+        }
+
+        public int getCouponState() {
+            return couponState;
+        }
+
+        public void setCouponState(int couponState) {
+            this.couponState = couponState;
         }
 
         public String getName() {
@@ -117,60 +134,12 @@ public class CouponBean {
             this.saleType = saleType;
         }
 
-        public int getNumber() {
-            return number;
-        }
-
-        public void setNumber(int number) {
-            this.number = number;
-        }
-
-        public int getAlready() {
-            return already;
-        }
-
-        public void setAlready(int already) {
-            this.already = already;
-        }
-
-        public int getResidue() {
-            return residue;
-        }
-
-        public void setResidue(int residue) {
-            this.residue = residue;
-        }
-
-        public int getEmploy() {
-            return employ;
-        }
-
-        public void setEmploy(int employ) {
-            this.employ = employ;
-        }
-
         public String getState() {
             return state;
         }
 
         public void setState(String state) {
             this.state = state;
-        }
-
-        public int getNorm() {
-            return norm;
-        }
-
-        public void setNorm(int norm) {
-            this.norm = norm;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
         }
 
         public long getBeginTime() {
@@ -187,14 +156,6 @@ public class CouponBean {
 
         public void setOverTime(long overTime) {
             this.overTime = overTime;
-        }
-
-        public Object getFixedTime() {
-            return fixedTime;
-        }
-
-        public void setFixedTime(Object fixedTime) {
-            this.fixedTime = fixedTime;
         }
 
         public int getFull() {

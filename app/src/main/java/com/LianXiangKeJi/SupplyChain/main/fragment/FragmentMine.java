@@ -134,7 +134,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
         rlChangmai.setOnClickListener(this);
         rlMyaddress.setOnClickListener(this);
         rlYouhui.setOnClickListener(this);
-
+        ivYuan.setOnClickListener(this);
         String username = SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.USER_NAME);
         String hearurl = SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.HEAD_URL);
         // 设置用户信息
@@ -180,6 +180,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                 break;
             // 登录注册
             case R.id.tv_login:
+            case R.id.iv_yuan:
                 if (!TextUtils.isEmpty(token)) {
                     return;
                 } else {

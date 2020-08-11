@@ -68,7 +68,6 @@ public class MovableActivity extends BaseAvtivity {
                     public void onSubscribe(Disposable d) {
 
                     }
-
                     @Override
                     public void onNext(MovableBean couponBean) {
                         hideDialog();

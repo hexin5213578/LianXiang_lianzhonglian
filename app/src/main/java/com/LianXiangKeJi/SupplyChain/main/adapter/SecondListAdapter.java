@@ -3,6 +3,7 @@ package com.LianXiangKeJi.SupplyChain.main.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.main.bean.ClassIfBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.SaveSecondItemBean;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.EventListener;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,6 +29,11 @@ public class SecondListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final Context context;
     private final List<ClassIfBean.DataBean.ChildrenBean> children;
 
+    private int id;
+
+    public void getId(int ids) {
+        id = ids;
+    }
 
     public SecondListAdapter(Context context, List<ClassIfBean.DataBean.ChildrenBean> children) {
 
@@ -45,12 +51,20 @@ public class SecondListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((ViewHolder)holder).tvName.setText(children.get(position).getName());
-        ((ViewHolder)holder).tvName.setOnClickListener(new View.OnClickListener() {
+        if(id ==position){
+            ((ViewHolder)holder).tvName.setTextColor(context.getResources().getColor(R.color.rc_selector_FontColor));
+        }else{
+            ((ViewHolder)holder).tvName.setTextColor(context.getResources().getColor(R.color.more_font));
+        }
+        ((ViewHolder) holder).tvName.setText(children.get(position).getName());
+        ((ViewHolder) holder).tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //点击具体条目发送到fragment 做ID检索
-                EventBus.getDefault().post(children.get(position).getId());
+                SaveSecondItemBean saveSecondItemBean = new SaveSecondItemBean();
+                saveSecondItemBean.setId(children.get(position).getId());
+                saveSecondItemBean.setIds(position);
+                EventBus.getDefault().post(saveSecondItemBean);
             }
         });
     }
@@ -63,9 +77,11 @@ public class SecondListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_name)
         TextView tvName;
+        @BindView(R.id.rl_second)
+        RelativeLayout rlSecond;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

@@ -37,6 +37,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
+import com.LianXiangKeJi.SupplyChain.recommend.adapter.HotsellAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
@@ -370,9 +371,18 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 }else{
                     //拿到商品信息 以count为数量加入购物车
                     String id = bean.getId();
-
                     LinkedHashMap<String, String> map = SPUtil.getMap(GoodsDetailsActivity.this, "goodsid");
-                    map.put(id, String.valueOf(tv_count_change));
+
+                    for (String key : map.keySet()) {
+                        if(id.equals(key)){
+                            String value = map.get(key);
+                            tv_count_change.setText(value);
+                        }
+                    }
+
+                    String s = tv_count_change.getText().toString();
+
+                    map.put(id, String.valueOf(s));
 
                     List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
 

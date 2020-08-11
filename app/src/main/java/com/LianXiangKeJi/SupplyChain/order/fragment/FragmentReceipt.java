@@ -90,7 +90,7 @@ public class FragmentReceipt extends BaseFragment {
                             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
                             rcHotSell.setLayoutManager(gridLayoutManager);
 
-                            Near_HotSellAdapter adapter = new Near_HotSellAdapter(getContext(), data);
+                            Near_HotSellAdapter adapter = new Near_HotSellAdapter(getActivity(), data);
                             rcHotSell.setAdapter(adapter);
                         }
                     }

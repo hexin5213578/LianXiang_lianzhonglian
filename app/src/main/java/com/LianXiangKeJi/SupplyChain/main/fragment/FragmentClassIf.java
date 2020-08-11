@@ -229,7 +229,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
                             LinearLayoutManager manager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
                             rcSearchGoodss.setLayoutManager(manager);
 
-                            adapter = new ClassifSearchGoodsAdapter(getContext(), dataBeans1);
+                            adapter = new ClassifSearchGoodsAdapter(getActivity(), dataBeans1);
 
                             rcSearchGoodss.setAdapter(adapter);
                             adapter.notifyDataSetChanged();

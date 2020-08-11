@@ -26,6 +26,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.DeleteShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
+import com.LianXiangKeJi.SupplyChain.recommend.adapter.HotsellAdapter;
 import com.LianXiangKeJi.SupplyChain.search.adapter.SearchGoodsAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
@@ -327,11 +328,9 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                         SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
                         resultBean.setShopGoodsId(listId.get(i));
                         shoplist.add(resultBean);
-                        String s = listId.get(i);
-
-                        goodsid.remove(s);
 
                     }
+
                     SPUtil.setMap(getContext(),"goodsid",goodsid);
 
                     Log.d("hmy","选删"+listId.size());

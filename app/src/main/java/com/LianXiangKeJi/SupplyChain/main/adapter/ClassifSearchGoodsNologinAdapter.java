@@ -50,7 +50,7 @@ public class ClassifSearchGoodsNologinAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        Glide.with(context).load(list.get(position).getUrl()).into(((ViewHolder)holder).ivGoodsImage);
+        Glide.with(context).load(list.get(position).getUrl()).into(((ViewHolder) holder).ivGoodsImage);
         ((ViewHolder) holder).tvGoodsPrice.setText("￥？");
         ((ViewHolder) holder).jia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,8 +87,13 @@ public class ClassifSearchGoodsNologinAdapter extends RecyclerView.Adapter<Recyc
         TextView tvGoodsName;
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
+        @BindView(R.id.jian)
+        ImageView jian;
+        @BindView(R.id.count)
+        TextView count;
         @BindView(R.id.jia)
-        Button jia;
+        ImageView jia;
+
         @BindView(R.id.rl_item)
         RelativeLayout rlItem;
 

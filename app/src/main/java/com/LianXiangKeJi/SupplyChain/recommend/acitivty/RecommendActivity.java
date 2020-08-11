@@ -126,7 +126,7 @@ public class RecommendActivity extends BaseAvtivity {
                             if(data.size()>0&&data!=null){
                                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
                                 rcRecommend.setLayoutManager(linearLayoutManager);
-                                HotsellAdapter home_hotSellAdapter = new HotsellAdapter(getContext(), data);
+                                HotsellAdapter home_hotSellAdapter = new HotsellAdapter(RecommendActivity.this, data);
                                 rcRecommend.setAdapter(home_hotSellAdapter);
                             }
                         }

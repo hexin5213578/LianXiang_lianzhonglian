@@ -1,14 +1,24 @@
 package com.LianXiangKeJi.SupplyChain.recommend.adapter;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,13 +63,13 @@ import okhttp3.RequestBody;
 public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    private final Context context;
+    private final Activity context;
     private final List<HotSellBean.DataBean> list;
 
 
-    private boolean checked = true;
+    private PopupWindow mPopupWindow1;
 
-    public HotsellAdapter(Context context, List<HotSellBean.DataBean> list) {
+    public HotsellAdapter(Activity context, List<HotSellBean.DataBean> list) {
 
         this.context = context;
         this.list = list;
@@ -96,6 +106,10 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
                 ((ViewHolder)holder).count.setVisibility(View.VISIBLE);
                 ((ViewHolder)holder).count.setText(s);
+                if(Integer.valueOf(s)==0){
+                    ((ViewHolder)holder).jian.setVisibility(View.INVISIBLE);
+                    ((ViewHolder)holder).count.setVisibility(View.INVISIBLE);
+                }
             }
         }
         ((ViewHolder) holder).jia.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +164,33 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                                 @Override
                                 public void onNext(ShopCarBean shopCarBean) {
-                                    Toast.makeText(context, "添加进货单成功", Toast.LENGTH_SHORT).show();
+                                    mPopupWindow1 = new PopupWindow();
+                                    mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                                    mPopupWindow1.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                                    View view1 = LayoutInflater.from(context).inflate(R.layout.dialog_addshopcar_success, null);
+                                    //popwindow设置属性
+                                    mPopupWindow1.setContentView(view1);
+                                    mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
+                                    mPopupWindow1.setFocusable(true);
+                                    mPopupWindow1.setOutsideTouchable(true);
+                                    mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss() {
+                                            setWindowAlpa(false);
+                                        }
+                                    });
+
+
+                                    show1(view1);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //要执行的操作
+                                            dismiss1();
+                                        }
+                                    }, 2000);//2秒后执行弹出框消失
+
 
                                 }
 
@@ -186,50 +226,89 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 integer--;
                 ((ViewHolder)holder).count.setText(integer+"");
 
+
                 map.put(list.get(position).getId(), String.valueOf(integer));
 
                 if(integer==0){
                     ((ViewHolder)holder).jian.setVisibility(View.INVISIBLE);
                     ((ViewHolder)holder).count.setVisibility(View.INVISIBLE);
 
-                    SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
-                    saveShopCarBean.setState(false);
+                    map.remove(list.get(position).getId());
 
-                    String id = list.get(position).getId();
+                    //遍历集合的键
+                    if(map.size()>0){
+                        SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                        saveShopCarBean.setState(false);
 
-                    SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
-                    resultBean.setShopGoodsId(id);
-                    shoplist.add(resultBean);
-                    //添加进集合
-                    map.remove(id);
-                    Gson gson = new Gson();
-                    String json = gson.toJson(saveShopCarBean);
-                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                            String key = entry.getKey();
+                            SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                            resultBean.setShopGoodsId(key);
+                            shoplist.add(resultBean);
+                        }
+                        //添加进集合
+                        saveShopCarBean.setShoppingCartList(shoplist);
 
-                    NetUtils.getInstance().getApis().doDeleteShopCar(requestBody)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<DeleteShopCarBean>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(saveShopCarBean);
+                        RequestBody requestBody2 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                        NetUtils.getInstance().getApis().doShopCar(requestBody2)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<ShopCarBean>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
 
-                                }
+                                    }
 
-                                @Override
-                                public void onNext(DeleteShopCarBean bean) {
+                                    @Override
+                                    public void onNext(ShopCarBean shopCarBean) {
 
-                                }
+                                    }
 
-                                @Override
-                                public void onError(Throwable e) {
+                                    @Override
+                                    public void onError(Throwable e) {
 
-                                }
+                                    }
 
-                                @Override
-                                public void onComplete() {
+                                    @Override
+                                    public void onComplete() {
 
-                                }
-                            });
+                                    }
+                                });
+
+                    }else{
+                        SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                        saveShopCarBean.setState(false);
+                        Gson gson = new Gson();
+                        String json = gson.toJson(saveShopCarBean);
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+                        NetUtils.getInstance().getApis().doDeleteShopCar(requestBody)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<DeleteShopCarBean>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(DeleteShopCarBean bean) {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+                    }
                 }
                 SPUtil.setMap(context, "goodsid", map);
             }
@@ -283,5 +362,45 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+    private void show1(View v) {
+        if (mPopupWindow1 != null && !mPopupWindow1.isShowing()) {
+            mPopupWindow1.showAtLocation(v, Gravity.CENTER_HORIZONTAL, 0, 0);
+        }
+        setWindowAlpa(true);
+    }
+
+    public void dismiss1() {
+        if (mPopupWindow1 != null && mPopupWindow1.isShowing()) {
+            mPopupWindow1.dismiss();
+        }
+    }
+
+    //设置透明度
+    public void setWindowAlpa(boolean isopen) {
+        if (Build.VERSION.SDK_INT < 11) {
+            return;
+        }
+        final Window window = context.getWindow();
+        final WindowManager.LayoutParams lp = window.getAttributes();
+        window.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        ValueAnimator animator;
+        if (isopen) {
+            animator = ValueAnimator.ofFloat(1.0f, 0.5f);
+        } else {
+            animator = ValueAnimator.ofFloat(0.5f, 1.0f);
+        }
+        animator.setDuration(400);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float alpha = (float) animation.getAnimatedValue();
+                lp.alpha = alpha;
+                window.setAttributes(lp);
+            }
+        });
+        animator.start();
     }
 }

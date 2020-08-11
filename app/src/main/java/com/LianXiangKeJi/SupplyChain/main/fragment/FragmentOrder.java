@@ -26,6 +26,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.DeleteShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
+import com.LianXiangKeJi.SupplyChain.search.adapter.SearchGoodsAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.google.gson.Gson;
@@ -83,6 +84,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
     private List<String> listId = new ArrayList<>();
     private ShopcarAdapter shopcarAdapter;
     private List<ShopCarBean.DataBean> data;
+    private double totalPrice;
 
     @Override
     protected void getid(View view) {
@@ -118,6 +120,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
             showDialog();
             doShopCar(requestBody);
             hideDialog();
+            money.setText("¥"+"0.00");
         } else {
             Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
         }
@@ -127,13 +130,14 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
     public void calculationCountAndPrice(String i) {
         //是否所有的条目都被选中
         boolean isAllChecked = true;
-        double totalPrice = 0;
+        totalPrice = 0;
 
         for (ShopCarBean.DataBean bean : list) {
             if (!bean.isPersonChecked()) {
                 isAllChecked = false;
             } else {
                 totalPrice += Double.valueOf(bean.getPrice()) * bean.getCount();
+                isAllChecked = true;
             }
         }
         if(tvManager.getVisibility()== 0){
@@ -180,7 +184,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         money.setVisibility(View.VISIBLE);
         btJiesuan.setVisibility(View.VISIBLE);
         btDelete.setVisibility(View.GONE);
-
+        money.setText("¥"+"0.00");
         rbCheckAll.setChecked(false);
         super.onHiddenChanged(hidden);
         SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
@@ -210,6 +214,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
             case R.id.bt_jiesuan:
                 //  带数据去订单页发起结算
                 List<OrderBean> list_order  = new ArrayList<>();
+
                 for (int i=0;i<data.size();i++){
                     ShopCarBean.DataBean dataBean = data.get(i);
                     if(dataBean.isPersonChecked()==true){
@@ -225,15 +230,19 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                     }
                 }
                 if(list_order!=null &&list_order.size()>0){
-                    Intent intent = new Intent(getContext(), ConfirmOrderActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("orderlist", (Serializable) list_order);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(totalPrice>200){
+                        Intent intent = new Intent(getContext(), ConfirmOrderActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("orderlist", (Serializable) list_order);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(getContext(), "结算最低金额为200元", Toast.LENGTH_SHORT).show();
+                    }
+
                 }else{
                     Toast.makeText(getContext(), "请先选购商品", Toast.LENGTH_SHORT).show();
                 }
-
 
                 break;
             case R.id.tv_finish:
@@ -247,7 +256,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.bt_delete:
                 List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
-
 
                 for (ShopCarBean.DataBean bean : list) {
                     if(bean.isPersonChecked()==false){
@@ -377,6 +385,15 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                     public void onNext(ShopCarBean shopCarBean) {
                         hideDialog();
                         data = shopCarBean.getData();
+                        LinkedHashMap<String, String> goodsid = SPUtil.getMap(getContext(), "goodsid");
+                        for (String key : goodsid.keySet()) {
+                            String value = goodsid.get(key);
+                            for (int i =0;i<data.size();i++){
+                                if(data.get(i).getId().equals(key)){
+                                    data.get(i).setCount(Integer.valueOf(value));
+                                }
+                            }
+                        }
                         //判断进货单数据是否为空 如果为空隐藏所有功能展示进货单为空图片
                         if(data.size()>0&& data !=null){
                             noshopcar.setVisibility(View.GONE);
@@ -388,17 +405,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                             list.addAll(data);
                             shopcarAdapter.setData(data);
                             rcOrder.setAdapter(shopcarAdapter);
-
-                            //将拿到的内容 存入sp
-
-                            LinkedHashMap<String,String> map = new LinkedHashMap<>();
-                            for (int i =0;i<data.size();i++){
-                                String id = data.get(i).getId();
-                                String name = data.get(i).getName();
-
-                                map.put(id,name);
-                            }
-                            SPUtil.setMap(getContext(),"mapkey",map);
 
                             rbCheckAll.setOnClickListener(new View.OnClickListener() {
                                 @Override

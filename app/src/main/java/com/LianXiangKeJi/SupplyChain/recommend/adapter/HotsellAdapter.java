@@ -25,6 +25,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.DeleteShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.recommend.bean.HotSellBean;
+import com.LianXiangKeJi.SupplyChain.search.adapter.SearchGoodsAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
@@ -54,6 +55,7 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final Context context;
     private final List<HotSellBean.DataBean> list;
+
 
     private boolean checked = true;
 
@@ -90,10 +92,10 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         for (String key : map.keySet()) {
             if (list.get(position).getId().equals(key)) {
-                checked = false;
-                ((ViewHolder) holder).jia.setText("已加入进货单");
-                ((ViewHolder) holder).jia.setTextColor(context.getColor(R.color.font_color));
-                ((ViewHolder) holder).jia.setBackground(context.getDrawable(R.drawable.unjoin_order));
+                String s = map.get(key);
+                ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
+                ((ViewHolder)holder).count.setVisibility(View.VISIBLE);
+                ((ViewHolder)holder).count.setText(s);
             }
         }
         ((ViewHolder) holder).jia.setOnClickListener(new View.OnClickListener() {
@@ -101,153 +103,135 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
-                if (checked) {
-                    //拿到商品信息 以count为数量加入购物车
-                    String id = list.get(position).getId();
-                    String name = list.get(position).getName();
-                    List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
-
-                    LinkedHashMap<String, String> map = SPUtil.getMap(context, "goodsid");
-
-                    map.put(id, name);
-
-                    //遍历集合的键
-                    if (map.size() > 0) {
-                        SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
-                        saveShopCarBean.setState(false);
-                        for (Map.Entry<String, String> entry : map.entrySet()) {
-                            String key = entry.getKey();
-                            SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
-                            resultBean.setShopGoodsId(key);
-                            shoplist.add(resultBean);
-                        }
-                        saveShopCarBean.setShoppingCartList(shoplist);
-
-                        Gson gson = new Gson();
-                        String json = gson.toJson(saveShopCarBean);
-
-                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-                        NetUtils.getInstance().getApis().doShopCar(requestBody)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Observer<ShopCarBean>() {
-                                    @Override
-                                    public void onSubscribe(Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(ShopCarBean shopCarBean) {
-                                        Toast.makeText(context, "添加进货单成功", Toast.LENGTH_SHORT).show();
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-
-                                    }
-                                });
+                String a = "0";
+                LinkedHashMap<String, String> map = SPUtil.getMap(context, "goodsid");
+                for (String key:map.keySet()
+                ) {
+                    if(key.equals(list.get(position).getId())){
+                        a = map.get(key);
                     }
-
-                    SPUtil.setMap(context, "goodsid", map);
-                    checked = false;
-                    ((ViewHolder) holder).jia.setText("已加入进货单");
-                    ((ViewHolder) holder).jia.setTextColor(context.getColor(R.color.font_color));
-                    ((ViewHolder) holder).jia.setBackground(context.getDrawable(R.drawable.unjoin_order));
-                } else {
-                    List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
-
-
-                    String id = list.get(position).getId();
-                    LinkedHashMap<String, String> goodsid = SPUtil.getMap(context, "goodsid");
-
-                    goodsid.remove(id);
-                    //遍历集合的键
-                    if (goodsid.size() > 0) {
-                        SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
-                        saveShopCarBean.setState(false);
-
-                        for (Map.Entry<String, String> entry : goodsid.entrySet()) {
-                            String key = entry.getKey();
-                            SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
-                            resultBean.setShopGoodsId(key);
-                            shoplist.add(resultBean);
-                        }
-                        //添加进集合
-
-                        saveShopCarBean.setShoppingCartList(shoplist);
-
-                        Gson gson = new Gson();
-                        String json = gson.toJson(saveShopCarBean);
-                        RequestBody requestBody2 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-                        NetUtils.getInstance().getApis().doShopCar(requestBody2)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Observer<ShopCarBean>() {
-                                    @Override
-                                    public void onSubscribe(Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(ShopCarBean shopCarBean) {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-
-                                    }
-                                });
-
-                    } else {
-                        SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
-                        saveShopCarBean.setState(false);
-                        Gson gson = new Gson();
-                        String json = gson.toJson(saveShopCarBean);
-                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-
-                        NetUtils.getInstance().getApis().doDeleteShopCar(requestBody)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Observer<DeleteShopCarBean>() {
-                                    @Override
-                                    public void onSubscribe(Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(DeleteShopCarBean bean) {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-
-                                    }
-                                });
-                    }
-                    SPUtil.setMap(context, "goodsid", goodsid);
-                    checked = true;
-                    ((ViewHolder) holder).jia.setText("加入进货单");
-                    ((ViewHolder) holder).jia.setTextColor(context.getColor(R.color.join_order));
-                    ((ViewHolder) holder).jia.setBackground(context.getDrawable(R.drawable.join_order));
                 }
+                Integer integer = Integer.valueOf(a);
+                integer++;
+                ((ViewHolder)holder).count.setText(integer+"");
+
+                map.put(list.get(position).getId(), String.valueOf(integer));
+                ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
+                ((ViewHolder)holder).count.setVisibility(View.VISIBLE);
+                String id = list.get(position).getId();
+                map.put(id, String.valueOf(integer));
+
+                //拿到商品信息 以count为数量加入购物车
+                if (Integer.valueOf(a)==0){
+                    List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
+                    //遍历集合的键
+                    SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                    saveShopCarBean.setState(false);
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        String key = entry.getKey();
+                        SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                        resultBean.setShopGoodsId(key);
+                        shoplist.add(resultBean);
+                    }
+                    saveShopCarBean.setShoppingCartList(shoplist);
+
+                    Gson gson = new Gson();
+                    String json = gson.toJson(saveShopCarBean);
+
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                    NetUtils.getInstance().getApis().doShopCar(requestBody)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<ShopCarBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(ShopCarBean shopCarBean) {
+                                    Toast.makeText(context, "添加进货单成功", Toast.LENGTH_SHORT).show();
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
+                SPUtil.setMap(context, "goodsid", map);
+            }
+        });
+        ((ViewHolder)holder).jian.setOnClickListener(new View.OnClickListener() {
+
+            private String s;
+
+            @Override
+            public void onClick(View view) {
+                List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
+                LinkedHashMap<String, String> map = SPUtil.getMap(context, "goodsid");
+                for (String key:map.keySet()
+                ) {
+                    if(key.equals(list.get(position).getId())){
+                        s = map.get(key);
+                    }
+                }
+                Integer integer = Integer.valueOf(s);
+                integer--;
+                ((ViewHolder)holder).count.setText(integer+"");
+
+                map.put(list.get(position).getId(), String.valueOf(integer));
+
+                if(integer==0){
+                    ((ViewHolder)holder).jian.setVisibility(View.INVISIBLE);
+                    ((ViewHolder)holder).count.setVisibility(View.INVISIBLE);
+
+                    SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                    saveShopCarBean.setState(false);
+
+                    String id = list.get(position).getId();
+
+                    SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                    resultBean.setShopGoodsId(id);
+                    shoplist.add(resultBean);
+                    //添加进集合
+                    map.remove(id);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(saveShopCarBean);
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+                    NetUtils.getInstance().getApis().doDeleteShopCar(requestBody)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<DeleteShopCarBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(DeleteShopCarBean bean) {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
+                SPUtil.setMap(context, "goodsid", map);
             }
         });
         //条目点击去商品详情
@@ -264,7 +248,7 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 goodsDeatailsBean.setId(list.get(position).getId() + "");
 
                 Intent intent = new Intent(context, GoodsDetailsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("goods", goodsDeatailsBean);
                 context.startActivity(intent);
             }
@@ -286,8 +270,12 @@ public class HotsellAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView tvGoodsYichengjiao;
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
+        @BindView(R.id.jian)
+        ImageView jian;
+        @BindView(R.id.count)
+        TextView count;
         @BindView(R.id.jia)
-        Button jia;
+        ImageView jia;
         @BindView(R.id.rl_item)
         RelativeLayout rlItem;
 

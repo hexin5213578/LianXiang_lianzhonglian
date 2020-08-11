@@ -249,7 +249,7 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
                                 //热销展示的四条商品
                                 GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
                                 rcRecommendGoods.setLayoutManager(gridLayoutManager);
-                                HotsellAdapter_home home_hotSellAdapter = new HotsellAdapter_home(getContext(), data);
+                                HotsellAdapter_home home_hotSellAdapter = new HotsellAdapter_home(getActivity(), data);
                                 rcRecommendGoods.setAdapter(home_hotSellAdapter);
                             }
                         }

@@ -67,6 +67,9 @@ public class ShopcarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
 
+        //设置数量
+        ((ViewHolder)holder).ccvItemShopCar.setCount(dataBean.getCount());
+
         ((ViewHolder)holder).ccvItemShopCar.setOnCountChangedListener(new CustomCountView.OnCountChangedListener() {
             @Override
             public void onCountChanged(int count) {

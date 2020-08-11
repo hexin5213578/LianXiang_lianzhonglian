@@ -72,7 +72,7 @@ public class HotsellNoLoginAdapter_home extends RecyclerView.Adapter<RecyclerVie
     @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            ((ViewHolder)holder).tvGoodsPrice.setText("￥？");
+        ((ViewHolder)holder).tvGoodsPrice.setText("￥？");
 
         Glide.with(context).load(list.get(position).getUrl()).into(((ViewHolder)holder).ivGoodsImage);
         ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
@@ -114,7 +114,11 @@ public class HotsellNoLoginAdapter_home extends RecyclerView.Adapter<RecyclerVie
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
         @BindView(R.id.jia)
-        Button jia;
+        ImageView jia;
+        @BindView(R.id.jian)
+        ImageView jian;
+        @BindView(R.id.count)
+        TextView count;
         @BindView(R.id.rl_item)
         RelativeLayout rlItem;
         public ViewHolder(@NonNull View itemView) {

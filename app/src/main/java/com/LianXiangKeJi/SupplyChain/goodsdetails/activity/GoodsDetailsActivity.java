@@ -370,10 +370,9 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 }else{
                     //拿到商品信息 以count为数量加入购物车
                     String id = bean.getId();
-                    String name = bean.getName();
 
                     LinkedHashMap<String, String> map = SPUtil.getMap(GoodsDetailsActivity.this, "goodsid");
-                    map.put(id,name);
+                    map.put(id, String.valueOf(tv_count_change));
 
                     List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
 

@@ -33,6 +33,7 @@ public class HotsellNoLoginAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private final Context context;
     private final List<HotSellNoLoginBean.DataBean> list;
 
+
     public HotsellNoLoginAdapter(Context context, List<HotSellNoLoginBean.DataBean> list) {
 
         this.context = context;
@@ -49,8 +50,8 @@ public class HotsellNoLoginAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((ViewHolder) holder).tvGoodsPrice.setText("￥？");
-        Glide.with(context).load(list.get(position).getUrl()).into(((ViewHolder)holder).ivGoodsImage);
-        ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
+        Glide.with(context).load(list.get(position).getUrl()).into(((ViewHolder) holder).ivGoodsImage);
+        ((ViewHolder) holder).tvGoodsName.setText(list.get(position).getName());
         // TODO: 2020/7/21 条目点击去商品详情
         ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +69,7 @@ public class HotsellNoLoginAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 context.startActivity(intent);
             }
         });
-        ((ViewHolder)holder).jia.setOnClickListener(new View.OnClickListener() {
+        ((ViewHolder) holder).jia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
@@ -91,10 +92,15 @@ public class HotsellNoLoginAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         TextView tvGoodsYichengjiao;
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
+        @BindView(R.id.jian)
+        ImageView jian;
+        @BindView(R.id.count)
+        TextView count;
         @BindView(R.id.jia)
-        Button jia;
+        ImageView jia;
         @BindView(R.id.rl_item)
         RelativeLayout rlItem;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

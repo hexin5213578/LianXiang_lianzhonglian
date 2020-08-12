@@ -159,18 +159,6 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        xbn.startAutoPlay();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        xbn.stopAutoPlay();
-    }
-
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.et_search:

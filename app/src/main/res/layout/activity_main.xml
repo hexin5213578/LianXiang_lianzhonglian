@@ -29,7 +29,6 @@
         android:background="@color/white"
         android:minHeight="@dimen/dp_50"
         android:orientation="horizontal">
-
         <RadioButton
             android:id="@+id/rbHome"
             style="@style/MainTab"

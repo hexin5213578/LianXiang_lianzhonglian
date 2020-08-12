@@ -10,8 +10,11 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -218,21 +221,35 @@ public class MainActivity extends BaseAvtivity implements RadioGroup.OnCheckedCh
         currentFragment = to;
     }
 
+    //定义一个变量，来标识是否退出
+    private static int isExit=0;
+
+    //实现按两次后退才退出
+    Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            super.handleMessage(msg);
+            isExit--;
+        }
+    };
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        exitWithDoubleClick();
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            isExit++;
+            exit();
+            return false;
+        }
+        return super.onKeyDown(keyCode,event);
     }
 
-    /**
-     * 点击两次返回按钮退出APP
-     */
-    private void exitWithDoubleClick() {
-        if (System.currentTimeMillis() - firstPressedTime < 3_000) {
-            super.onBackPressed();
-        } else {
+    private void exit(){
+        if(isExit<2){
             Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
-            firstPressedTime = System.currentTimeMillis();
+            //利用handler延迟发送更改状态信息
+            handler.sendEmptyMessageDelayed(0,2000);
+        }else{
+            super.onBackPressed();
         }
     }
 

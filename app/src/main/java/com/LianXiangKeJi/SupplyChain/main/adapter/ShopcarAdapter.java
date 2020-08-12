@@ -55,7 +55,6 @@ public class ShopcarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((ViewHolder)holder).tvPrice.setText("¥"+Double.valueOf(dataBean.getPrice()));
         Glide.with(context).load(dataBean.getLittlePrintUrl()).into(((ViewHolder)holder).ivImage);
 
-
         //根据 bean 类中的是否选中，更改checkBox状态
         ((ViewHolder)holder).rbChecked.setChecked(dataBean.isPersonChecked());
         ((ViewHolder)holder).rbChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -66,6 +65,7 @@ public class ShopcarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 EventBus.getDefault().post("123");
             }
         });
+
 
         //设置数量
         ((ViewHolder)holder).ccvItemShopCar.setCount(dataBean.getCount());

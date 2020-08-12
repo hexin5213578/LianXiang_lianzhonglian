@@ -1,6 +1,7 @@
 package com.LianXiangKeJi.SupplyChain.movable.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
+import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.movable.bean.GetCouponBean;
 import com.LianXiangKeJi.SupplyChain.movable.bean.MovableBean;
 import com.LianXiangKeJi.SupplyChain.movable.bean.SaveCouponIdBean;
@@ -66,43 +68,49 @@ public class MovableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((ViewHolder)holder).getCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SaveCouponIdBean saveCouponIdBean = new SaveCouponIdBean();
-                saveCouponIdBean.setCouponId(dataBean.getId());
+                String token = Common.getToken();
+                if(TextUtils.isEmpty(token)){
+                    Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+                }else{
 
-                Gson gson = new Gson();
-                String json = gson.toJson(saveCouponIdBean);
+                    SaveCouponIdBean saveCouponIdBean = new SaveCouponIdBean();
+                    saveCouponIdBean.setCouponId(dataBean.getId());
 
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(saveCouponIdBean);
 
-                NetUtils.getInstance().getApis().doGetCoupon(requestBody)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<GetCouponBean>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
 
-                            }
+                    NetUtils.getInstance().getApis().doGetCoupon(requestBody)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<GetCouponBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
 
-                            @Override
-                            public void onNext(GetCouponBean getCouponBean) {
-                                Toast.makeText(context, ""+getCouponBean.getData(), Toast.LENGTH_SHORT).show();
-                                if (getCouponBean.getData().equals("领取成功")){
-                                    Glide.with(context).load(R.mipmap.activity_getover).into(((ViewHolder)holder).getCoupon);
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                if(e.getMessage().equals("timeout")){
-                                    Toast.makeText(context, "连接超时", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onNext(GetCouponBean getCouponBean) {
+                                    Toast.makeText(context, ""+getCouponBean.getData(), Toast.LENGTH_SHORT).show();
+                                    if (getCouponBean.getData().equals("领取成功")){
+                                        Glide.with(context).load(R.mipmap.activity_getover).into(((ViewHolder)holder).getCoupon);
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onComplete() {
+                                @Override
+                                public void onError(Throwable e) {
+                                    if(e.getMessage().equals("timeout")){
+                                        Toast.makeText(context, "连接超时", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                            }
-                        });
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
             }
         });
 

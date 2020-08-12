@@ -380,9 +380,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                         }
                     }
 
-                    String s = tv_count_change.getText().toString();
-
-                    map.put(id, String.valueOf(s));
+                    map.put(id, String.valueOf(count));
 
                     List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
 

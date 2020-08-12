@@ -24,7 +24,7 @@
                     android:text="订单编号:"
                     android:layout_marginLeft="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
                 <TextView
@@ -35,7 +35,7 @@
                     android:id="@+id/tv_order_number"
                     android:layout_marginRight="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
             </RelativeLayout>
@@ -59,7 +59,7 @@
                     android:text="实付金额:"
                     android:layout_marginLeft="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
                 <TextView
@@ -70,7 +70,7 @@
                     android:id="@+id/tv_order_price"
                     android:layout_marginRight="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
             </RelativeLayout>
@@ -94,7 +94,7 @@
                     android:text="付款方式:"
                     android:layout_marginLeft="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
                 <TextView
@@ -105,7 +105,7 @@
                     android:id="@+id/tv_order_pay_theway"
                     android:layout_marginRight="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
             </RelativeLayout>
@@ -129,7 +129,7 @@
                     android:text="创建时间:"
                     android:layout_marginLeft="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
                 <TextView
@@ -140,7 +140,7 @@
                     android:id="@+id/tv_order_time"
                     android:layout_marginRight="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
             </RelativeLayout>
@@ -164,7 +164,7 @@
                     android:text="收款方:"
                     android:layout_marginLeft="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
                 <TextView
@@ -175,7 +175,7 @@
                     android:id="@+id/tv_order_payto"
                     android:layout_marginRight="@dimen/dp_8"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_14"
                     android:layout_height="wrap_content">
                 </TextView>
             </RelativeLayout>

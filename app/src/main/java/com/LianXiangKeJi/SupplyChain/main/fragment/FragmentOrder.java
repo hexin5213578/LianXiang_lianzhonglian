@@ -39,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -81,7 +82,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
     RelativeLayout noshopcar;
     @BindView(R.id.ll_order)
     LinearLayout llOrder;
-    private List<ShopCarBean.DataBean>list = new ArrayList<>();
     private List<String> listId = new ArrayList<>();
     private ShopcarAdapter shopcarAdapter;
     private List<ShopCarBean.DataBean> data;
@@ -133,12 +133,11 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         boolean isAllChecked = true;
         totalPrice = 0;
 
-        for (ShopCarBean.DataBean bean : list) {
+        for (ShopCarBean.DataBean bean : data) {
             if (!bean.isPersonChecked()) {
                 isAllChecked = false;
             } else {
                 totalPrice += Double.valueOf(bean.getPrice()) * bean.getCount();
-                isAllChecked = true;
             }
         }
         if(tvManager.getVisibility()== 0){
@@ -153,7 +152,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         super.onStart();
 
         listId.clear();
-        list.clear();
 
         tvFinish.setVisibility(View.GONE);
         tvManager.setVisibility(View.VISIBLE);
@@ -177,7 +175,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
     @Override
     public void onHiddenChanged(boolean hidden) {
         listId.clear();
-        list.clear();
 
         tvFinish.setVisibility(View.GONE);
         tvManager.setVisibility(View.VISIBLE);
@@ -258,12 +255,12 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
             case R.id.bt_delete:
                 List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
 
-                for (ShopCarBean.DataBean bean : list) {
+                for (ShopCarBean.DataBean bean : data) {
                     if(bean.isPersonChecked()==false){
                         listId.add(bean.getId());
                     }
                 }
-                Log.d("hmy","当前集合长度:"+list.size());
+                Log.d("hmy","当前集合长度:"+data.size());
                 Log.d("hmy","不删除的数量"+listId.size());
                 if(listId.size()<1){
                     SaveShopCarBean saveShopCarBean1 = new SaveShopCarBean();
@@ -323,15 +320,22 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                     SaveShopCarBean saveShopCarBean2 = new SaveShopCarBean();
                     saveShopCarBean2.setState(false);
                     LinkedHashMap<String, String> goodsid = SPUtil.getMap(getContext(), "goodsid");
+                    LinkedHashMap<String, String> map = new LinkedHashMap<>();
 
                     for (int i=0;i<listId.size();i++){
                         SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
                         resultBean.setShopGoodsId(listId.get(i));
                         shoplist.add(resultBean);
-
+                        Iterator<String> iterator = goodsid.keySet().iterator();
+                        while (iterator.hasNext()){
+                            String next = iterator.next();
+                            if(next.equals(listId.get(i))){
+                                map.put(next,goodsid.get(next));
+                            }
+                        }
                     }
 
-                    SPUtil.setMap(getContext(),"goodsid",goodsid);
+                    SPUtil.setMap(getContext(),"goodsid",map);
 
                     Log.d("hmy","选删"+listId.size());
 
@@ -343,7 +347,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                     RequestBody requestBody2 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json2);
                     //删除购物车
                     doShopCar(requestBody2);
-                    list.clear();
+                    data.clear();
                     listId.clear();
                 }
 
@@ -401,7 +405,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                             rcOrder.setLayoutManager(manager);
 
                             shopcarAdapter = new ShopcarAdapter(getContext());
-                            list.addAll(data);
                             shopcarAdapter.setData(data);
                             rcOrder.setAdapter(shopcarAdapter);
 

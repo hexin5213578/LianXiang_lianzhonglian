@@ -155,19 +155,41 @@
         <!-- 已取消订单详情-->
         <activity android:name=".paysuccess.activity.OrderCancleActivity"
             android:screenOrientation="portrait"/>
+
+        <!-- 用户协议-->
+        <activity android:name=".protocol.UserAgreementActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 隐私政策-->
+        <activity android:name=".protocol.PrivacypolicyActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- bugly版本更新-->
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
+
+        <provider
+            android:name="com.tencent.bugly.beta.utils.BuglyFileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="name,authorities,exported,grantUriPermissions">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                tools:replace="name,resource"/>
+        </provider>
+
+        <!-- 微信支付-->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop">
-      <!--      <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="你的appid"/>
-            </intent-filter>-->
         </activity>
 
         <!-- 定位服务 -->
-
         <service android:name=".common.service.LocationService"></service>
 
         <!-- 高德定位 -->

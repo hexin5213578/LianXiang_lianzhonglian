@@ -5,6 +5,15 @@ public class SaveCouponIdBean {
     private String full;
     private String jian;
     private String close;
+    private int state;
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
 
     public String getClose() {
         return close;

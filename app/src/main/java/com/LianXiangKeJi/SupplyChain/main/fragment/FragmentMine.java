@@ -2,16 +2,13 @@ package com.LianXiangKeJi.SupplyChain.main.fragment;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.address.activity.MyAddressActivity;
@@ -22,7 +19,6 @@ import com.LianXiangKeJi.SupplyChain.base.Common;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
 import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.order.activity.OrderActivity;
-import com.LianXiangKeJi.SupplyChain.order.adapter.AllOrderAdapter;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.setup.activity.SetUpActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
@@ -30,6 +26,7 @@ import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -89,6 +86,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
     int b = 0;
     int c = 0;
     int d = 0;
+
     @Override
     protected void getid(View view) {
 
@@ -263,7 +261,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    public void getDataBean(){
+    public void getDataBean() {
         NetUtils.getInstance().getApis()
                 .getUserOrder()
                 .subscribeOn(Schedulers.io())
@@ -277,51 +275,51 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void onNext(UserOrderBean userOrderBean) {
                         List<UserOrderBean.DataBean> data = userOrderBean.getData();
-                        for (int i = 0;i<data.size();i++){
+                        for (int i = 0; i < data.size(); i++) {
                             UserOrderBean.DataBean dataBean = data.get(i);
                             int orderState = dataBean.getOrderState();
-                            if(orderState==0){
+                            if (orderState == 0) {
                                 a++;
-                            }else if(orderState==1){
+                            } else if (orderState == 1) {
                                 b++;
-                            }else if(orderState==3){
+                            } else if (orderState == 3) {
                                 c++;
-                            }else if(orderState==4){
+                            } else if (orderState == 4) {
                                 d++;
                             }
                         }
-                        if(a==0){
+                        if (a == 0) {
                             tvDaifukuan.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             tvDaifukuan.setVisibility(View.VISIBLE);
                         }
-                        if(b==0){
+                        if (b == 0) {
                             tvDaifahuo.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             tvDaifahuo.setVisibility(View.VISIBLE);
 
                         }
-                        if(c==0){
+                        if (c == 0) {
                             tvDaishouhuo.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             tvDaishouhuo.setVisibility(View.VISIBLE);
 
                         }
-                        if(d==0){
+                        if (d == 0) {
                             tvYiwancheng.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             tvYiwancheng.setVisibility(View.VISIBLE);
 
                         }
 
-                        tvDaifukuan.setText(a+"");
-                        tvDaifahuo.setText(b+"");
-                        tvDaishouhuo.setText(c+"");
-                        tvYiwancheng.setText(d+"");
-                        a=0;
-                        b=0;
-                        c=0;
-                        d=0;
+                        tvDaifukuan.setText(a + "");
+                        tvDaifahuo.setText(b + "");
+                        tvDaishouhuo.setText(c + "");
+                        tvYiwancheng.setText(d + "");
+                        a = 0;
+                        b = 0;
+                        c = 0;
+                        d = 0;
 
                     }
 

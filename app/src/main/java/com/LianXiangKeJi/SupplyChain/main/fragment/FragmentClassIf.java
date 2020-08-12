@@ -69,6 +69,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     private String token;
     private ClassifSearchGoodsAdapter adapter;
     private SecondListAdapter secondListAdapter;
+    private List<ClassIfBean.DataBean> data;
 
     @Override
     public void onResume() {
@@ -150,7 +151,6 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         super.onStart();
         if(!TextUtils.isEmpty(token)){
             getclassIfGoods("4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797");
-
         }else{
             getclassIfGoodsnoLogin("4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797");
         }
@@ -167,7 +167,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     @Override
     public void onGetClassIfSuccess(ClassIfBean bean) {
         hideDialog();
-        List<ClassIfBean.DataBean> data = bean.getData();
+        data = bean.getData();
         //将获取到的数据提成全局变量
         list.addAll(data);
 
@@ -177,8 +177,6 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         //创建适配器
         firstListAdapter = new FirstListAdapter(getContext(), data);
         rcFirstList.setAdapter(firstListAdapter);
-
-
 
         //首次进入加载第一条
         ClassIfBean.DataBean dataBean = data.get(0);

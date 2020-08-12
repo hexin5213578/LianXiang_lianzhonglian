@@ -22,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,6 +95,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     private double price = 0.00;
     private List<OrderBean> orderlist;
     String counponId  ="";
+    int orderstate;
     @Override
     protected int getResId() {
         return R.layout.activity_confirm_order;
@@ -189,7 +191,8 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getCouponBean(SaveCouponIdBean bean){
         String couponId = bean.getCouponId();
-
+        int state = bean.getState();
+        orderstate = state;
         counponId=couponId;
         int full = Integer.valueOf(bean.getFull());
         int jian = Integer.valueOf(bean.getJian());
@@ -267,13 +270,16 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     Intent intent = new Intent(ConfirmOrderActivity.this, ConfirmPaymentActivity.class);
                     Log.d("hmy", "微信支付");
                     intent.putExtra("theway", "微信支付");
-
                     intent.putExtra("remark", etRemarks.getText().toString());
                     intent.putExtra("couponid",counponId);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("orderlist", (Serializable) orderlist);
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    if(orderstate==2){
+                        Toast.makeText(ConfirmOrderActivity.this, "订单已经被占用", Toast.LENGTH_SHORT).show();
+                    }else{
+                        startActivity(intent);
+                    }
                 }
                 //支付宝支付
                 else {
@@ -287,8 +293,11 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("orderlist", (Serializable) orderlist);
                     intent.putExtras(bundle);
-
-                    startActivity(intent);
+                    if(orderstate==2){
+                        Toast.makeText(ConfirmOrderActivity.this, "订单已经被占用", Toast.LENGTH_SHORT).show();
+                    }else{
+                        startActivity(intent);
+                    }
                 }
             }
         });

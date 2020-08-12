@@ -71,10 +71,13 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             @Override
             public void onClick(View view) {
                 int couponState = list.get(position).getCouponState();
+                SaveCouponIdBean saveCouponIdBean = new SaveCouponIdBean();
+
+                saveCouponIdBean.setState(couponState);
+
                 if(couponState==0){
-                    Toast.makeText(context, "开始使用时间为"+beginTime, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "开始使用时间为"+date1, Toast.LENGTH_SHORT).show();
                 }else if(couponState==1){
-                    SaveCouponIdBean saveCouponIdBean = new SaveCouponIdBean();
                     saveCouponIdBean.setClose("关闭界面");
                     saveCouponIdBean.setCouponId(list.get(position).getId());
                     saveCouponIdBean.setFull(list.get(position).getFull()+"");

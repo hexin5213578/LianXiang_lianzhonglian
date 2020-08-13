@@ -177,7 +177,7 @@ public class FragmentReceipt extends BaseFragment {
                         }
 
                         if (list != null && list.size() > 0) {
-                            Log.d("hmy", "待发货订单" + list.size());
+                            Log.d("hmy", "待收货订单" + list.size());
 
                             rlNoorder.setVisibility(View.GONE);
                             rcOrder.setVisibility(View.VISIBLE);

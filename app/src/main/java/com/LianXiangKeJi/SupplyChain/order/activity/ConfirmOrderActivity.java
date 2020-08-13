@@ -199,9 +199,12 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         if(price>=full){
             price = this.price - jian;
             tvPrice.setText(price + "");
+            tvCoupon.setText("满"+full+"元减"+jian+"元");
+        }
+        if(full==0){
+            tvCoupon.setText("请选择优惠券");
         }
 
-        tvCoupon.setText("满"+full+"元减"+jian+"元");
     }
     @Override
     protected void onResume() {
@@ -276,7 +279,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     bundle.putSerializable("orderlist", (Serializable) orderlist);
                     intent.putExtras(bundle);
                     if(orderstate==2){
-                        Toast.makeText(ConfirmOrderActivity.this, "订单已经被占用", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConfirmOrderActivity.this, "优惠券已经被占用", Toast.LENGTH_SHORT).show();
                     }else{
                         startActivity(intent);
                     }

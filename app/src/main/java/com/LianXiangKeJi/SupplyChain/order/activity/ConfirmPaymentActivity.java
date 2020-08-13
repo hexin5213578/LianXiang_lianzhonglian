@@ -217,7 +217,11 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                         @Override
                         public void onError(Throwable e) {
                             hideDialog();
-                            Toast.makeText(ConfirmPaymentActivity.this, "订单生成失败", Toast.LENGTH_SHORT).show();
+                            if(e.getMessage().equals("java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 50 path $.data")){
+                                Toast.makeText(ConfirmPaymentActivity.this, "此优惠券已被占用", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(ConfirmPaymentActivity.this, "订单生成失败", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
@@ -336,7 +340,11 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                         @Override
                         public void onError(Throwable e) {
                             hideDialog();
-                            Toast.makeText(ConfirmPaymentActivity.this, "订单生成失败", Toast.LENGTH_SHORT).show();
+                            if(e.getMessage().equals("java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 50 path $.data")){
+                                Toast.makeText(ConfirmPaymentActivity.this, "此优惠券已被占用", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(ConfirmPaymentActivity.this, "订单生成失败", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
@@ -460,7 +468,7 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                     App.getWXApi().sendReq(request);
 
 
-                }else{
+                }else if (pay_theway.equals("支付宝支付")){
                     //调起支付宝支付
                     Runnable payRunnable = new Runnable() {
                         @Override

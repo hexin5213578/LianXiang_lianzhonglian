@@ -122,6 +122,16 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         ClassIfBean.DataBean dataBean = list.get(id);
         List<ClassIfBean.DataBean.ChildrenBean> children = dataBean.getChildren();
 
+        if(children.size()>0 && children!=null){
+            String id1 = children.get(0).getId();
+
+            if(!TextUtils.isEmpty(token)){
+                getclassIfGoods(id1);
+            }else{
+                getclassIfGoodsnoLogin(id1);
+            }
+        }
+
         manager = new GridLayoutManager(getContext(),3);
         rcSecondList.setLayoutManager(manager);
         secondListAdapter = new SecondListAdapter(getContext(),children);
@@ -149,11 +159,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     @Override
     public void onStart() {
         super.onStart();
-        if(!TextUtils.isEmpty(token)){
-            getclassIfGoods("4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797");
-        }else{
-            getclassIfGoodsnoLogin("4cbdb49a-f6d1-456c-bcc5-9e0d7b94b874797");
-        }
+
     }
 
     @Override
@@ -191,7 +197,8 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
 
     @Override
     public void onGetClassError(String msg) {
-
+        hideDialog();
+        Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
     }
 
     //根据ID查询分类商品
@@ -201,7 +208,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         Gson gson = new Gson();
 
         String json = gson.toJson(saveIdBean);
-        Log.d("hmy","json为"+json);
+
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
 
         //调用查询接口

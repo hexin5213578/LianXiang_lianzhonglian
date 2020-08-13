@@ -48,7 +48,18 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
     protected void getData() {
         back.setOnClickListener(this);
         title.setText("我的优惠券");
-        tvRight.setVisibility(View.GONE);
+        tvRight.setText("不使用优惠券");
+        SaveCouponIdBean saveCouponIdBean = new SaveCouponIdBean();
+        tvRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveCouponIdBean.setCouponId("");
+                saveCouponIdBean.setFull("0");
+                saveCouponIdBean.setJian("0");
+                EventBus.getDefault().post(saveCouponIdBean);
+                finish();
+            }
+        });
         setTitleColor(CouponActivity.this);
         showDialog();
         NetUtils.getInstance().getApis().doGetMyCoupon()

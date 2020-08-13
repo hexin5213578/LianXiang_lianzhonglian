@@ -387,6 +387,8 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                     @Override
                     public void onNext(ShopCarBean shopCarBean) {
                         hideDialog();
+                        money.setText("¥"+"0.00");
+
                         data = shopCarBean.getData();
                         LinkedHashMap<String, String> goodsid = SPUtil.getMap(getContext(), "goodsid");
                         for (String key : goodsid.keySet()) {
@@ -421,7 +423,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                                     calculationCountAndPrice("0");
                                 }
                             });
-
                         }else{
                             noshopcar.setVisibility(View.VISIBLE);
                             llOrder.setVisibility(View.GONE);

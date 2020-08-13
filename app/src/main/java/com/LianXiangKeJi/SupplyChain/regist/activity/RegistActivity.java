@@ -1,7 +1,6 @@
 package com.LianXiangKeJi.SupplyChain.regist.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -12,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,16 +30,11 @@ import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
-import com.LianXiangKeJi.SupplyChain.main.activity.MainActivity;
 import com.LianXiangKeJi.SupplyChain.map.activity.MapActivity;
 import com.LianXiangKeJi.SupplyChain.regist.bean.RegistLogcationBean;
-import com.LianXiangKeJi.SupplyChain.utils.Base64;
-import com.LianXiangKeJi.SupplyChain.utils.FileUtil;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
-import com.LianXiangKeJi.SupplyChain.utils.bean.IdentifyYingyeBean;
 import com.amap.api.services.core.PoiItem;
-import com.baidu.ocr.ui.camera.CameraActivity;
 import com.bumptech.glide.Glide;
 import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
@@ -51,8 +44,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -113,8 +104,6 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
     private File file;
     private File file1;
     private String location;
-    private int REQUEST_CODE_CAMERA = 200;
-    String access_token = "24.0752162179a498eed3a41b081ce3f47e.2592000.1599717865.282335-21929519";
     @Override
     protected int getResId() {
         return R.layout.activity_regist;
@@ -388,49 +377,6 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-  /*      if (requestCode == REQUEST_CODE_CAMERA && resultCode == Activity.RESULT_OK) {
-            // 获取调用参数
-            String contentType = data.getStringExtra(CameraActivity.KEY_CONTENT_TYPE);
-            // 通过临时文件获取拍摄的图片
-            String filePath = FileUtil.getSaveFile(getApplicationContext()).getAbsolutePath();
-            Log.d("xxx",filePath);
-            byte[] imgData = new byte[0];
-            try {
-                imgData = FileUtil.readFileByBytes(filePath);
-                String encode = Base64.encode(imgData);
-                Log.i("aaa",encode);
-                byte[] decode = Base64.decode(encode);
-                String imgParam = URLEncoder.encode(encode, "UTF-8");
-
-                NetUtils.getInstance().getApis().IdentifyYingye("https://aip.baidubce.com/rest/2.0/ocr/v1/business_license",access_token,imgParam,"true")
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<IdentifyYingyeBean>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onNext(IdentifyYingyeBean identifyYingyeBean) {
-                                String words = identifyYingyeBean.getWords_result().get单位名称().getWords();
-                                Log.d("xxx",words);
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
         if (resultCode == RESULT_OK && requestCode == 100) {
             if (data != null) {
                 PictureBean bean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);

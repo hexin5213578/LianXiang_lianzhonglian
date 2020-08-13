@@ -83,7 +83,7 @@ public class PictureSelectUtils {
             takePictureFile = new File(pathName);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { //解决Android 7.0 拍照出现FileUriExposedException的问题
-                String authority = activity.getPackageName() + ".fileProvider";
+                String authority = activity.getPackageName() + ".utils.MyFileProvider";
                 takePictureUri = FileProvider.getUriForFile(activity, authority, takePictureFile);
             } else {
                 takePictureUri = Uri.fromFile(takePictureFile);

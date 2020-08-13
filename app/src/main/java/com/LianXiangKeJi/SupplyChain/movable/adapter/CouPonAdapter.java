@@ -84,7 +84,7 @@ public class CouPonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     saveCouponIdBean.setJian(list.get(position).getMinus()+"");
                     EventBus.getDefault().post(saveCouponIdBean);
                 }else if(couponState==2){
-                    Toast.makeText(context, "此优惠券已被使用", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "此优惠券已被占用", Toast.LENGTH_SHORT).show();
                 }else if(couponState==3){
                     Toast.makeText(context, "此优惠券已过期", Toast.LENGTH_SHORT).show();
 

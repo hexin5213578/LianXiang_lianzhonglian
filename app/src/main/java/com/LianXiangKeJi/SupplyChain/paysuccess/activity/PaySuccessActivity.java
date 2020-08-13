@@ -51,7 +51,6 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
     private String theway;
     private long times;
     private String orderid;
-    private long time1;
 
     @Override
     protected int getResId() {
@@ -61,6 +60,7 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
 
     @Override
     protected void getData() {
+        back.setOnClickListener(this);
         btBack.setOnClickListener(this);
         btSeeorder.setOnClickListener(this);
         //设置标题栏颜色
@@ -93,7 +93,8 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            // 跳转至主页
+            case R.id.back:
+                // 跳转至主页
             case R.id.bt_back:
                 finish();
                 IntentBean intentBean = new IntentBean();

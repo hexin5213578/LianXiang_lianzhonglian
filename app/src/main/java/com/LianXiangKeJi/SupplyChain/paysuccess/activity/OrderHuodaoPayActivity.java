@@ -1,16 +1,25 @@
 package com.LianXiangKeJi.SupplyChain.paysuccess.activity;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,19 +32,16 @@ import com.LianXiangKeJi.SupplyChain.base.App;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
-import com.LianXiangKeJi.SupplyChain.order.adapter.AllOrderAdapter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.OrderInfoAdapter;
-import com.LianXiangKeJi.SupplyChain.order.adapter.PaymentAdapter;
-import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
 import com.LianXiangKeJi.SupplyChain.order.bean.SaveGetPayDataBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrderListBean;
-import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrdersidBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.WxBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
-import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean1;
+import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean2;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -58,12 +64,7 @@ import okhttp3.RequestBody;
 
 import static com.LianXiangKeJi.SupplyChain.base.App.getContext;
 
-/**
- * @ClassName:OrderWaitPayActivity
- * @Author:hmy
- * @Description:java类作用描述 等待支付订单详情
- */
-public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickListener {
+public class OrderHuodaoPayActivity extends BaseAvtivity implements View.OnClickListener {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
@@ -84,23 +85,33 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
     RelativeLayout rlSelectAddress;
     @BindView(R.id.rc_order_list)
     RecyclerView rcOrderList;
+    @BindView(R.id.tv1)
+    TextView tv1;
+    @BindView(R.id.tv2)
+    TextView tv2;
     @BindView(R.id.tv_order_number)
     TextView tvOrderNumber;
+    @BindView(R.id.tv3)
+    TextView tv3;
     @BindView(R.id.tv_theway)
     TextView tvTheway;
+    @BindView(R.id.tv4)
+    TextView tv4;
     @BindView(R.id.tv_time1)
     TextView tvTime1;
-    @BindView(R.id.to_pay)
-    Button toPay;
-    @BindView(R.id.bt_cancle)
-    Button btCancle;
-    private String theway;
+    @BindView(R.id.tv6)
+    TextView tv6;
+    @BindView(R.id.bt_pay)
+    Button btPay;
+    private PopupWindow mPopupWindow;
+    private double OrderPrice = 0.0;
+    private String orderprice;
     private String orderid;
     private static final int SDK_PAY_FLAG = 1;
 
     @Override
     protected int getResId() {
-        return R.layout.activity_order_wait_pay;
+        return R.layout.activity_order_huodao_pay;
     }
     private Handler mHandler = new Handler() {
         @SuppressLint("HandlerLeak")
@@ -133,20 +144,20 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
     @Override
     protected void getData() {
         back.setOnClickListener(this);
-        toPay.setOnClickListener(this);
-        setTitleColor(OrderWaitPayActivity.this);
+        btPay.setOnClickListener(this);
         title.setText("订单详情");
         tvRight.setVisibility(View.GONE);
-
+        setTitleColor(OrderHuodaoPayActivity.this);
         //展示默认地址
-        tvName.setText(SPUtil.getInstance().getData(OrderWaitPayActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
-        tvAddress.setText(SPUtil.getInstance().getData(OrderWaitPayActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
-        tvPhone.setText(SPUtil.getInstance().getData(OrderWaitPayActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_PHONE));
 
+        tvName.setText(SPUtil.getInstance().getData(OrderHuodaoPayActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
+        tvAddress.setText(SPUtil.getInstance().getData(OrderHuodaoPayActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
+        tvPhone.setText(SPUtil.getInstance().getData(OrderHuodaoPayActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_PHONE));
         Intent intent = getIntent();
 
+
         //获取订单信息
-        theway = intent.getStringExtra("theway");
+        String theway = intent.getStringExtra("theway");
         orderid = intent.getStringExtra("orderid");
         long time = intent.getLongExtra("time", 0);
 
@@ -160,62 +171,16 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
         tvTheway.setText(theway);
         tvOrderNumber.setText(orderid);
 
-        LinearLayoutManager manager = new LinearLayoutManager(OrderWaitPayActivity.this, RecyclerView.VERTICAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(OrderHuodaoPayActivity.this, RecyclerView.VERTICAL, false);
         rcOrderList.setLayoutManager(manager);
-        OrderInfoAdapter orderInfoAdapter = new OrderInfoAdapter(OrderWaitPayActivity.this, orderlist);
+        OrderInfoAdapter orderInfoAdapter = new OrderInfoAdapter(OrderHuodaoPayActivity.this, orderlist);
         rcOrderList.setAdapter(orderInfoAdapter);
 
-        SaveOrdersidBean saveOrdersidBean = new SaveOrdersidBean();
-        saveOrdersidBean.setId(orderid);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(saveOrdersidBean);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-        //取消订单
-        btCancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(OrderWaitPayActivity.this)
-                        .setMessage("是否确认取消订单").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                NetUtils.getInstance().getApis().cancleOrder(requestBody)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(new Observer<DeleteOrCancleOrderBean>() {
-                                            @Override
-                                            public void onSubscribe(Disposable d) {
-
-                                            }
-
-                                            @Override
-                                            public void onNext(DeleteOrCancleOrderBean deleteOrCancleOrderBean) {
-                                                Toast.makeText(OrderWaitPayActivity.this, "" + deleteOrCancleOrderBean.getData(), Toast.LENGTH_SHORT).show();
-                                                finish();
-                                                EventBus.getDefault().post("刷新界面");
-                                            }
-
-                                            @Override
-                                            public void onError(Throwable e) {
-
-                                            }
-
-                                            @Override
-                                            public void onComplete() {
-
-                                            }
-                                        });
-                            }
-                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //ToDo: 你想做的事情
-                                dialogInterface.dismiss();
-                            }
-                        });
-                builder.create().show();
-            }
-        });
+        for (int i =0;i<orderlist.size();i++){
+            String price = orderlist.get(i).getPrice();
+            OrderPrice+=Double.valueOf(price);
+        }
+        orderprice = StringUtil.round(String.valueOf(OrderPrice));
 
     }
 
@@ -224,16 +189,69 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
         return null;
     }
 
-
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        switch (view.getId()){
             case R.id.back:
                 finish();
                 break;
-            case R.id.to_pay:
-                if(theway.equals("微信支付")){
-                    //调用微信支付
+            case R.id.bt_pay:
+                showSelect();
+                break;
+        }
+    }
+    public void showSelect() {
+        //创建popwiondow弹出框
+        mPopupWindow = new PopupWindow();
+        mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        View view = LayoutInflater.from(OrderHuodaoPayActivity.this).inflate(R.layout.dialog_select_pay2, null);
+        ImageView ivclose = view.findViewById(R.id.iv_close);
+        RelativeLayout rl2 = view.findViewById(R.id.rl2);
+        RelativeLayout rl3 = view.findViewById(R.id.rl3);
+
+        RadioButton rb1 = view.findViewById(R.id.rb1);
+        RadioButton rb2 = view.findViewById(R.id.rb2);
+
+        ImageView check1 = view.findViewById(R.id.pay_check1);
+        ImageView check2 = view.findViewById(R.id.pay_check2);
+
+        TextView tvprice = view.findViewById(R.id.tv_price);
+        Button startpay = view.findViewById(R.id.startpay);
+
+        tvprice.setText(" ￥" + StringUtil.round(String.valueOf(orderprice)));
+
+        ivclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+        rl2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check1.setVisibility(View.VISIBLE);
+                check2.setVisibility(View.GONE);
+                rb1.setChecked(true);
+                rb2.setChecked(false);
+            }
+        });
+        rl3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check2.setVisibility(View.VISIBLE);
+                check1.setVisibility(View.GONE);
+                rb2.setChecked(true);
+                rb1.setChecked(false);
+            }
+        });
+        //立即支付 判断微信支付宝选中状态决定调起哪种支付方式
+        startpay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 微信支付
+                if (rb1.isChecked()) {
+                    //获取微信支付的请求体
                     SaveGetPayDataBean saveGetPayDataBean = new SaveGetPayDataBean();
                     saveGetPayDataBean.setOrdersId(orderid);
                     saveGetPayDataBean.setPayWay("1");
@@ -243,7 +261,8 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
 
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
 
-                    NetUtils.getInstance().getApis().doGetWxData(requestBody)
+                    NetUtils.getInstance().getApis()
+                            .doGetWxData(requestBody)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<WxBean>() {
@@ -261,7 +280,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                                     saveOrderListBean.setFlag(1);
                                     Gson gson = new Gson();
                                     String json = gson.toJson(saveOrderListBean);
-                                    SPUtil.getInstance().saveData(OrderWaitPayActivity.this,SPUtil.FILE_NAME,"orderinfo",json);
+                                    SPUtil.getInstance().saveData(OrderHuodaoPayActivity.this,SPUtil.FILE_NAME,"orderinfo",json);
 
 
                                     PayReq request = new PayReq();
@@ -288,9 +307,10 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
 
                                 }
                             });
-
-                }else{
-                    //调用支付宝支付
+                }
+                //支付宝支付
+                else if(rb2.isChecked()) {
+                    //获取支付宝支付的请求体
                     SaveGetPayDataBean saveGetPayDataBean = new SaveGetPayDataBean();
                     saveGetPayDataBean.setOrdersId(orderid);
                     saveGetPayDataBean.setPayWay("0");
@@ -299,7 +319,9 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                     String json = gson.toJson(saveGetPayDataBean);
 
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-                    NetUtils.getInstance().getApis().doGetZfbData(requestBody)
+                    NetUtils.getInstance()
+                            .getApis()
+                            .doGetZfbData(requestBody)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<ZfbBean>() {
@@ -309,14 +331,15 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                                 }
 
                                 @Override
-                                public void onNext(ZfbBean zfbBean) {
-                                    ZfbBean.DataBean data = zfbBean.getData();
+                                public void onNext(ZfbBean bean) {
+                                    //调用支付宝支付
+                                    ZfbBean.DataBean data = bean.getData();
                                     String info = data.getBody();
                                     //调用支付宝支付
                                     Runnable payRunnable = new Runnable() {
                                         @Override
                                         public void run() {
-                                            PayTask alipay = new PayTask(OrderWaitPayActivity.this);
+                                            PayTask alipay = new PayTask(OrderHuodaoPayActivity.this);
                                             Map<String,String> result = alipay.payV2(info,true);
 
                                             Message msg = new Message();
@@ -333,7 +356,8 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    Toast.makeText(OrderWaitPayActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(OrderHuodaoPayActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
+
                                 }
 
                                 @Override
@@ -342,9 +366,67 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                                 }
                             });
                 }
-
-                break;
+            }
+        });
+        //popwindow设置属性
+        mPopupWindow.setAnimationStyle(R.style.popwindow_anim_style);
+        mPopupWindow.setContentView(view);
+        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                setWindowAlpa(false);
+            }
+        });
+        show(view);
+    }
+    //设置透明度
+    public void setWindowAlpa(boolean isopen) {
+        if (Build.VERSION.SDK_INT < 11) {
+            return;
         }
+        final Window window = this.getWindow();
+        final WindowManager.LayoutParams lp = window.getAttributes();
+        window.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        ValueAnimator animator;
+        if (isopen) {
+            animator = ValueAnimator.ofFloat(1.0f, 0.5f);
+        } else {
+            animator = ValueAnimator.ofFloat(0.5f, 1.0f);
+        }
+        animator.setDuration(400);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float alpha = (float) animation.getAnimatedValue();
+                lp.alpha = alpha;
+                window.setAttributes(lp);
+            }
+        });
+        animator.start();
     }
 
+    /**
+     * 显示PopupWindow
+     */
+    private void show(View v) {
+        if (mPopupWindow != null && !mPopupWindow.isShowing()) {
+            mPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
+        }
+        setWindowAlpa(true);
+    }
+
+
+    /**
+     * 消失PopupWindow
+     */
+    public void dismiss() {
+        if (mPopupWindow != null && mPopupWindow.isShowing()) {
+            mPopupWindow.dismiss();
+        }
+    }
 }

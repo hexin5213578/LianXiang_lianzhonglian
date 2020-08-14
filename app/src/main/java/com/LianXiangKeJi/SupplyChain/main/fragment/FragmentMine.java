@@ -279,6 +279,7 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void onNext(UserOrderBean userOrderBean) {
                         List<UserOrderBean.DataBean> data = userOrderBean.getData();
+
                         for (int i = 0; i < data.size(); i++) {
                             UserOrderBean.DataBean dataBean = data.get(i);
                             int orderState = dataBean.getOrderState();

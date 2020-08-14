@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class OrderGoodsListAdapterTwo extends RecyclerView.Adapter<RecyclerView.
 
         ((ViewHolder) holder).tvGoodsName.setText(list.get(position).getName());
         ((ViewHolder)holder).tvGoodsSpec.setText(list.get(position).getSpecs());
-        ((ViewHolder)holder).tvPrice.setText("￥"+list.get(position).getPrice());
+        ((ViewHolder)holder).tvPrice.setText("￥"+ StringUtil.round(String.valueOf(list.get(position).getPrice())));
         ((ViewHolder)holder).tvGoodsCount.setText("x"+list.get(position).getNumber());
         Glide.with(context).load(list.get(position).getLittlePrintUrl()).into(((ViewHolder)holder).ivGoodsImage);
     }

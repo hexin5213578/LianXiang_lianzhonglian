@@ -39,6 +39,7 @@ import com.LianXiangKeJi.SupplyChain.recommend.bean.HotSellBean;
 import com.LianXiangKeJi.SupplyChain.search.adapter.SearchGoodsAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
@@ -92,8 +93,7 @@ public class HotsellAdapter_home extends RecyclerView.Adapter<RecyclerView.ViewH
         ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
 
         ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
-        ((ViewHolder)holder).tvGoodsPrice.setText("￥"+Float.valueOf(list.get(position).getPrice()));
-
+        ((ViewHolder)holder).tvGoodsPrice.setText("￥"+ StringUtil.round(list.get(position).getPrice()));
 
         LinkedHashMap<String, String> map = SPUtil.getMap(context, "goodsid");
 

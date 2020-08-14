@@ -156,6 +156,10 @@
         <activity android:name=".paysuccess.activity.OrderCancleActivity"
             android:screenOrientation="portrait"/>
 
+        <!-- 货到付款订单详情-->
+        <activity android:name=".paysuccess.activity.OrderHuodaoPayActivity"
+            android:screenOrientation="portrait"/>
+
         <!-- 用户协议-->
         <activity android:name=".protocol.UserAgreementActivity"
             android:screenOrientation="portrait"/>

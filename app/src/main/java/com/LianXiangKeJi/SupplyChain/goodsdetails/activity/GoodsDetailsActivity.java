@@ -40,6 +40,7 @@ import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 import com.LianXiangKeJi.SupplyChain.recommend.adapter.HotsellAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
@@ -129,7 +130,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
         if(bean !=null){
             image = bean.getImage();
             tvGoodsTitle.setText(bean.getName());
-            tvGoodsMoney.setText("¥ "+ bean.getPrice());
+            tvGoodsMoney.setText("¥ "+ StringUtil.round(bean.getPrice()));
             if(bean.getStock()!=null && !bean.getStock().equals("null")){
                 tvGoodsKucun.setText("库存"+ bean.getStock()+"件");
             }else{

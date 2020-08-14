@@ -15,8 +15,10 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.activity.GoodsDetailsActivity;
 import com.LianXiangKeJi.SupplyChain.goodsdetails.bean.GoodsDeatailsBean;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,12 +50,13 @@ public class OrderInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ((ViewHolder) holder).tvName.setText(orderBean.getName());
         ((ViewHolder) holder).tvCount.setText("x" + orderBean.getCount() + "");
         ((ViewHolder) holder).tvSpec.setText(orderBean.getSpecs());
-        ((ViewHolder) holder).tvPrice.setText("￥" + orderBean.getPrice());
+        ((ViewHolder) holder).tvPrice.setText("￥" + StringUtil.round(String.valueOf(orderBean.getPrice())));
         int count = orderBean.getCount();
         String price = orderBean.getPrice();
         Float aFloat = Float.valueOf(price);
+        float a = count*aFloat;
 
-        ((ViewHolder) holder).tvAllprice.setText("小计：￥" + Double.valueOf(count * aFloat));
+        ((ViewHolder) holder).tvAllprice.setText("小计：￥" + StringUtil.round(String.valueOf(a)));
         //点击条目跳转商品详情页
         ((ViewHolder)holder).rlTitle.setOnClickListener(new View.OnClickListener() {
             @Override

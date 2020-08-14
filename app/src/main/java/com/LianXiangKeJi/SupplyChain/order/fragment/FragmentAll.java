@@ -53,14 +53,12 @@ public class FragmentAll extends BaseFragment {
     RecyclerView rcOrder;
     @BindView(R.id.rl_noorder)
     RelativeLayout rlNoorder;
-    @BindView(R.id.rc_hotSell)
-    RecyclerView rcHotSell;
     @BindView(R.id.sv)
     SpringView sv;
     private static final int SDK_PAY_FLAG = 1;
-    private List<UserOrderBean.DataBean> list;
+    private List<UserOrderBean.DataBean> data = new ArrayList<>();
     private LinearLayoutManager manager;
-
+    int page = 1;
     @Override
     protected void getid(View view) {
 
@@ -105,57 +103,18 @@ public class FragmentAll extends BaseFragment {
 
     @Override
     protected void getData() {
-
-        rcHotSell.getParent().requestDisallowInterceptTouchEvent(true);
-
-        // TODO: 2020/7/21 测试热销展示的四条商品
-
-
-        //获取热销商品
-        NetUtils.getInstance().getApis()
-                .doGetHotSell()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<HotSellBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(HotSellBean hotSellBean) {
-                        List<HotSellBean.DataBean> data = hotSellBean.getData();
-                        if(data.size()>0&&data!=null){
-                            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-                            rcHotSell.setLayoutManager(gridLayoutManager);
-
-                            Near_HotSellAdapter adapter = new Near_HotSellAdapter(getActivity(), data);
-                            rcHotSell.setAdapter(adapter);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-
-        getDataBean();
+        getDataBean(page);
+        data.clear();
 
         sv.setHeader(new DefaultHeader(getContext()));
+        sv.setFooter(new DefaultFooter(getContext()));
 
         sv.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
-                getDataBean();
-
-
+                data.clear();
+                page=1;
+                getDataBean(page);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -169,6 +128,8 @@ public class FragmentAll extends BaseFragment {
              */
             @Override
             public void onLoadmore() {
+                page++;
+                getDataBean(page);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -184,7 +145,8 @@ public class FragmentAll extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(String str){
         if (str.equals("刷新界面")){
-            getDataBean();
+            page=1;
+            getDataBean(page);
         }
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -222,10 +184,11 @@ public class FragmentAll extends BaseFragment {
         }
     }
 
-    public void getDataBean(){
+    public void getDataBean(int page){
+
         showDialog();
         NetUtils.getInstance().getApis()
-                .getUserOrder()
+                .getAllUserOrderLimete(page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UserOrderBean>() {
@@ -238,20 +201,21 @@ public class FragmentAll extends BaseFragment {
                     public void onNext(UserOrderBean userOrderBean) {
                         hideDialog();
                         List<UserOrderBean.DataBean> list = userOrderBean.getData();
-                        if (list != null && list.size() > 0) {
-                            Log.d("hmy", "全部订单" + list.size());
+                        data.addAll(list);
+
+                        if (data != null && data.size() > 0) {
+                            Log.d("hmy", "全部订单" + data.size());
 
                             rlNoorder.setVisibility(View.GONE);
-                            rcOrder.setVisibility(View.VISIBLE);
+                            sv.setVisibility(View.VISIBLE);
                             //传入列表数据
                             manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                             rcOrder.setLayoutManager(manager);
-                            AllOrderAdapter allOrderAdapter = new AllOrderAdapter(getContext(), list);
+                            AllOrderAdapter allOrderAdapter = new AllOrderAdapter(getActivity(), data);
                             rcOrder.setAdapter(allOrderAdapter);
-
                         } else {
                             rlNoorder.setVisibility(View.VISIBLE);
-                            rcOrder.setVisibility(View.GONE);
+                            sv.setVisibility(View.GONE);
                         }
                     }
 

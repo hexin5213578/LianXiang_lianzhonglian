@@ -9,6 +9,7 @@
         android:textColor="#E94942"
         android:layout_marginTop="@dimen/dp_18"
         android:layout_marginRight="@dimen/dp_8"
+        android:id="@+id/tv_payment"
         android:textSize="@dimen/sp_13"
         android:layout_height="wrap_content">
     </TextView>

@@ -65,7 +65,6 @@ public class FragmentPayment extends BaseFragment {
     protected void getid(View view) {
 
     }
-
     @Override
     protected int getResId() {
         return R.layout.fragment_payment;
@@ -123,7 +122,7 @@ public class FragmentPayment extends BaseFragment {
                     @Override
                     public void onNext(HotSellBean hotSellBean) {
                         List<HotSellBean.DataBean> data = hotSellBean.getData();
-                        if(data.size()>0&&data!=null){
+                        if(data.size()>0 && data!=null){
                             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
                             rcHotSell.setLayoutManager(gridLayoutManager);
 
@@ -221,16 +220,18 @@ public class FragmentPayment extends BaseFragment {
                     @Override
                     public void onNext(UserOrderBean userOrderBean) {
                         List<UserOrderBean.DataBean> orderlist = userOrderBean.getData();
+
                         list = new ArrayList<>();
 
-                        for (int i =0;i<orderlist.size();i++){
-                            UserOrderBean.DataBean dataBean = orderlist.get(i);
-                            int orderState = orderlist.get(i).getOrderState();
-                            if(orderState==0){
-                                list.add(dataBean);
+                        if (orderlist.size()>0 && orderlist!=null){
+                            for (int i =0;i<orderlist.size();i++){
+                                UserOrderBean.DataBean dataBean = orderlist.get(i);
+                                int orderState = orderlist.get(i).getOrderState();
+                                if(orderState==0){
+                                    list.add(dataBean);
+                                }
                             }
                         }
-
                         if (list != null && list.size() > 0) {
                             Log.d("hmy", "代付款订单" + list.size());
 

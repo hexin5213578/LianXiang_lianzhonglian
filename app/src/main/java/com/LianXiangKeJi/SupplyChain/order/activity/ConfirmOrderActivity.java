@@ -35,18 +35,31 @@ import com.LianXiangKeJi.SupplyChain.common.custom.CustomDialog;
 import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.SaveCouponIdBean;
 import com.LianXiangKeJi.SupplyChain.order.adapter.OrderInfoAdapter;
+import com.LianXiangKeJi.SupplyChain.order.bean.CashondeliveryBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.SavePutOrderBean;
 import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
+import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * @ClassName:ConfirmOrderActivity
@@ -135,7 +148,8 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         }
         tvCount.setText(orderlist.size() + "种共" + count + "件，");
         Log.d("hmy", "总价为" + price + "");
-        tvPrice.setText(price + "");
+
+        tvPrice.setText(StringUtil.round(String.valueOf(price)));
         // 展示默认地址
         tvName.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
         tvAddress.setText(SPUtil.getInstance().getData(ConfirmOrderActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
@@ -231,14 +245,19 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         ImageView ivclose = view.findViewById(R.id.iv_close);
         RelativeLayout rl2 = view.findViewById(R.id.rl2);
         RelativeLayout rl3 = view.findViewById(R.id.rl3);
+        RelativeLayout rl4 = view.findViewById(R.id.rl4);
+
         RadioButton rb1 = view.findViewById(R.id.rb1);
         RadioButton rb2 = view.findViewById(R.id.rb2);
+        RadioButton rb3 = view.findViewById(R.id.rb3);
+
         ImageView check1 = view.findViewById(R.id.pay_check1);
         ImageView check2 = view.findViewById(R.id.pay_check2);
+        ImageView check3 = view.findViewById(R.id.pay_check3);
+
         TextView tvprice = view.findViewById(R.id.tv_price);
         Button startpay = view.findViewById(R.id.startpay);
-
-        tvprice.setText(" ￥" + price + "");
+        tvprice.setText(" ￥" + StringUtil.round(String.valueOf(price)));
         ivclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -250,8 +269,10 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
             public void onClick(View view) {
                 check1.setVisibility(View.VISIBLE);
                 check2.setVisibility(View.GONE);
+                check3.setVisibility(View.GONE);
                 rb1.setChecked(true);
                 rb2.setChecked(false);
+                rb3.setChecked(false);
             }
         });
         rl3.setOnClickListener(new View.OnClickListener() {
@@ -259,11 +280,23 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
             public void onClick(View view) {
                 check2.setVisibility(View.VISIBLE);
                 check1.setVisibility(View.GONE);
+                check3.setVisibility(View.GONE);
                 rb2.setChecked(true);
+                rb1.setChecked(false);
+                rb3.setChecked(false);
+            }
+        });
+        rl4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check3.setVisibility(View.VISIBLE);
+                check2.setVisibility(View.GONE);
+                check1.setVisibility(View.GONE);
+                rb3.setChecked(true);
+                rb2.setChecked(false);
                 rb1.setChecked(false);
             }
         });
-
         //立即支付 判断微信支付宝选中状态决定调起哪种支付方式
         startpay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,7 +318,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     }
                 }
                 //支付宝支付
-                else {
+                else if(rb2.isChecked()){
                     Log.d("hmy", "支付宝支付");
 
                     Intent intent = new Intent(ConfirmOrderActivity.this, ConfirmPaymentActivity.class);
@@ -297,10 +330,74 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     bundle.putSerializable("orderlist", (Serializable) orderlist);
                     intent.putExtras(bundle);
                     if(orderstate==2){
-                        Toast.makeText(ConfirmOrderActivity.this, "订单已经被占用", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConfirmOrderActivity.this, "优惠券已经被占用", Toast.LENGTH_SHORT).show();
                     }else{
                         startActivity(intent);
                     }
+                    //货到付款
+                }else if(rb3.isChecked()){
+
+                    //生成货到付款订单
+                    SavePutOrderBean savePutOrderBean = new SavePutOrderBean();
+                    List<SavePutOrderBean.ResultBean> list = new ArrayList<>();
+                    for (int i = 0; i< orderlist.size(); i++){
+                        String goodsid = orderlist.get(i).getGoodsid();
+                        int count = orderlist.get(i).getCount();
+                        SavePutOrderBean.ResultBean resultBean = new SavePutOrderBean.ResultBean();
+                        resultBean.setNumber(count+"");
+                        resultBean.setShopGoodsId(goodsid);
+                        list.add(resultBean);
+                    }
+                    savePutOrderBean.setGoodsList(list);
+                    if(counponId!=null){
+                        savePutOrderBean.setUserCouponId(counponId);
+                    }else{
+                        savePutOrderBean.setUserCouponId("");
+                    }
+                    String s = etRemarks.getText().toString();
+
+                    if(s!=null){
+                        savePutOrderBean.setRemark(s);
+                    }else{
+                        savePutOrderBean.setRemark("");
+                    }
+                    savePutOrderBean.setPayWay(3);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(savePutOrderBean);
+
+                    Log.d("hmy",json);
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                    NetUtils.getInstance().getApis().doCashonOrder(requestBody)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<CashondeliveryBean>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(CashondeliveryBean cashondeliveryBean) {
+                                    Toast.makeText(ConfirmOrderActivity.this, ""+cashondeliveryBean.getData(), Toast.LENGTH_SHORT).show();
+                                    if(cashondeliveryBean.getData().equals("货到付款订单已提交")){
+                                        IntentBean intentBean = new IntentBean();
+                                        intentBean.setStr("关闭");
+                                        EventBus.getDefault().post(intentBean);
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+
                 }
             }
         });

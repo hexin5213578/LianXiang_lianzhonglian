@@ -13,6 +13,7 @@ import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.CouponBean;
 import com.LianXiangKeJi.SupplyChain.movable.bean.GetCouponBean;
 import com.LianXiangKeJi.SupplyChain.movable.bean.MovableBean;
+import com.LianXiangKeJi.SupplyChain.order.bean.CashondeliveryBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.ConfirmGetGoodsBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.DeleteOrCancleOrderBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.GenerOrdersBean;
@@ -127,28 +128,34 @@ public interface Apis {
     Observable<GetCouponBean> doGetCoupon(@Body RequestBody body);
 
 
-    //生成订单
+    //查询热门搜索
+    @GET("category/hotSeek")
+    Observable<SearchHotBean> GetSearchHot();
+
+
+    //生成支付宝订单
     @POST("order/foundOrder")
     Observable<GenerOrdersBean> doGenerOrder(@Body RequestBody body);
+
     //生成微信订单
     @POST("order/foundOrder")
     Observable<WechatOrderBean> doWXGenerOrder(@Body RequestBody body);
 
-    //查询热门搜索
-    @GET("category/hotSeek")
-    Observable<SearchHotBean> GetSearchHot();
+    //生成货到付款订单
+    @POST("order/foundOrder")
+    Observable<CashondeliveryBean> doCashonOrder(@Body RequestBody body);
 
     //查询所有订单
     @GET("order/super/findOrders")
     Observable<UserOrderBean> getUserOrder();
 
-    //删除订单
-    @POST("order/super/delOrdersOne")
-    Observable<DeleteOrCancleOrderBean> cancleOrder(@Body RequestBody body);
+    //查询所有订单(分页)
+    @GET("order/super/findAll")
+    Observable<UserOrderBean> getUserOrderLimete(@Query("pageNum")int num,@Query("orderState")int  orderstate);
 
-    //确认收货
-    @POST("order/super/confirmOrders")
-    Observable<ConfirmGetGoodsBean> doConfirmGetGoods(@Body RequestBody body);
+    //查询所有订单(分页  无状态)
+    @GET("order/super/findAll")
+    Observable<UserOrderBean> getAllUserOrderLimete(@Query("pageNum")int num);
 
     //通过订单号获取微信支付数据
     @POST("order/super/payOne")
@@ -157,6 +164,14 @@ public interface Apis {
     //通过订单号获取支付宝支付数据
     @POST("order/super/payOne")
     Observable<ZfbBean> doGetZfbData(@Body RequestBody body);
+
+    //删除订单
+    @POST("order/super/delOrdersOne")
+    Observable<DeleteOrCancleOrderBean> cancleOrder(@Body RequestBody body);
+
+    //确认收货
+    @POST("order/super/confirmOrders")
+    Observable<ConfirmGetGoodsBean> doConfirmGetGoods(@Body RequestBody body);
 
     //查询热门商品
     @GET("category/hotShopGoods")

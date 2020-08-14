@@ -45,12 +45,12 @@ public class FragmentFinish extends BaseFragment {
     RecyclerView rcOrder;
     @BindView(R.id.rl_noorder)
     RelativeLayout rlNoorder;
-    @BindView(R.id.rc_hotSell)
-    RecyclerView rcHotSell;
     @BindView(R.id.sv)
     SpringView sv;
-    private List<UserOrderBean.DataBean> list;
+    private List<UserOrderBean.DataBean> data = new ArrayList<>();
 
+    int page = 1;
+    int state=4;
     @Override
     protected void getid(View view) {
 
@@ -69,41 +69,9 @@ public class FragmentFinish extends BaseFragment {
     @Override
     protected void getData() {
         sv.setHeader(new DefaultHeader(getContext()));
-        getDataBean();
+        data.clear();
+        getDataBean(page,state);
 
-        //获取热销商品
-        NetUtils.getInstance().getApis()
-                .doGetHotSell()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<HotSellBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(HotSellBean hotSellBean) {
-                        List<HotSellBean.DataBean> data = hotSellBean.getData();
-                        if(data.size()>0&&data!=null){
-                            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-                            rcHotSell.setLayoutManager(gridLayoutManager);
-
-                            Near_HotSellAdapter adapter = new Near_HotSellAdapter(getActivity(), data);
-                            rcHotSell.setAdapter(adapter);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
         sv.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {
@@ -111,7 +79,9 @@ public class FragmentFinish extends BaseFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getDataBean();
+                        data.clear();
+                        page=1;
+                        getDataBean(page,state);
                         sv.onFinishFreshAndLoad();
                     }
                 }, 1000);
@@ -119,6 +89,8 @@ public class FragmentFinish extends BaseFragment {
 
             @Override
             public void onLoadmore() {
+                page++;
+                getDataBean(page,state);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -131,7 +103,8 @@ public class FragmentFinish extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(String str){
         if (str.equals("刷新界面")){
-            getDataBean();
+            page=1;
+            getDataBean(page,state);
         }
     }
 
@@ -149,55 +122,43 @@ public class FragmentFinish extends BaseFragment {
             EventBus.getDefault().unregister(this);
         }
     }
-    public void getDataBean(){
-        NetUtils.getInstance().getApis()
-                .getUserOrder()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<UserOrderBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+    public void getDataBean(int page,int orderstate){
+       NetUtils.getInstance().getApis().getUserOrderLimete(page,orderstate)
+               .subscribeOn(Schedulers.io())
+               .observeOn(AndroidSchedulers.mainThread())
+               .subscribe(new Observer<UserOrderBean>() {
+                   @Override
+                   public void onSubscribe(Disposable d) {
 
-                    }
+                   }
+                   @Override
+                   public void onNext(UserOrderBean userOrderBean) {
+                       List<UserOrderBean.DataBean> orderlist = userOrderBean.getData();
+                       data.addAll(orderlist);
+                       if (data != null && data.size() > 0) {
+                           Log.d("hmy", "待发货订单" + data.size());
+                           rlNoorder.setVisibility(View.GONE);
+                           sv.setVisibility(View.VISIBLE);
+                           //传入列表数据
+                           LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+                           rcOrder.setLayoutManager(manager);
+                           FinishAdapter adapter = new FinishAdapter(getContext(), data);
+                           rcOrder.setAdapter(adapter);
+                       } else {
+                           rlNoorder.setVisibility(View.VISIBLE);
+                           sv.setVisibility(View.GONE);
+                       }
+                   }
+                   @Override
+                   public void onError(Throwable e) {
 
-                    @Override
-                    public void onNext(UserOrderBean userOrderBean) {
-                        List<UserOrderBean.DataBean> orderlist = userOrderBean.getData();
-                        list = new ArrayList<>();
+                   }
+                   @Override
+                   public void onComplete() {
 
-                        for (int i =0;i<orderlist.size();i++){
-                            UserOrderBean.DataBean dataBean = orderlist.get(i);
-                            int orderState = orderlist.get(i).getOrderState();
-                            if(orderState==4){
-                                list.add(dataBean);
-                            }
-                        }
-
-                        if (list != null && list.size() > 0) {
-                            Log.d("hmy", "待发货订单" + list.size());
-
-                            rlNoorder.setVisibility(View.GONE);
-                            rcOrder.setVisibility(View.VISIBLE);
-                            //传入列表数据
-                            LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-                            rcOrder.setLayoutManager(manager);
-                            FinishAdapter adapter = new FinishAdapter(getContext(), list);
-                            rcOrder.setAdapter(adapter);
-                        } else {
-                            rlNoorder.setVisibility(View.VISIBLE);
-                            rcOrder.setVisibility(View.GONE);
-                        }
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                   }
+               });
     }
+
 
 }

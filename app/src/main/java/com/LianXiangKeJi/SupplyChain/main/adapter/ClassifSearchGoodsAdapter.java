@@ -37,6 +37,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.search.adapter.SearchGoodsAdapter;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
@@ -84,7 +85,7 @@ public class ClassifSearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView
             ((ViewHolder) holder).tvGoodsPrice.setText("￥？");
         } else {
             ((ViewHolder) holder).tvGoodsName.setText(list.get(position).getName());
-            ((ViewHolder) holder).tvGoodsPrice.setText("￥" + list.get(position).getPrice());
+            ((ViewHolder) holder).tvGoodsPrice.setText("￥" + StringUtil.round(list.get(position).getPrice()));
 
             double price = Double.parseDouble(list.get(position).getPrice());
 

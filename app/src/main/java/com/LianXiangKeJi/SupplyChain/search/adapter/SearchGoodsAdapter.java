@@ -35,6 +35,7 @@ import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.search.bean.SearchGoodsBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
@@ -79,15 +80,11 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        String token = Common.getToken();
-        if (TextUtils.isEmpty(token)) {
-            ((ViewHolder) holder).tvGoodsPrice.setText("￥？");
-        }
         Glide.with(context).load(list.get(position).getLittlePrintUrl()).into(((ViewHolder) holder).ivGoodsImage);
         ((ViewHolder) holder).tvGoodsName.setText(list.get(position).getName());
 
         ((ViewHolder) holder).tvGoodsName.setText(list.get(position).getName());
-        ((ViewHolder) holder).tvGoodsPrice.setText("￥" + list.get(position).getPrice());
+        ((ViewHolder) holder).tvGoodsPrice.setText("￥" + StringUtil.round(list.get(position).getPrice()));
 
         Integer count = Integer.valueOf(list.get(position).getAllSell());
         ((ViewHolder) holder).tvGoodsYichengjiao.setText("成交" + count + "笔");

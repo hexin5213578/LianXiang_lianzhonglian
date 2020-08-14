@@ -8,6 +8,7 @@
         android:layout_alignParentRight="true"
         android:textColor="#E94942"
         android:layout_marginTop="@dimen/dp_18"
+        android:id="@+id/tv_payment"
         android:layout_marginRight="@dimen/dp_8"
         android:textSize="@dimen/sp_13"
         android:layout_height="wrap_content">

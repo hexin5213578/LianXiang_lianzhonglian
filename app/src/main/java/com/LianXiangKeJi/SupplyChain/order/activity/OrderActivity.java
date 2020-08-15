@@ -4,69 +4,82 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BaseFragment;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
-import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
-import com.LianXiangKeJi.SupplyChain.order.contract.UserOrderContract;
 import com.LianXiangKeJi.SupplyChain.order.fragment.FragmentAll;
 import com.LianXiangKeJi.SupplyChain.order.fragment.FragmentFinish;
 import com.LianXiangKeJi.SupplyChain.order.fragment.FragmentPayment;
 import com.LianXiangKeJi.SupplyChain.order.fragment.FragmentReceipt;
 import com.LianXiangKeJi.SupplyChain.order.fragment.FragmentShip;
 import com.LianXiangKeJi.SupplyChain.order.presenter.UserOrderPresenter;
-import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @ClassName:OrderActivity
  * @Author:hmy
  * @Description:java类作用描述 我的订单页
  */
-public class OrderActivity extends BaseAvtivity implements View.OnClickListener{
+public class OrderActivity extends BaseAvtivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.back)
     ImageView back;
-    @BindView(R.id.tab)
-    TabLayout tab;
-    @BindView(R.id.vp)
-    ViewPager vp;
+    @BindView(R.id.flContent)
+    FrameLayout flContent;
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.tv_right)
     TextView tvRight;
+    @BindView(R.id.rb_all)
+    RadioButton rbAll;
+    @BindView(R.id.rb_daifukuan)
+    RadioButton rbDaifukuan;
+    @BindView(R.id.rb_daishouhuo)
+    RadioButton rbDaishouhuo;
+    @BindView(R.id.rb_daifahuo)
+    RadioButton rbDaifahuo;
+    @BindView(R.id.rb_finish)
+    RadioButton rbFinish;
+    @BindView(R.id.rgMenu)
+    RadioGroup rgMenu;
+    /**
+     * 当前展示的Fragment
+     */
+    private FragmentManager fmManager;
+    private Fragment currentFragment;
+    /**
+     * 上次点击返回按钮的时间戳
+     */
+    private long firstPressedTime;
 
-    private List<String> list = new ArrayList<>();
-    private List<BaseFragment> fragments = new ArrayList<>();
-    private List<String> textlist = new ArrayList<>();
+    /**
+     * 创建Fragment实例
+     */
     private FragmentAll fragmentAll;
     private FragmentPayment fragmentPayment;
     private FragmentShip fragmentShip;
     private FragmentReceipt fragmentReceipt;
     private FragmentFinish fragmentFinish;
-
     @Override
     protected int getResId() {
         return R.layout.activity_order;
@@ -74,32 +87,8 @@ public class OrderActivity extends BaseAvtivity implements View.OnClickListener{
 
     @Override
     protected void getData() {
-        setTitleColor(OrderActivity.this);
-        back.setOnClickListener(this);
-        title.setText("我的订单");
-        tvRight.setVisibility(View.GONE);
-        for (int i = 0; i < 10; i++) {
-            textlist.add("第" + i);
-        }
-/*        GridLayoutManager gridLayoutManager = new GridLayoutManager(OrderActivity.this, 2);
-        rcHotSell.setLayoutManager(gridLayoutManager);
-
-        Near_HotSellAdapter adapter = new Near_HotSellAdapter(OrderActivity.this, textlist);
-        rcHotSell.setAdapter(adapter);*/
 
 
-        list.add("全部");
-        list.add("待付款");
-        list.add("待发货");
-        list.add("待收货");
-        list.add("已完成");
-
-
-        tab.addTab(tab.newTab().setText(list.get(0)));
-        tab.addTab(tab.newTab().setText(list.get(1)));
-        tab.addTab(tab.newTab().setText(list.get(2)));
-        tab.addTab(tab.newTab().setText(list.get(3)));
-        tab.addTab(tab.newTab().setText(list.get(4)));
         //全部订单
         fragmentAll = new FragmentAll();
         //待付款订单
@@ -111,34 +100,29 @@ public class OrderActivity extends BaseAvtivity implements View.OnClickListener{
         //已完成订单
         fragmentFinish = new FragmentFinish();
 
-        //发起全部订单的请求
+        setTitleColor(OrderActivity.this);
+        back.setOnClickListener(this);
+        title.setText("我的订单");
+        tvRight.setVisibility(View.GONE);
+        rgMenu.setOnCheckedChangeListener(this);
 
 
-        //将订单添加进集合
-        fragments.add(fragmentAll);
-        fragments.add(fragmentPayment);
-        fragments.add(fragmentShip);
-        fragments.add(fragmentReceipt);
-        fragments.add(fragmentFinish);
-
-        MyAdapter myAdapter = new MyAdapter(getSupportFragmentManager());
-        vp.setAdapter(myAdapter);
-        tab.setupWithViewPager(vp);
+        fmManager=getSupportFragmentManager();
 
         Intent intent = getIntent();
         int flag = intent.getIntExtra("flag", 0);
         Log.d("hmy", "当前跳转到的页面为" + flag);
         //通过标记判断需要展示的页面
         if (flag == 0) {
-            vp.setCurrentItem(0);
+            rbAll.setChecked(true);
         } else if (flag == 1) {
-            vp.setCurrentItem(1);
+            rbDaifukuan.setChecked(true);
         } else if (flag == 2) {
-            vp.setCurrentItem(2);
+            rbDaifahuo.setChecked(true);
         } else if (flag == 3) {
-            vp.setCurrentItem(3);
+            rbDaishouhuo.setChecked(true);
         } else {
-            vp.setCurrentItem(4);
+            rbFinish.setChecked(true);
         }
 
     }
@@ -158,29 +142,54 @@ public class OrderActivity extends BaseAvtivity implements View.OnClickListener{
     }
 
 
-    //创建viewpager适配器
-    public class MyAdapter extends FragmentPagerAdapter {
-
-
-        public MyAdapter(@NonNull FragmentManager fm) {
-            super(fm);
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        switch (i) {
+            case R.id.rb_all:
+                replace(fragmentAll);
+                break;
+            case R.id.rb_daifukuan:
+                replace(fragmentPayment);
+                break;
+            case R.id.rb_daifahuo:
+                replace(fragmentShip);
+                break;
+            case R.id.rb_daishouhuo:
+                replace(fragmentReceipt);
+                break;
+            case R.id.rb_finish:
+                replace(fragmentFinish);
+                break;
+            default:
+                break;
         }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
+    }
+    /**
+     * 切换页面显示fragment
+     *
+     * @param to 跳转到的fragment
+     */
+    private void replace(Fragment to) {
+        if (to == null || to == currentFragment) {
+            // 如果跳转的fragment为空或者跳转的fragment为当前fragment则不做操作
+            return;
         }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
+        if (currentFragment == null) {
+            // 如果当前fragment为空,即为第一次添加fragment
+            fmManager.beginTransaction()
+                    .add(R.id.flContent, to)
+                    .commitAllowingStateLoss();
+            currentFragment = to;
+            return;
         }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return list.get(position);
+        // 切换fragment
+        FragmentTransaction transaction = fmManager.beginTransaction().hide(currentFragment);
+        if (!to.isAdded()) {
+            transaction.add(R.id.flContent, to);
+        } else {
+            transaction.show(to);
         }
+        transaction.commitAllowingStateLoss();
+        currentFragment = to;
     }
 }

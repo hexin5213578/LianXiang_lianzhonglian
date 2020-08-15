@@ -52,8 +52,8 @@ public interface Apis {
     Observable<GetPhoneCodeBean> getPhoneCode(@Url String url, @Query("phone") String phone);
 
     //用户注册
-    @POST()
-    Observable<GetPhoneCodeBean> doRegist (@Url String url,@Body RequestBody body);
+    @POST("user/signIn")
+    Observable<GetPhoneCodeBean> doRegist (@Body RequestBody body);
 
     //密码登录
     @POST("user/login")

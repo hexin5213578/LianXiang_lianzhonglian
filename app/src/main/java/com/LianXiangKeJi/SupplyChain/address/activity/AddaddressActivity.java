@@ -231,5 +231,4 @@ public class AddaddressActivity extends BaseAvtivity implements View.OnClickList
             e.printStackTrace();
         }
     }
-
 }

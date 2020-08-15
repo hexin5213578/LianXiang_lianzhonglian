@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -141,6 +142,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -215,6 +217,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                                                                 @Override
                                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                                     //发起解析地址的请求
+                                                                    showDialog();
                                                                     NetUtils.getInstance().getApis().doRegistLocation("https://restapi.amap.com/v3/geocode/geo", "6002f521fac7009a462a76d33debdd4a", address, "JSON")
                                                                             .subscribeOn(Schedulers.io())
                                                                             .observeOn(AndroidSchedulers.mainThread())
@@ -245,8 +248,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                                                                                     list.add(file1);
 
                                                                                     RequestBody requsetBody = NetUtils.getInstance().getRequsetBody(list, map);
-                                                                                    showDialog();
-                                                                                    NetUtils.getInstance().getApis().doRegist("http://192.168.0.143:8081/user/signIn", requsetBody)
+                                                                                    NetUtils.getInstance().getApis().doRegist(requsetBody)
                                                                                             .subscribeOn(Schedulers.io())
                                                                                             .observeOn(AndroidSchedulers.mainThread())
                                                                                             .subscribe(new Observer<GetPhoneCodeBean>() {
@@ -258,11 +260,11 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                                                                                                 @Override
                                                                                                 public void onNext(GetPhoneCodeBean getPhoneCodeBean) {
                                                                                                     hideDialog();
+                                                                                                    Toast.makeText(RegistActivity.this, getPhoneCodeBean.getData(), Toast.LENGTH_SHORT).show();
 
                                                                                                     if (getPhoneCodeBean.getData().equals("注册信息已提交")) {
                                                                                                         Toast.makeText(RegistActivity.this, "注册成功，等待管理员审核", Toast.LENGTH_SHORT).show();
-
-                                                                                                        startActivity(new Intent(RegistActivity.this, LoginActivity.class));
+                                                                                                        startActivity(new Intent(RegistActivity.this,LoginActivity.class));
                                                                                                         finish();
                                                                                                     }
                                                                                                 }
@@ -326,7 +328,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
 
                 break;
             case R.id.rl_location:
-                String sdk = Build.VERSION.SDK; // SDK号
+               /* String sdk = Build.VERSION.SDK; // SDK号
                 String model = Build.MODEL; // 手机型号
                 String release = Build.VERSION.RELEASE; // android系统版本号
                 String brand = Build.BRAND;//手机厂商
@@ -359,11 +361,10 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                         builder.create().show();
                         return;
                     }
-                }
+                }*/
+                Request();
 
 
-                Intent intent = new Intent(RegistActivity.this, MapActivity.class);
-                startActivity(intent);
                 break;
         }
     }
@@ -400,7 +401,22 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
             }
         }
     }
+    //安卓10.0定位权限
+    public void Request() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int request = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+            if (request != PackageManager.PERMISSION_GRANTED)//缺少权限，进行权限申请
+            {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+                return;//
+            } else {
+                Intent intent = new Intent(RegistActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+        } else {
 
+        }
+    }
     //开启相机相册动态权限
     public void onTakePhoto() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -427,6 +443,15 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         if (requestCode == 123) {            //当然权限多了，建议使用Switch，不必纠结于此
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "权限申请成功", Toast.LENGTH_SHORT).show();
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(this, "权限申请失败，用户拒绝权限", Toast.LENGTH_SHORT).show();
+            }
+        }else if(requestCode==100){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "权限申请成功", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(RegistActivity.this, MapActivity.class);
+                startActivity(intent);
             } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(this, "权限申请失败，用户拒绝权限", Toast.LENGTH_SHORT).show();
             }
@@ -464,16 +489,9 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         btGetcode.setEnabled(false);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
-
     /**
      * 跳转到miui的权限管理页面
-     */
+     *//*
     private void gotoMiuiPermission() {
         try { // MIUI 8
             Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
@@ -492,9 +510,9 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         }
     }
 
-    /**
+    *//**
      * 跳转到魅族的权限管理系统
-     */
+     *//*
     private void gotoMeizuPermission() {
         try {
             Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
@@ -507,9 +525,9 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
         }
     }
 
-    /**
+    *//**
      * 华为的权限管理页面
-     */
+     *//*
     private void gotoHuaweiPermission() {
         try {
             Intent intent = new Intent();
@@ -524,11 +542,11 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
 
     }
 
-    /**
+    *//**
      * 获取应用详情页面intent（如果找不到要跳转的界面，也可以先把用户引导到系统设置页面）
      *
      * @return
-     */
+     *//*
     private Intent getAppDetailSettingIntent() {
         Intent localIntent = new Intent();
         localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -541,5 +559,5 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
             localIntent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
         }
         return localIntent;
-    }
+    }*/
 }

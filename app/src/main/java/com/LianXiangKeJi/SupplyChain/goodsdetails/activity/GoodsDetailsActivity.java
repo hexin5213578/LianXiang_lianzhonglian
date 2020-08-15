@@ -289,7 +289,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
         }else{
             tv_name.setText(bean.getName());
             tv_guige.setText(bean.getSpec());
-            tv_price.setText("￥"+bean.getPrice());
+            tv_price.setText("￥"+StringUtil.round(bean.getPrice()));
             Glide.with(GoodsDetailsActivity.this).load(bean.getImage()).into(iv_touxiang);
 
             tv_count.setText(count+"");

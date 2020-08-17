@@ -96,6 +96,8 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
         getLunboImage();
         //获取热销商品
         getHotSell(token);
+        //获取分类
+        getClassif();
         //轮播图的点击事件
         sv.setListener(new SpringView.OnFreshListener() {
             @Override
@@ -106,6 +108,7 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
                         sv.onFinishFreshAndLoad();
                         getLunboImage();
                         getHotSell(token);
+                        getClassif();
                     }
                 }, 1000);
             }
@@ -127,35 +130,7 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
             }
         });
 
-        //分类标签栏
-        NetUtils.getInstance().getApis().doGetHomeClassIf()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<HomeClassIfBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(HomeClassIfBean homeClassIfBean) {
-                        List<HomeClassIfBean.DataBean> data = homeClassIfBean.getData();
-                        GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
-                        rcFenLei.setLayoutManager(manager);
-                        Home_labelAdapter home_labelAdapter = new Home_labelAdapter(getContext(), data);
-                        rcFenLei.setAdapter(home_labelAdapter);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
     @Override
@@ -285,5 +260,36 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
                         }
                     });
         }
+    }
+    public void getClassif(){
+        //分类标签栏
+        NetUtils.getInstance().getApis().doGetHomeClassIf()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HomeClassIfBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(HomeClassIfBean homeClassIfBean) {
+                        List<HomeClassIfBean.DataBean> data = homeClassIfBean.getData();
+                        GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
+                        rcFenLei.setLayoutManager(manager);
+                        Home_labelAdapter home_labelAdapter = new Home_labelAdapter(getContext(), data);
+                        rcFenLei.setAdapter(home_labelAdapter);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

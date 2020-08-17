@@ -58,7 +58,6 @@ public class FragmentPayment extends BaseFragment {
     RecyclerView rcHotSell;
     @BindView(R.id.sv)
     SpringView sv;
-    private List<UserOrderBean.DataBean> list;
     private static final int SDK_PAY_FLAG = 1;
 
     @Override
@@ -171,6 +170,15 @@ public class FragmentPayment extends BaseFragment {
             getDataBean();
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(sv!=null){
+            sv.onFinishFreshAndLoad();
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getZfbData(ZfbBean1 bean){
         //调用支付宝支付
@@ -207,55 +215,45 @@ public class FragmentPayment extends BaseFragment {
     }
 
     public void getDataBean(){
-        NetUtils.getInstance().getApis()
-                .getUserOrder()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<UserOrderBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+       NetUtils.getInstance().getApis()
+               .getStateAllUserOrder(0)
+               .subscribeOn(Schedulers.io())
+               .observeOn(AndroidSchedulers.mainThread())
+               .subscribe(new Observer<UserOrderBean>() {
+                   @Override
+                   public void onSubscribe(Disposable d) {
 
-                    }
+                   }
 
-                    @Override
-                    public void onNext(UserOrderBean userOrderBean) {
-                        List<UserOrderBean.DataBean> orderlist = userOrderBean.getData();
+                   @Override
+                   public void onNext(UserOrderBean userOrderBean) {
+                       List<UserOrderBean.DataBean> orderlist = userOrderBean.getData();
 
-                        list = new ArrayList<>();
+                       if (orderlist != null && orderlist.size() > 0) {
+                           Log.d("hmy", "代付款订单" + orderlist.size());
 
-                        if (orderlist.size()>0 && orderlist!=null){
-                            for (int i =0;i<orderlist.size();i++){
-                                UserOrderBean.DataBean dataBean = orderlist.get(i);
-                                int orderState = orderlist.get(i).getOrderState();
-                                if(orderState==0){
-                                    list.add(dataBean);
-                                }
-                            }
-                        }
-                        if (list != null && list.size() > 0) {
-                            Log.d("hmy", "代付款订单" + list.size());
+                           rlNoorder.setVisibility(View.GONE);
+                           rcOrder.setVisibility(View.VISIBLE);
+                           //传入列表数据
+                           LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+                           rcOrder.setLayoutManager(manager);
+                           PaymentAdapter allOrderAdapter = new PaymentAdapter(getContext(), orderlist);
+                           rcOrder.setAdapter(allOrderAdapter);
+                       } else {
+                           rlNoorder.setVisibility(View.VISIBLE);
+                           rcOrder.setVisibility(View.GONE);
+                       }
+                   }
 
-                            rlNoorder.setVisibility(View.GONE);
-                            rcOrder.setVisibility(View.VISIBLE);
-                            //传入列表数据
-                            LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-                            rcOrder.setLayoutManager(manager);
-                            PaymentAdapter allOrderAdapter = new PaymentAdapter(getContext(), list);
-                            rcOrder.setAdapter(allOrderAdapter);
-                        } else {
-                            rlNoorder.setVisibility(View.VISIBLE);
-                            rcOrder.setVisibility(View.GONE);
-                        }
-                    }
-                    @Override
-                    public void onError(Throwable e) {
+                   @Override
+                   public void onError(Throwable e) {
 
-                    }
+                   }
 
-                    @Override
-                    public void onComplete() {
+                   @Override
+                   public void onComplete() {
 
-                    }
-                });
+                   }
+               });
     }
 }

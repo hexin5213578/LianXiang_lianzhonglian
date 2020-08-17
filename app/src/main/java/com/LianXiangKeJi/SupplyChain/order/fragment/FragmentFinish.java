@@ -69,6 +69,7 @@ public class FragmentFinish extends BaseFragment {
     @Override
     protected void getData() {
         sv.setHeader(new DefaultHeader(getContext()));
+        sv.setFooter(new DefaultFooter(getContext()));
         data.clear();
         getDataBean(page,state);
 
@@ -136,7 +137,7 @@ public class FragmentFinish extends BaseFragment {
                        List<UserOrderBean.DataBean> orderlist = userOrderBean.getData();
                        data.addAll(orderlist);
                        if (data != null && data.size() > 0) {
-                           Log.d("hmy", "待发货订单" + data.size());
+                           Log.d("hmy", "已完成订单" + data.size());
                            rlNoorder.setVisibility(View.GONE);
                            sv.setVisibility(View.VISIBLE);
                            //传入列表数据

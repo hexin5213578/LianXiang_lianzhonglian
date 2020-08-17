@@ -46,7 +46,6 @@ public class FragmentShip extends BaseFragment {
     RecyclerView rcHotSell;
     @BindView(R.id.sv)
     SpringView sv;
-    private List<UserOrderBean.DataBean> list;
 
 
     @Override
@@ -129,7 +128,7 @@ public class FragmentShip extends BaseFragment {
     }
     public void getDataBean(){
         NetUtils.getInstance().getApis()
-                .getUserOrder()
+                .getStateAllUserOrder(1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UserOrderBean>() {
@@ -141,31 +140,23 @@ public class FragmentShip extends BaseFragment {
                     @Override
                     public void onNext(UserOrderBean userOrderBean) {
                         List<UserOrderBean.DataBean> orderlist = userOrderBean.getData();
-                        list = new ArrayList<>();
 
-                        for (int i =0;i<orderlist.size();i++){
-                            UserOrderBean.DataBean dataBean = orderlist.get(i);
-                            int orderState = orderlist.get(i).getOrderState();
-                            if(orderState==1){
-                                list.add(dataBean);
-                            }
-                        }
-
-                        if (list != null && list.size() > 0) {
-                            Log.d("hmy", "待发货订单" + list.size());
+                        if (orderlist != null && orderlist.size() > 0) {
+                            Log.d("hmy", "待发货" + orderlist.size());
 
                             rlNoorder.setVisibility(View.GONE);
                             rcOrder.setVisibility(View.VISIBLE);
                             //传入列表数据
                             LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                             rcOrder.setLayoutManager(manager);
-                            ShipAdapter adapter = new ShipAdapter(getContext(), list);
-                            rcOrder.setAdapter(adapter);
+                            ShipAdapter allOrderAdapter = new ShipAdapter(getContext(), orderlist);
+                            rcOrder.setAdapter(allOrderAdapter);
                         } else {
                             rlNoorder.setVisibility(View.VISIBLE);
                             rcOrder.setVisibility(View.GONE);
                         }
                     }
+
                     @Override
                     public void onError(Throwable e) {
 
@@ -177,5 +168,4 @@ public class FragmentShip extends BaseFragment {
                     }
                 });
     }
-
 }

@@ -17,6 +17,7 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseFragment;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.Near_HotSellAdapter;
+import com.LianXiangKeJi.SupplyChain.order.adapter.PaymentAdapter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.ReceiptAdapter;
 import com.LianXiangKeJi.SupplyChain.order.adapter.ShipAdapter;
 import com.LianXiangKeJi.SupplyChain.order.bean.PayResult;
@@ -58,7 +59,6 @@ public class FragmentReceipt extends BaseFragment {
     RecyclerView rcHotSell;
     @BindView(R.id.sv)
     SpringView sv;
-    private List<UserOrderBean.DataBean> list;
     private static final int SDK_PAY_FLAG = 1;
 
 
@@ -221,7 +221,7 @@ public class FragmentReceipt extends BaseFragment {
     }
     public void getDataBean(){
         NetUtils.getInstance().getApis()
-                .getUserOrder()
+                .getStateAllUserOrder(3)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UserOrderBean>() {
@@ -233,31 +233,23 @@ public class FragmentReceipt extends BaseFragment {
                     @Override
                     public void onNext(UserOrderBean userOrderBean) {
                         List<UserOrderBean.DataBean> orderlist = userOrderBean.getData();
-                        list = new ArrayList<>();
 
-                        for (int i =0;i<orderlist.size();i++){
-                            UserOrderBean.DataBean dataBean = orderlist.get(i);
-                            int orderState = orderlist.get(i).getOrderState();
-                            if(orderState==3){
-                                list.add(dataBean);
-                            }
-                        }
-
-                        if (list != null && list.size() > 0) {
-                            Log.d("hmy", "待收货订单" + list.size());
+                        if (orderlist != null && orderlist.size() > 0) {
+                            Log.d("hmy", "待收货" + orderlist.size());
 
                             rlNoorder.setVisibility(View.GONE);
                             rcOrder.setVisibility(View.VISIBLE);
                             //传入列表数据
                             LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                             rcOrder.setLayoutManager(manager);
-                            ReceiptAdapter adapter = new ReceiptAdapter(getActivity(), list);
-                            rcOrder.setAdapter(adapter);
+                            ReceiptAdapter allOrderAdapter = new ReceiptAdapter(getActivity(), orderlist);
+                            rcOrder.setAdapter(allOrderAdapter);
                         } else {
                             rlNoorder.setVisibility(View.VISIBLE);
                             rcOrder.setVisibility(View.GONE);
                         }
                     }
+
                     @Override
                     public void onError(Throwable e) {
 

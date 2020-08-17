@@ -149,13 +149,17 @@ public interface Apis {
     @GET("order/super/findOrders")
     Observable<UserOrderBean> getUserOrder();
 
-    //查询所有订单(分页)
+    //查询所有订单(分页 带状态)
     @GET("order/super/findAll")
     Observable<UserOrderBean> getUserOrderLimete(@Query("pageNum")int num,@Query("orderState")int  orderstate);
 
     //查询所有订单(分页  无状态)
     @GET("order/super/findAll")
     Observable<UserOrderBean> getAllUserOrderLimete(@Query("pageNum")int num);
+
+    //查询所有订单(无分页  带状态)
+    @GET("order/super/findAll")
+    Observable<UserOrderBean> getStateAllUserOrder(@Query("orderState")int orderstate);
 
     //通过订单号获取微信支付数据
     @POST("order/super/payOne")

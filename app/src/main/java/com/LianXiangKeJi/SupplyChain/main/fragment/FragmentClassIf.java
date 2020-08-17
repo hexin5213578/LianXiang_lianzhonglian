@@ -70,7 +70,6 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     private ClassifSearchGoodsAdapter adapter;
     private SecondListAdapter secondListAdapter;
     private List<ClassIfBean.DataBean> data;
-
     @Override
     public void onResume() {
         super.onResume();
@@ -105,20 +104,19 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
                 startActivity(intent);
             }
         });
-        // 发起分类的请求
+        // 发起分类数据的请求
         BasePresenter basePresenter = getPresenter();
         if (basePresenter instanceof ClassIfPresenter) {
             showDialog();
             ((ClassIfPresenter) basePresenter).doGetClassIf();
         }
 
-
     }
     //接受一级列表条目点击
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getInt(Integer id) {
+        //点击一级条目分类 获取二级条目分类
         firstListAdapter.getId(id);
-
         ClassIfBean.DataBean dataBean = list.get(id);
         List<ClassIfBean.DataBean.ChildrenBean> children = dataBean.getChildren();
 
@@ -136,7 +134,6 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         rcSecondList.setLayoutManager(manager);
         secondListAdapter = new SecondListAdapter(getContext(),children);
         rcSecondList.setAdapter(secondListAdapter);
-
         //刷新UI
         firstListAdapter.notifyDataSetChanged();
         secondListAdapter.notifyDataSetChanged();
@@ -145,7 +142,7 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     //获取点击条目的id 查询id下的商品
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getSearchID(SaveSecondItemBean bean){
-
+        //点击二级条目获取三级条目下分类商品
         secondListAdapter.getId(bean.getIds());
         secondListAdapter.notifyDataSetChanged();
 
@@ -177,6 +174,8 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         //将获取到的数据提成全局变量
         list.addAll(data);
 
+
+
         //布局管理器
         LinearLayoutManager manager1 = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         rcFirstList.setLayoutManager(manager1);
@@ -189,9 +188,17 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         List<ClassIfBean.DataBean.ChildrenBean> children = dataBean.getChildren();
         manager = new GridLayoutManager(getContext(),3);
         rcSecondList.setLayoutManager(manager);
-        SecondListAdapter secondListAdapter = new SecondListAdapter(getContext(),children);
+        secondListAdapter = new SecondListAdapter(getContext(),children);
         rcSecondList.setAdapter(secondListAdapter);
-
+        //首次加载二级分类下三级分类的商品
+        if(children.size()>0 && children!=null){
+            secondListAdapter.getId(0);
+            if(!TextUtils.isEmpty(token)){
+                getclassIfGoods(children.get(0).getId());
+            }else{
+                getclassIfGoodsnoLogin(children.get(0).getId());
+            }
+        }
         secondListAdapter.notifyDataSetChanged();
     }
 

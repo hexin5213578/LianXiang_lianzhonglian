@@ -140,9 +140,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                 totalPrice += Double.valueOf(bean.getPrice()) * bean.getCount();
             }
         }
-        if(tvManager.getVisibility()== 0){
             money.setText("¥" + String.format("%.2f", totalPrice));
-        }
 
         rbCheckAll.setChecked(isAllChecked);
     }
@@ -207,7 +205,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                 money.setVisibility(View.GONE);
                 btJiesuan.setVisibility(View.GONE);
                 btDelete.setVisibility(View.VISIBLE);
-
                 break;
             case R.id.bt_jiesuan:
                 //  带数据去订单页发起结算
@@ -391,18 +388,20 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
 
                         data = shopCarBean.getData();
                         LinkedHashMap<String, String> goodsid = SPUtil.getMap(getContext(), "goodsid");
-                        for (String key : goodsid.keySet()) {
-                            String value = goodsid.get(key);
-                            for (int i =0;i<data.size();i++){
-                                if(data.get(i).getId().equals(key)){
-                                    data.get(i).setCount(Integer.valueOf(value));
-                                }
-                            }
-                        }
+
                         //判断进货单数据是否为空 如果为空隐藏所有功能展示进货单为空图片
                         if(data.size()>0&& data !=null){
                             noshopcar.setVisibility(View.GONE);
                             llOrder.setVisibility(View.VISIBLE);
+                            for (String key : goodsid.keySet()) {
+                                String value = goodsid.get(key);
+                                for (int i =0;i<data.size();i++){
+                                    if(data.get(i).getId().equals(key)){
+                                        data.get(i).setCount(Integer.valueOf(value));
+                                    }
+                                }
+                            }
+
                             LinearLayoutManager manager = new LinearLayoutManager(getContext());
                             rcOrder.setLayoutManager(manager);
 

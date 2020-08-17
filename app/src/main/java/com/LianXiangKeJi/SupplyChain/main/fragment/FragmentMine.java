@@ -110,6 +110,8 @@ public class FragmentMine extends BaseFragment implements View.OnClickListener {
             EventBus.getDefault().register(this);
         }
         getDataBean();
+        String username = SPUtil.getInstance().getData(getContext(), SPUtil.FILE_NAME, SPUtil.USER_NAME);
+        tvUsername.setText(username);
         Log.d("hmy","onResume");
     }
 

@@ -56,7 +56,7 @@ public class SearchGoodsNoLoginAdapter extends RecyclerView.Adapter<RecyclerView
     
         Glide.with(context).load(list.get(position).getUrl()).into(((ViewHolder)holder).ivGoodsImage);
         ((ViewHolder)holder).tvGoodsName.setText(list.get(position).getName());
-        ((ViewHolder)holder).tvGoodsPrice.setText("￥?");
+        ((ViewHolder)holder).tvGoodsPrice.setText("￥？");
 
         ((ViewHolder)holder).jia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,10 +94,9 @@ public class SearchGoodsNoLoginAdapter extends RecyclerView.Adapter<RecyclerView
         @BindView(R.id.tv_goods_price)
         TextView tvGoodsPrice;
         @BindView(R.id.jia)
-        Button jia;
+        ImageView jia;
         @BindView(R.id.rl_item)
         RelativeLayout rlItem;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

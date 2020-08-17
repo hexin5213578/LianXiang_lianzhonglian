@@ -263,7 +263,6 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                                                                                                     Toast.makeText(RegistActivity.this, getPhoneCodeBean.getData(), Toast.LENGTH_SHORT).show();
 
                                                                                                     if (getPhoneCodeBean.getData().equals("注册信息已提交")) {
-                                                                                                        Toast.makeText(RegistActivity.this, "注册成功，等待管理员审核", Toast.LENGTH_SHORT).show();
                                                                                                         startActivity(new Intent(RegistActivity.this,LoginActivity.class));
                                                                                                         finish();
                                                                                                     }

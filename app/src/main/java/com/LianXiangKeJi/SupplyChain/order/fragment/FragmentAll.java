@@ -59,6 +59,8 @@ public class FragmentAll extends BaseFragment {
     private List<UserOrderBean.DataBean> data = new ArrayList<>();
     private LinearLayoutManager manager;
     int page = 1;
+    private AllOrderAdapter allOrderAdapter;
+
     @Override
     protected void getid(View view) {
 
@@ -145,8 +147,51 @@ public class FragmentAll extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(String str){
         if (str.equals("刷新界面")){
-            page=1;
-            getDataBean(page);
+            NetUtils.getInstance().getApis()
+                    .getAllUserOrderLimete(1)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<UserOrderBean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(UserOrderBean userOrderBean) {
+                            hideDialog();
+                            List<UserOrderBean.DataBean> list = userOrderBean.getData();
+
+                            if (list != null && list.size() > 0) {
+                                Log.d("hmy", "全部订单" + data.size());
+
+                                rlNoorder.setVisibility(View.GONE);
+                                sv.setVisibility(View.VISIBLE);
+                                //传入列表数据
+                                manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+                                rcOrder.setLayoutManager(manager);
+                                allOrderAdapter = new AllOrderAdapter(getActivity(), list);
+                                rcOrder.setAdapter(allOrderAdapter);
+
+
+                                allOrderAdapter.notifyDataSetChanged();
+
+                            } else {
+                                rlNoorder.setVisibility(View.VISIBLE);
+                                sv.setVisibility(View.GONE);
+                            }
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            hideDialog();
+                            Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
         }
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -211,8 +256,12 @@ public class FragmentAll extends BaseFragment {
                             //传入列表数据
                             manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
                             rcOrder.setLayoutManager(manager);
-                            AllOrderAdapter allOrderAdapter = new AllOrderAdapter(getActivity(), data);
+                            allOrderAdapter = new AllOrderAdapter(getActivity(), data);
                             rcOrder.setAdapter(allOrderAdapter);
+
+
+                            allOrderAdapter.notifyDataSetChanged();
+
                         } else {
                             rlNoorder.setVisibility(View.VISIBLE);
                             sv.setVisibility(View.GONE);

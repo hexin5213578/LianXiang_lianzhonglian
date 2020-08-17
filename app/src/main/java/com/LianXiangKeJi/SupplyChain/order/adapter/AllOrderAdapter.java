@@ -39,6 +39,7 @@ import com.LianXiangKeJi.SupplyChain.order.bean.WxBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.ZfbBean;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderCancleActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderFinishActivity;
+import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderHuodaoActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderShippedActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderWaitPayActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessOrderActivity;
@@ -723,8 +724,10 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     String theway = "";
                     if (list.get(position).getPayWay() == 0) {
                         theway = "支付宝支付";
-                    } else {
+                    } else if(list.get(position).getPayWay()==1){
                         theway = "微信支付";
+                    }else{
+                        theway="货到付款";
                     }
                     long times = list.get(position).getGmtCreate();
                     String orderid = list.get(position).getId();
@@ -779,31 +782,45 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mPopupWindow1 = new PopupWindow();
-                    mPopupWindow1.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-                    mPopupWindow1.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                    View view1 = LayoutInflater.from(context).inflate(R.layout.dialog_no_pay, null);
-                    //popwindow设置属性
-                    mPopupWindow1.setContentView(view1);
-                    mPopupWindow1.setBackgroundDrawable(new BitmapDrawable());
-                    mPopupWindow1.setFocusable(true);
-                    mPopupWindow1.setOutsideTouchable(true);
-                    mPopupWindow1.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            setWindowAlpa(false);
-                        }
-                    });
-                    show1(view1);
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //要执行的操作
-                            dismiss1();
-                        }
-                    }, 2000);//2秒后执行弹出框消失
+                    Intent intent = new Intent(context, OrderHuodaoActivity.class);
+                    Bundle bundle = new Bundle();
+                    List<UserOrderBean.DataBean.OrdersDetailListBean> ordersDetailList1 = list.get(position).getOrdersDetailList();
+                    List<OrderBean> orderlist = new ArrayList<>();
 
+
+                    for (int i = 0; i < ordersDetailList1.size(); i++) {
+                        OrderBean orderBean = new OrderBean();
+
+                        UserOrderBean.DataBean.OrdersDetailListBean ordersDetailListBean = ordersDetailList1.get(i);
+                        //将数据存入集合
+                        orderBean.setName(ordersDetailListBean.getName());
+                        orderBean.setPrice(ordersDetailListBean.getPrice() + "");
+                        orderBean.setSpecs(ordersDetailListBean.getSpecs());
+                        orderBean.setCount(ordersDetailListBean.getNumber());
+                        orderBean.setImageurl(ordersDetailListBean.getLittlePrintUrl());
+                        orderBean.setGoodsid(ordersDetailListBean.getId());
+
+                        orderlist.add(orderBean);
+                    }
+
+                    bundle.putSerializable("orderlist", (Serializable) orderlist);
+
+                    intent.putExtras(bundle);
+                    String theway = "";
+                    if (list.get(position).getPayWay() == 0) {
+                        theway = "支付宝支付";
+                    } else if(list.get(position).getPayWay()==1){
+                        theway = "微信支付";
+                    }else{
+                        theway="货到付款";
+                    }
+                    long times = list.get(position).getGmtCreate();
+                    String orderid = list.get(position).getId();
+
+                    intent.putExtra("theway", theway);
+                    intent.putExtra("time", times);
+                    intent.putExtra("orderid", orderid);
+                    context.startActivity(intent);
                 }
             });
         }

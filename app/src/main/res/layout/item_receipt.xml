@@ -34,7 +34,7 @@
             android:layout_height="wrap_content">
         </TextView>
         <Button
-            android:layout_width="@dimen/dp_80"
+            android:layout_width="@dimen/dp_100"
             android:text="确认收货"
             android:textColor="#FF9966"
             android:id="@+id/bt_confirm"

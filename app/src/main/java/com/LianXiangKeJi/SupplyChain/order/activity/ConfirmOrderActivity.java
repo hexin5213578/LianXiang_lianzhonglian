@@ -32,6 +32,8 @@ import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
 import com.LianXiangKeJi.SupplyChain.common.custom.CustomDialog;
+import com.LianXiangKeJi.SupplyChain.main.bean.SaveShopCarBean;
+import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
 import com.LianXiangKeJi.SupplyChain.movable.activity.CouponActivity;
 import com.LianXiangKeJi.SupplyChain.movable.bean.SaveCouponIdBean;
 import com.LianXiangKeJi.SupplyChain.order.adapter.OrderInfoAdapter;
@@ -50,6 +52,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -106,6 +109,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     private PopupWindow mPopupWindow;
     private int count = 0;
     private double price = 0.00;
+    private double Orderprice = 0.00;
     private List<OrderBean> orderlist;
     String counponId  ="";
     int orderstate;
@@ -144,7 +148,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
 
             Log.d("hmy", "条目价格为" + itemprice + "");
             this.price += itemprice;
-
+            Orderprice = this.price;
         }
         tvCount.setText(orderlist.size() + "种共" + count + "件，");
         Log.d("hmy", "总价为" + price + "");
@@ -217,6 +221,10 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         }
         if(full==0){
             tvCoupon.setText("请选择优惠券");
+        }
+        if(bean.getCouponId().equals("")){
+            tvPrice.setText(Orderprice+"");
+            price = Orderprice;
         }
 
     }
@@ -385,6 +393,60 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                                         EventBus.getDefault().post(intentBean);
                                         finish();
                                     }
+                                    LinkedHashMap<String, String> map = SPUtil.getMap(ConfirmOrderActivity.this, "goodsid");
+
+                                    for (int i=0;i<orderlist.size();i++){
+                                        String goodsid = orderlist.get(i).getGoodsid();
+                                        for (int j =0;j<map.size();j++){
+                                            map.remove(goodsid);
+                                        }
+                                    }
+
+                                    //创建订单后从购物车删除
+                                    List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
+                                    SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                                    saveShopCarBean.setState(false);
+                                    SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                                    //添加进集合
+                                    //遍历map集合的键
+                                    for (String key : map.keySet()) {
+                                        resultBean.setShopGoodsId(key);
+                                        shoplist.add(resultBean);
+
+                                    }
+                                    saveShopCarBean.setShoppingCartList(shoplist);
+
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(saveShopCarBean);
+                                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+                                    NetUtils.getInstance().getApis().doShopCar(requestBody)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(new Observer<ShopCarBean>() {
+                                                @Override
+                                                public void onSubscribe(Disposable d) {
+
+                                                }
+
+                                                @Override
+                                                public void onNext(ShopCarBean shopCarBean) {
+
+                                                }
+
+                                                @Override
+                                                public void onError(Throwable e) {
+
+                                                }
+
+                                                @Override
+                                                public void onComplete() {
+
+                                                }
+                                            });
+                                    SPUtil.setMap(ConfirmOrderActivity.this,"goodsid",map);
+
+
                                 }
 
                                 @Override

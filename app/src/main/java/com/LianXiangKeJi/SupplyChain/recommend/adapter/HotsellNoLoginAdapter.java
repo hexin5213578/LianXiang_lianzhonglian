@@ -57,7 +57,7 @@ public class HotsellNoLoginAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             @Override
             public void onClick(View view) {
                 GoodsDeatailsBean goodsDeatailsBean = new GoodsDeatailsBean();
-                goodsDeatailsBean.setPrice("?");
+                goodsDeatailsBean.setPrice("？");
                 goodsDeatailsBean.setImage(list.get(position).getUrl());
                 goodsDeatailsBean.setName(list.get(position).getName() + "");
                 goodsDeatailsBean.setMonthsell(list.get(position).getMonthSell() + "");

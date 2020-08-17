@@ -102,6 +102,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
     private View view2;
     private String image;
     private GoodsDeatailsBean bean;
+    private double allprice;
 
     @Override
     protected int getResId() {
@@ -130,7 +131,11 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
         if(bean !=null){
             image = bean.getImage();
             tvGoodsTitle.setText(bean.getName());
-            tvGoodsMoney.setText("¥ "+ StringUtil.round(bean.getPrice()));
+            if(bean.getPrice().equals("？")){
+                tvGoodsMoney.setText("¥ "+ bean.getPrice());
+            }else{
+                tvGoodsMoney.setText("¥ "+ StringUtil.round(bean.getPrice()));
+            }
             if(bean.getStock()!=null && !bean.getStock().equals("null")){
                 tvGoodsKucun.setText("库存"+ bean.getStock()+"件");
             }else{
@@ -299,7 +304,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
             String substring = s.substring(1);
             float price = Float.parseFloat(substring);
 
-            double allprice = count*price;
+            allprice = count*price;
             DecimalFormat df = new DecimalFormat("#.00");
             df.format((float) allprice);
             tv_allprice.setText("¥"+df.format((float) allprice));
@@ -323,7 +328,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                 String substring = s.substring(1);
                 float price = Float.parseFloat(substring);
 
-                double allprice = count*price;
+                 allprice = count*price;
                 DecimalFormat df = new DecimalFormat("#.00");
                 df.format((float) allprice);
                 tv_allprice.setText("¥"+df.format((float) allprice));
@@ -343,7 +348,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                     String substring = s.substring(1);
                     float price = Float.parseFloat(substring);
 
-                    double allprice = count*price;
+                     allprice = count*price;
                     DecimalFormat df = new DecimalFormat("#.00");
                     df.format((float) allprice);
                     tv_allprice.setText("¥"+df.format((float) allprice));
@@ -352,8 +357,6 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
         });
         //加入进货单
         bt_join.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View view) {
                 //处理选择配送方式
@@ -467,37 +470,40 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
         bt_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //处理选择配送方式
-                boolean checked = rb1.isChecked();
-                boolean checked1 = rb2.isChecked();
-                if(checked){
-                    str=rb1.getText().toString();
-                }
-                if(checked1){
-                    str=rb2.getText().toString();
-                }
-                //跳转至确认订单页  将所选择信息通过集合传递
-                if (TextUtils.isEmpty(token)){
-                    Toast.makeText(GoodsDetailsActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                if (allprice<200){
+                    Toast.makeText(GoodsDetailsActivity.this, "结算最低金额为200元", Toast.LENGTH_SHORT).show();
                 }else{
-                    Intent intent = new Intent(GoodsDetailsActivity.this, ConfirmOrderActivity.class);
-                    OrderBean orderBean = new OrderBean();
-                    orderBean.setImageurl(bean.getImage());
-                    orderBean.setName(bean.getName());
-                    orderBean.setPrice(bean.getPrice());
-                    orderBean.setSpecs(bean.getSpec());
-                    orderBean.setCount(count);
-                    orderBean.setGoodsid(bean.getId());
-                    List<OrderBean> list = new ArrayList<>();
+                    //处理选择配送方式
+                    boolean checked = rb1.isChecked();
+                    boolean checked1 = rb2.isChecked();
+                    if(checked){
+                        str=rb1.getText().toString();
+                    }
+                    if(checked1){
+                        str=rb2.getText().toString();
+                    }
+                    //跳转至确认订单页  将所选择信息通过集合传递
+                    if (TextUtils.isEmpty(token)){
+                        Toast.makeText(GoodsDetailsActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Intent intent = new Intent(GoodsDetailsActivity.this, ConfirmOrderActivity.class);
+                        OrderBean orderBean = new OrderBean();
+                        orderBean.setImageurl(bean.getImage());
+                        orderBean.setName(bean.getName());
+                        orderBean.setPrice(bean.getPrice());
+                        orderBean.setSpecs(bean.getSpec());
+                        orderBean.setCount(count);
+                        orderBean.setGoodsid(bean.getId());
+                        List<OrderBean> list = new ArrayList<>();
 
-                    list.add(orderBean);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("orderlist", (Serializable) list);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    dismiss();
+                        list.add(orderBean);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("orderlist", (Serializable) list);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        dismiss();
+                    }
                 }
-
             }
         });
         //popwindow设置属性

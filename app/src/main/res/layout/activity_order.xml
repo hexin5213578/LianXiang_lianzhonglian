@@ -24,7 +24,7 @@
             android:id="@+id/rb_daifukuan"
             style="@style/OrderTab"
             android:background="@drawable/selector_ordr_tab_bg"
-            android:text="代付款" />
+            android:text="待付款" />
         <RadioButton
             android:id="@+id/rb_daifahuo"
             style="@style/OrderTab"

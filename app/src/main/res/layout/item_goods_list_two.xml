@@ -12,7 +12,7 @@
             android:layout_height="@dimen/dp_69">
         </ImageView>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_160"
             android:layout_toRightOf="@id/iv_goods_image"
             android:textSize="@dimen/sp_14"
             android:text="青岛啤酒经典8度"

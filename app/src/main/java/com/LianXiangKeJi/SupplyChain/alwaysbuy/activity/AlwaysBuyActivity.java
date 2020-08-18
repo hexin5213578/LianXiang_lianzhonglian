@@ -72,13 +72,13 @@ public class AlwaysBuyActivity extends BaseAvtivity implements View.OnClickListe
             textList.add(0);
         }
 
-        // TODO: 2020/7/21 常买商品列表
+        //常买商品列表
         LinearLayoutManager manager = new LinearLayoutManager(AlwaysBuyActivity.this,RecyclerView.VERTICAL,false);
         rcAlwaysBuy.setLayoutManager(manager);
         AlwaysBuyAdapterOne alwaysBuyAdapterOne = new AlwaysBuyAdapterOne(AlwaysBuyActivity.this,textList);
         rcAlwaysBuy.setAdapter(alwaysBuyAdapterOne);
 
-        // TODO: 2020/7/21 管理常买商品列表
+        //管理常买商品列表
         LinearLayoutManager manager1 = new LinearLayoutManager(AlwaysBuyActivity.this,RecyclerView.VERTICAL,false);
         rcAlwaysBuyManager.setLayoutManager(manager1);
         AlwaysBuyAdapterTwo alwaysBuyAdapterTwo = new AlwaysBuyAdapterTwo(AlwaysBuyActivity.this,textList);

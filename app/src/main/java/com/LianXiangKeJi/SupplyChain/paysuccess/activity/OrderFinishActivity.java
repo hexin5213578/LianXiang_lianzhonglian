@@ -135,6 +135,7 @@ public class OrderFinishActivity extends BaseAvtivity implements View.OnClickLis
                         .setMessage("是否确认删除").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                showDialog();
                                 NetUtils.getInstance().getApis().cancleOrder(requestBody)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
@@ -146,6 +147,7 @@ public class OrderFinishActivity extends BaseAvtivity implements View.OnClickLis
 
                                             @Override
                                             public void onNext(DeleteOrCancleOrderBean deleteOrCancleOrderBean) {
+                                                hideDialog();
                                                 Toast.makeText(OrderFinishActivity.this, "" + deleteOrCancleOrderBean.getData(), Toast.LENGTH_SHORT).show();
                                                 finish();
                                                 EventBus.getDefault().post("刷新界面");
@@ -165,7 +167,7 @@ public class OrderFinishActivity extends BaseAvtivity implements View.OnClickLis
                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //ToDo: 你想做的事情
+                                //你想做的事情
                                 dialogInterface.dismiss();
                             }
                         });
@@ -188,10 +190,4 @@ public class OrderFinishActivity extends BaseAvtivity implements View.OnClickLis
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

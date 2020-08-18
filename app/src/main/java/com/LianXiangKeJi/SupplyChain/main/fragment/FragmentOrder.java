@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -42,12 +44,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import me.trojx.dancingnumber.DancingNumberView;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -68,8 +72,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
     TextView heji;
     @BindView(R.id.bt_jiesuan)
     Button btJiesuan;
-    @BindView(R.id.tv_finish)
-    TextView tvFinish;
     @BindView(R.id.bt_delete)
     Button btDelete;
     @BindView(R.id.money)
@@ -107,7 +109,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         String token = Common.getToken();
         if (!TextUtils.isEmpty(token)) {
             tvManager.setOnClickListener(this);
-            tvFinish.setOnClickListener(this);
             btJiesuan.setOnClickListener(this);
             btDelete.setOnClickListener(this);
 
@@ -151,7 +152,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
 
         listId.clear();
 
-        tvFinish.setVisibility(View.GONE);
         tvManager.setVisibility(View.VISIBLE);
         heji.setVisibility(View.VISIBLE);
         money.setVisibility(View.VISIBLE);
@@ -168,13 +168,14 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         //查询购物车
 
         doShopCar(requestBody);
+        Log.d("xxx","onstart");
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         listId.clear();
+        Log.d("xxx","onHiddenChanged");
 
-        tvFinish.setVisibility(View.GONE);
         tvManager.setVisibility(View.VISIBLE);
         heji.setVisibility(View.VISIBLE);
         money.setVisibility(View.VISIBLE);
@@ -194,17 +195,30 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         doShopCar(requestBody);
 
     }
-
+    private boolean checked = true;
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_manager:
-                tvManager.setVisibility(View.GONE);
-                tvFinish.setVisibility(View.VISIBLE);
-                heji.setVisibility(View.GONE);
-                money.setVisibility(View.GONE);
-                btJiesuan.setVisibility(View.GONE);
-                btDelete.setVisibility(View.VISIBLE);
+                if(checked){
+                    tvManager.setText("完成");//设置显示内容
+                    heji.setVisibility(View.GONE);
+                    money.setVisibility(View.GONE);
+                    btJiesuan.setVisibility(View.GONE);
+                    btDelete.setVisibility(View.VISIBLE);
+                    Animation shake = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
+                    tvManager.startAnimation(shake);
+                    checked=false;
+                }else{
+                    tvManager.setText("管理");//设置显示内容
+                    heji.setVisibility(View.VISIBLE);
+                    money.setVisibility(View.VISIBLE);
+                    btJiesuan.setVisibility(View.VISIBLE);
+                    btDelete.setVisibility(View.GONE);
+                    Animation shake = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
+                    tvManager.startAnimation(shake);
+                    checked=true;
+                }
                 break;
             case R.id.bt_jiesuan:
                 //  带数据去订单页发起结算
@@ -230,6 +244,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("orderlist", (Serializable) list_order);
                         intent.putExtras(bundle);
+                        intent.putExtra("flag","flase");
                         startActivity(intent);
                     }else{
                         Toast.makeText(getContext(), "结算最低金额为200元", Toast.LENGTH_SHORT).show();
@@ -238,15 +253,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                 }else{
                     Toast.makeText(getContext(), "请先选购商品", Toast.LENGTH_SHORT).show();
                 }
-
-                break;
-            case R.id.tv_finish:
-                tvFinish.setVisibility(View.GONE);
-                tvManager.setVisibility(View.VISIBLE);
-                heji.setVisibility(View.VISIBLE);
-                money.setVisibility(View.VISIBLE);
-                btJiesuan.setVisibility(View.VISIBLE);
-                btDelete.setVisibility(View.GONE);
 
                 break;
             case R.id.bt_delete:
@@ -365,6 +371,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+        Log.d("xxx","onResume");
     }
     /**
      *  处理购物车
@@ -388,6 +395,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
 
                         data = shopCarBean.getData();
                         LinkedHashMap<String, String> goodsid = SPUtil.getMap(getContext(), "goodsid");
+                        LinkedHashMap<String,String> orderlist = new LinkedHashMap<>();
 
                         //判断进货单数据是否为空 如果为空隐藏所有功能展示进货单为空图片
                         if(data.size()>0&& data !=null){
@@ -401,8 +409,15 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                                     }
                                 }
                             }
+                            //第一次查询购物车 以服务器为准
+                            for (int i =0;i<data.size();i++){
+                                orderlist.put(data.get(i).getId(),String.valueOf(data.get(i).getCount()));
+                            }
+                            //覆盖
+                            SPUtil.setMap(getContext(),"goodsid",orderlist);
 
                             LinearLayoutManager manager = new LinearLayoutManager(getContext());
+
                             rcOrder.setLayoutManager(manager);
 
                             shopcarAdapter = new ShopcarAdapter(getContext());
@@ -426,6 +441,9 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                             noshopcar.setVisibility(View.VISIBLE);
                             llOrder.setVisibility(View.GONE);
                             tvManager.setVisibility(View.GONE);
+
+                            LinkedHashMap<String,String> orderlist1 = new LinkedHashMap<>();
+                            SPUtil.setMap(getContext(),"goodsid",orderlist1);
                         }
 
                     }

@@ -129,6 +129,8 @@ public class OrderHuodaoPayActivity extends BaseAvtivity implements View.OnClick
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                        EventBus.getDefault().post("刷新界面");
+                        finish();
                         Toast.makeText(getContext(), "支付成功", Toast.LENGTH_SHORT).show();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
@@ -245,6 +247,24 @@ public class OrderHuodaoPayActivity extends BaseAvtivity implements View.OnClick
                 rb1.setChecked(false);
             }
         });
+        rb1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check1.setVisibility(View.VISIBLE);
+                check2.setVisibility(View.GONE);
+                rb1.setChecked(true);
+                rb2.setChecked(false);
+            }
+        });
+        rb2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check2.setVisibility(View.VISIBLE);
+                check1.setVisibility(View.GONE);
+                rb2.setChecked(true);
+                rb1.setChecked(false);
+            }
+        });
         //立即支付 判断微信支付宝选中状态决定调起哪种支付方式
         startpay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,7 +280,7 @@ public class OrderHuodaoPayActivity extends BaseAvtivity implements View.OnClick
                     String json = gson.toJson(saveGetPayDataBean);
 
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-
+                    showDialog();
                     NetUtils.getInstance().getApis()
                             .doGetWxData(requestBody)
                             .subscribeOn(Schedulers.io())
@@ -273,6 +293,7 @@ public class OrderHuodaoPayActivity extends BaseAvtivity implements View.OnClick
 
                                 @Override
                                 public void onNext(WxBean wxBean) {
+                                    hideDialog();
                                     WxBean.DataBean data = wxBean.getData();
                                     SaveOrderListBean saveOrderListBean = new SaveOrderListBean();
 
@@ -319,6 +340,7 @@ public class OrderHuodaoPayActivity extends BaseAvtivity implements View.OnClick
                     String json = gson.toJson(saveGetPayDataBean);
 
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                    showDialog();
                     NetUtils.getInstance()
                             .getApis()
                             .doGetZfbData(requestBody)
@@ -332,6 +354,7 @@ public class OrderHuodaoPayActivity extends BaseAvtivity implements View.OnClick
 
                                 @Override
                                 public void onNext(ZfbBean bean) {
+                                    hideDialog();
                                     //调用支付宝支付
                                     ZfbBean.DataBean data = bean.getData();
                                     String info = data.getBody();

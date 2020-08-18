@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -52,6 +54,7 @@ import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 
@@ -76,6 +79,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private PopupWindow mPopupWindow;
     private double price = 0.0;
     private String id;
+    private Dialog mLoadingDialog;
 
     public ReceiptAdapter(Activity context, List<UserOrderBean.DataBean> list) {
 
@@ -166,6 +170,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             .setMessage("是否确认收货").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    showDialog();
                                     NetUtils.getInstance().getApis().doConfirmGetGoods(requestBody)
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
@@ -177,6 +182,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                                                 @Override
                                                 public void onNext(ConfirmGetGoodsBean confirmGetGoodsBean) {
+                                                    hideDialog();
                                                     Toast.makeText(context, "" + confirmGetGoodsBean.getData(), Toast.LENGTH_SHORT).show();
                                                     EventBus.getDefault().post("刷新界面");
                                                 }
@@ -330,6 +336,24 @@ public class ReceiptAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
         rl3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check2.setVisibility(View.VISIBLE);
+                check1.setVisibility(View.GONE);
+                rb2.setChecked(true);
+                rb1.setChecked(false);
+            }
+        });
+        rb1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check1.setVisibility(View.VISIBLE);
+                check2.setVisibility(View.GONE);
+                rb1.setChecked(true);
+                rb2.setChecked(false);
+            }
+        });
+        rb2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 check2.setVisibility(View.VISIBLE);
@@ -510,6 +534,28 @@ public class ReceiptAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void dismiss() {
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
+        }
+    }
+    // 展示loading圈
+    public void showDialog() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new Dialog(context);
+            mLoadingDialog.setCancelable(false);
+            View v = View.inflate(context, R.layout.dialog_loading, null);
+            ImageView iv = v.findViewById(R.id.iv_loading);
+            Glide.with(context).asGif().load(R.mipmap.loading).into(iv);
+
+            mLoadingDialog.addContentView(v,
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        mLoadingDialog.show();
+    }
+    //  隐藏loading圈
+    public void hideDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 }

@@ -118,4 +118,11 @@ public class PaySuccessActivity extends BaseAvtivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IntentBean intentBean = new IntentBean();
+        intentBean.setStr("关闭");
+        EventBus.getDefault().post(intentBean);
+    }
 }

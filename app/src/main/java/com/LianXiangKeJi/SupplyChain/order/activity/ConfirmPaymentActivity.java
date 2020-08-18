@@ -88,6 +88,7 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
     private String remark;
     private String couponid;
     private WechatOrderBean.DataBean data1;
+    private String flag;
 
     @Override
     protected int getResId() {
@@ -105,7 +106,7 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
         theway = intent.getStringExtra("theway");
         remark = intent.getStringExtra("remark");
         couponid = intent.getStringExtra("couponid");
-
+        flag = intent.getStringExtra("flag");
         Bundle bundle = intent.getExtras();
         orderlist = (List<OrderBean>) bundle.getSerializable("orderlist");
 
@@ -161,57 +162,58 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                                     new java.util.Date(data.getGmtCreate()));
                             tvOrderTime.setText(date);
 
-                            LinkedHashMap<String, String> map = SPUtil.getMap(ConfirmPaymentActivity.this, "goodsid");
-
-                            for (int i=0;i<orderlist.size();i++){
-                                String goodsid = orderlist.get(i).getGoodsid();
-                                for (int j =0;j<map.size();j++){
-                                    map.remove(goodsid);
+                            if(flag.equals("flase")){
+                                LinkedHashMap<String, String> map = SPUtil.getMap(ConfirmPaymentActivity.this, "goodsid");
+                                for (int i=0;i<orderlist.size();i++){
+                                    String goodsid = orderlist.get(i).getGoodsid();
+                                    for (int j =0;j<map.size();j++){
+                                        map.remove(goodsid);
+                                    }
                                 }
+                                //创建订单后从购物车删除
+                                List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
+                                SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                                saveShopCarBean.setState(false);
+                                //添加进集合
+                                //遍历map集合的键
+                                for (String key : map.keySet()) {
+                                    SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                                    resultBean.setShopGoodsId(key);
+                                    shoplist.add(resultBean);
+                                }
+                                saveShopCarBean.setShoppingCartList(shoplist);
+
+                                Gson gson = new Gson();
+                                String json = gson.toJson(saveShopCarBean);
+                                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+
+                                NetUtils.getInstance().getApis().doShopCar(requestBody)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Observer<ShopCarBean>() {
+                                            @Override
+                                            public void onSubscribe(Disposable d) {
+
+                                            }
+
+                                            @Override
+                                            public void onNext(ShopCarBean shopCarBean) {
+
+                                            }
+
+                                            @Override
+                                            public void onError(Throwable e) {
+
+                                            }
+
+                                            @Override
+                                            public void onComplete() {
+
+                                            }
+                                        });
+                                SPUtil.setMap(ConfirmPaymentActivity.this,"goodsid",map);
                             }
-                            //创建订单后从购物车删除
-                            List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
-                            SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
-                            saveShopCarBean.setState(false);
-                            SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
-                            //添加进集合
-                            //遍历map集合的键
-                            for (String key : map.keySet()) {
-                                resultBean.setShopGoodsId(key);
-                                shoplist.add(resultBean);
-
-                            }
-                            saveShopCarBean.setShoppingCartList(shoplist);
-
-                            Gson gson = new Gson();
-                            String json = gson.toJson(saveShopCarBean);
-                            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-
-                            NetUtils.getInstance().getApis().doShopCar(requestBody)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new Observer<ShopCarBean>() {
-                                        @Override
-                                        public void onSubscribe(Disposable d) {
-
-                                        }
-
-                                        @Override
-                                        public void onNext(ShopCarBean shopCarBean) {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-
-                                        }
-
-                                        @Override
-                                        public void onComplete() {
-
-                                        }
-                                    });
-                            SPUtil.setMap(ConfirmPaymentActivity.this,"goodsid",map);
                         }
 
                         @Override
@@ -284,57 +286,58 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                             tvOrderTime.setText(date);
 
 
-                            LinkedHashMap<String, String> map = SPUtil.getMap(ConfirmPaymentActivity.this, "goodsid");
-
-                            for (int i=0;i<orderlist.size();i++){
-                                String goodsid = orderlist.get(i).getGoodsid();
-                                for (int j =0;j<map.size();j++){
-                                    map.remove(goodsid);
+                            if(flag.equals("flase")){
+                                LinkedHashMap<String, String> map = SPUtil.getMap(ConfirmPaymentActivity.this, "goodsid");
+                                for (int i=0;i<orderlist.size();i++){
+                                    String goodsid = orderlist.get(i).getGoodsid();
+                                    for (int j =0;j<map.size();j++){
+                                        map.remove(goodsid);
+                                    }
                                 }
+                                //创建订单后从购物车删除
+                                List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
+                                SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
+                                saveShopCarBean.setState(false);
+                                //添加进集合
+                                //遍历map集合的键
+                                for (String key : map.keySet()) {
+                                    SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
+                                    resultBean.setShopGoodsId(key);
+                                    shoplist.add(resultBean);
+                                }
+                                saveShopCarBean.setShoppingCartList(shoplist);
+
+                                Gson gson = new Gson();
+                                String json = gson.toJson(saveShopCarBean);
+                                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+
+                                NetUtils.getInstance().getApis().doShopCar(requestBody)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Observer<ShopCarBean>() {
+                                            @Override
+                                            public void onSubscribe(Disposable d) {
+
+                                            }
+
+                                            @Override
+                                            public void onNext(ShopCarBean shopCarBean) {
+
+                                            }
+
+                                            @Override
+                                            public void onError(Throwable e) {
+
+                                            }
+
+                                            @Override
+                                            public void onComplete() {
+
+                                            }
+                                        });
+                                SPUtil.setMap(ConfirmPaymentActivity.this,"goodsid",map);
                             }
-                            //创建订单后从购物车删除
-                            List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
-                            SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
-                            saveShopCarBean.setState(false);
-                            SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
-                            //添加进集合
-                            //遍历map集合的键
-                            for (String key : map.keySet()) {
-                                resultBean.setShopGoodsId(key);
-                                shoplist.add(resultBean);
-
-                            }
-                            saveShopCarBean.setShoppingCartList(shoplist);
-
-                            Gson gson = new Gson();
-                            String json = gson.toJson(saveShopCarBean);
-                            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-
-                            NetUtils.getInstance().getApis().doShopCar(requestBody)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new Observer<ShopCarBean>() {
-                                        @Override
-                                        public void onSubscribe(Disposable d) {
-
-                                        }
-
-                                        @Override
-                                        public void onNext(ShopCarBean shopCarBean) {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-
-                                        }
-
-                                        @Override
-                                        public void onComplete() {
-
-                                        }
-                                    });
-                            SPUtil.setMap(ConfirmPaymentActivity.this,"goodsid",map);
                         }
 
                         @Override
@@ -427,6 +430,9 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+        IntentBean intentBean = new IntentBean();
+        intentBean.setStr("关闭");
+        EventBus.getDefault().post(intentBean);
     }
     @Override
     public void onClick(View view) {

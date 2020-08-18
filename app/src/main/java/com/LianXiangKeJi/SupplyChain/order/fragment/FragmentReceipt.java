@@ -81,7 +81,6 @@ public class FragmentReceipt extends BaseFragment {
     protected void getData() {
         sv.setHeader(new DefaultHeader(getContext()));
         getDataBean();
-        // TODO: 2020/7/21 测试热销展示的四条商品
         //获取热销商品
         NetUtils.getInstance().getApis()
                 .doGetHotSell()
@@ -158,8 +157,7 @@ public class FragmentReceipt extends BaseFragment {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         Toast.makeText(getContext(), "支付成功", Toast.LENGTH_SHORT).show();
-                        getDataBean();
-
+                        refresh("刷新界面");
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         Toast.makeText(getContext(), "支付失败", Toast.LENGTH_SHORT).show();

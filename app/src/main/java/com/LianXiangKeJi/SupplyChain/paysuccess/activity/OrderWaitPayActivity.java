@@ -179,6 +179,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                         .setMessage("是否确认取消订单").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                showDialog();
                                 NetUtils.getInstance().getApis().cancleOrder(requestBody)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
@@ -190,6 +191,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
 
                                             @Override
                                             public void onNext(DeleteOrCancleOrderBean deleteOrCancleOrderBean) {
+                                                hideDialog();
                                                 Toast.makeText(OrderWaitPayActivity.this, "" + deleteOrCancleOrderBean.getData(), Toast.LENGTH_SHORT).show();
                                                 finish();
                                                 EventBus.getDefault().post("刷新界面");
@@ -209,7 +211,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //ToDo: 你想做的事情
+                                //你想做的事情
                                 dialogInterface.dismiss();
                             }
                         });
@@ -242,7 +244,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                     String json = gson.toJson(saveGetPayDataBean);
 
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-
+                    showDialog();
                     NetUtils.getInstance().getApis().doGetWxData(requestBody)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -254,6 +256,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
 
                                 @Override
                                 public void onNext(WxBean wxBean) {
+                                    hideDialog();
                                     WxBean.DataBean data = wxBean.getData();
                                     SaveOrderListBean saveOrderListBean = new SaveOrderListBean();
 
@@ -299,6 +302,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
                     String json = gson.toJson(saveGetPayDataBean);
 
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                    showDialog();
                     NetUtils.getInstance().getApis().doGetZfbData(requestBody)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -310,6 +314,7 @@ public class OrderWaitPayActivity extends BaseAvtivity implements View.OnClickLi
 
                                 @Override
                                 public void onNext(ZfbBean zfbBean) {
+                                    hideDialog();
                                     ZfbBean.DataBean data = zfbBean.getData();
                                     String info = data.getBody();
                                     //调用支付宝支付

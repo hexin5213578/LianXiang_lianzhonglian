@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,6 +18,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,6 +48,7 @@ import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderWaitPayActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessOrderActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 
@@ -68,6 +72,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final List<UserOrderBean.DataBean> list;
 
     private PopupWindow mPopupWindow1;
+    private Dialog mLoadingDialog;
 
     public AllOrderAdapter(Activity context, List<UserOrderBean.DataBean> list) {
 
@@ -130,6 +135,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             .setMessage("是否确认取消订单").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    showDialog();
                                     NetUtils.getInstance().getApis().cancleOrder(requestBody)
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
@@ -141,6 +147,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                                 @Override
                                                 public void onNext(DeleteOrCancleOrderBean deleteOrCancleOrderBean) {
+                                                    hideDialog();
                                                     Toast.makeText(context, "" + deleteOrCancleOrderBean.getData(), Toast.LENGTH_SHORT).show();
                                                     EventBus.getDefault().post("刷新界面");
 
@@ -392,6 +399,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 .setMessage("是否确认收货").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        showDialog();
                                         NetUtils.getInstance().getApis().doConfirmGetGoods(requestBody)
                                                 .subscribeOn(Schedulers.io())
                                                 .observeOn(AndroidSchedulers.mainThread())
@@ -403,6 +411,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                                     @Override
                                                     public void onNext(ConfirmGetGoodsBean confirmGetGoodsBean) {
+                                                        hideDialog();
                                                         Toast.makeText(context, "" + confirmGetGoodsBean.getData(), Toast.LENGTH_SHORT).show();
                                                         EventBus.getDefault().post("刷新界面");
                                                     }
@@ -554,6 +563,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             .setMessage("是否确认删除").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    showDialog();
                                     NetUtils.getInstance().getApis().cancleOrder(requestBody)
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
@@ -565,6 +575,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                                 @Override
                                                 public void onNext(DeleteOrCancleOrderBean deleteOrCancleOrderBean) {
+                                                    hideDialog();
                                                     Toast.makeText(context, "" + deleteOrCancleOrderBean.getData(), Toast.LENGTH_SHORT).show();
                                                     EventBus.getDefault().post("刷新界面");
                                                 }
@@ -658,6 +669,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             .setMessage("是否确认删除").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    showDialog();
                                     NetUtils.getInstance().getApis().cancleOrder(requestBody)
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
@@ -669,6 +681,7 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                                                 @Override
                                                 public void onNext(DeleteOrCancleOrderBean deleteOrCancleOrderBean) {
+                                                    hideDialog();
                                                     Toast.makeText(context, "" + deleteOrCancleOrderBean.getData(), Toast.LENGTH_SHORT).show();
                                                     EventBus.getDefault().post("刷新界面");
                                                 }
@@ -901,5 +914,27 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         });
         animator.start();
+    }
+    // 展示loading圈
+    public void showDialog() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new Dialog(context);
+            mLoadingDialog.setCancelable(false);
+            View v = View.inflate(context, R.layout.dialog_loading, null);
+            ImageView iv = v.findViewById(R.id.iv_loading);
+            Glide.with(context).asGif().load(R.mipmap.loading).into(iv);
+
+            mLoadingDialog.addContentView(v,
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        mLoadingDialog.show();
+    }
+    //  隐藏loading圈
+    public void hideDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
     }
 }

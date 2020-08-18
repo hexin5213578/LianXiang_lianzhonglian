@@ -113,6 +113,8 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     private List<OrderBean> orderlist;
     String counponId  ="";
     int orderstate;
+    private String flag;
+
     @Override
     protected int getResId() {
         return R.layout.activity_confirm_order;
@@ -132,6 +134,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         orderlist = (List<OrderBean>) bundle.getSerializable("orderlist");
+        flag = intent.getStringExtra("flag");
         //设置适配器
         LinearLayoutManager manager = new LinearLayoutManager(ConfirmOrderActivity.this, RecyclerView.VERTICAL, false);
         rcOrder.setLayoutManager(manager);
@@ -305,6 +308,39 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                 rb1.setChecked(false);
             }
         });
+        rb1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check1.setVisibility(View.VISIBLE);
+                check2.setVisibility(View.GONE);
+                check3.setVisibility(View.GONE);
+                rb1.setChecked(true);
+                rb2.setChecked(false);
+                rb3.setChecked(false);
+            }
+        });
+        rb2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check2.setVisibility(View.VISIBLE);
+                check1.setVisibility(View.GONE);
+                check3.setVisibility(View.GONE);
+                rb2.setChecked(true);
+                rb1.setChecked(false);
+                rb3.setChecked(false);
+            }
+        });
+        rb3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check3.setVisibility(View.VISIBLE);
+                check2.setVisibility(View.GONE);
+                check1.setVisibility(View.GONE);
+                rb3.setChecked(true);
+                rb2.setChecked(false);
+                rb1.setChecked(false);
+            }
+        });
         //立即支付 判断微信支付宝选中状态决定调起哪种支付方式
         startpay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,6 +352,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     intent.putExtra("theway", "微信支付");
                     intent.putExtra("remark", etRemarks.getText().toString());
                     intent.putExtra("couponid",counponId);
+                    intent.putExtra("flag",flag);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("orderlist", (Serializable) orderlist);
                     intent.putExtras(bundle);
@@ -331,7 +368,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
 
                     Intent intent = new Intent(ConfirmOrderActivity.this, ConfirmPaymentActivity.class);
                     intent.putExtra("theway", "支付宝支付");
-
+                    intent.putExtra("flag",flag);
                     intent.putExtra("remark", etRemarks.getText().toString());
                     intent.putExtra("couponid",counponId);
                     Bundle bundle = new Bundle();
@@ -344,7 +381,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     }
                     //货到付款
                 }else if(rb3.isChecked()){
-
+                    startpay.setEnabled(false);
                     //生成货到付款订单
                     SavePutOrderBean savePutOrderBean = new SavePutOrderBean();
                     List<SavePutOrderBean.ResultBean> list = new ArrayList<>();
@@ -374,6 +411,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                     String json = gson.toJson(savePutOrderBean);
 
                     Log.d("hmy",json);
+                    showDialogdelete();
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
                     NetUtils.getInstance().getApis().doCashonOrder(requestBody)
                             .subscribeOn(Schedulers.io())
@@ -388,6 +426,8 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                                 public void onNext(CashondeliveryBean cashondeliveryBean) {
                                     Toast.makeText(ConfirmOrderActivity.this, ""+cashondeliveryBean.getData(), Toast.LENGTH_SHORT).show();
                                     if(cashondeliveryBean.getData().equals("货到付款订单已提交")){
+                                        hideDialog();
+
                                         IntentBean intentBean = new IntentBean();
                                         intentBean.setStr("关闭");
                                         EventBus.getDefault().post(intentBean);
@@ -406,13 +446,12 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
                                     List<SaveShopCarBean.ResultBean> shoplist = new ArrayList<>();
                                     SaveShopCarBean saveShopCarBean = new SaveShopCarBean();
                                     saveShopCarBean.setState(false);
-                                    SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
                                     //添加进集合
                                     //遍历map集合的键
                                     for (String key : map.keySet()) {
+                                        SaveShopCarBean.ResultBean resultBean = new SaveShopCarBean.ResultBean();
                                         resultBean.setShopGoodsId(key);
                                         shoplist.add(resultBean);
-
                                     }
                                     saveShopCarBean.setShoppingCartList(shoplist);
 
@@ -431,6 +470,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
 
                                                 @Override
                                                 public void onNext(ShopCarBean shopCarBean) {
+                                                    startpay.setEnabled(true);
 
                                                 }
 

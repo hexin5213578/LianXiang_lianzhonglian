@@ -3,7 +3,7 @@ package com.LianXiangKeJi.SupplyChain.utils;
 /**
  * @author xyj
  * @Classname Base64
- * @Description TODO
+ * @Description
  * @Date 2020/4/9 9:36
  */
 public class Base64 {

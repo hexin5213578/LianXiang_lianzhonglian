@@ -70,7 +70,12 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
 
         mLoadingDialog.show();
     }
-
+    //  隐藏loading圈
+    public void hideDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
+    }
     public void showDialogdelete() {
         if (mLoadingDialog == null) {
             mLoadingDialog = new Dialog(this);
@@ -86,12 +91,7 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
 
         mLoadingDialog.show();
     }
-    //  隐藏loading圈
-    public void hideDialog() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
-            mLoadingDialog.dismiss();
-        }
-    }
+
     public P getPresenter() {
         return presenter;
     }

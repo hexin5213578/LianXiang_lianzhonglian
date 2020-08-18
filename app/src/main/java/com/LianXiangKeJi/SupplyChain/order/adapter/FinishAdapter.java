@@ -1,6 +1,7 @@
 package com.LianXiangKeJi.SupplyChain.order.adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrdersidBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderFinishActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,6 +49,7 @@ public class FinishAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final List<UserOrderBean.DataBean> list;
 
     private double price = 0.0;
+    private Dialog mLoadingDialog;
 
     public FinishAdapter(Context context, List<UserOrderBean.DataBean> list) {
 
@@ -129,6 +134,7 @@ public class FinishAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .setMessage("是否确认删除").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                showDialog();
                                 NetUtils.getInstance().getApis().cancleOrder(requestBody)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
@@ -140,6 +146,7 @@ public class FinishAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                                             @Override
                                             public void onNext(DeleteOrCancleOrderBean deleteOrCancleOrderBean) {
+                                                hideDialog();
                                                 Toast.makeText(context, "" + deleteOrCancleOrderBean.getData(), Toast.LENGTH_SHORT).show();
                                                 EventBus.getDefault().post("刷新界面");
                                             }
@@ -185,6 +192,28 @@ public class FinishAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+    }
+    // 展示loading圈
+    public void showDialog() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new Dialog(context);
+            mLoadingDialog.setCancelable(false);
+            View v = View.inflate(context, R.layout.dialog_loading, null);
+            ImageView iv = v.findViewById(R.id.iv_loading);
+            Glide.with(context).asGif().load(R.mipmap.loading).into(iv);
+
+            mLoadingDialog.addContentView(v,
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+
+        mLoadingDialog.show();
+    }
+    //  隐藏loading圈
+    public void hideDialog() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 }

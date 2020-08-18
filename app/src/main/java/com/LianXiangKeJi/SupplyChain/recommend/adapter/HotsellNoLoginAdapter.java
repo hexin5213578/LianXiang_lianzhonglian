@@ -52,7 +52,7 @@ public class HotsellNoLoginAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         ((ViewHolder) holder).tvGoodsPrice.setText("￥？");
         Glide.with(context).load(list.get(position).getUrl()).into(((ViewHolder) holder).ivGoodsImage);
         ((ViewHolder) holder).tvGoodsName.setText(list.get(position).getName());
-        // TODO: 2020/7/21 条目点击去商品详情
+        //条目点击去商品详情
         ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

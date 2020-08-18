@@ -67,7 +67,6 @@ public class FragmentShip extends BaseFragment {
     protected void getData() {
         sv.setHeader(new DefaultHeader(getContext()));
         getDataBean();
-        // TODO: 2020/7/21 测试热销展示的四条商品
         //获取热销商品
         NetUtils.getInstance().getApis()
                 .doGetHotSell()

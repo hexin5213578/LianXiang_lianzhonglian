@@ -145,6 +145,7 @@ public class OrderShippedActivity extends BaseAvtivity implements View.OnClickLi
                         .setMessage("是否确认收货").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                showDialog();
                                 NetUtils.getInstance().getApis().doConfirmGetGoods(requestBody)
                                         .subscribeOn(Schedulers.io())
                                         .observeOn(AndroidSchedulers.mainThread())
@@ -156,6 +157,7 @@ public class OrderShippedActivity extends BaseAvtivity implements View.OnClickLi
 
                                             @Override
                                             public void onNext(ConfirmGetGoodsBean confirmGetGoodsBean) {
+                                                hideDialog();
                                                 Toast.makeText(OrderShippedActivity.this, "" + confirmGetGoodsBean.getData(), Toast.LENGTH_SHORT).show();
                                                 EventBus.getDefault().post("刷新界面");
                                                 finish();
@@ -175,7 +177,7 @@ public class OrderShippedActivity extends BaseAvtivity implements View.OnClickLi
                         }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //ToDo: 你想做的事情
+                                //你想做的事情
                                 dialogInterface.dismiss();
                             }
                         });

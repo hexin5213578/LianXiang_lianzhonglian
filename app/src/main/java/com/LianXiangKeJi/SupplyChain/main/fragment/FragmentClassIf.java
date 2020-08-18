@@ -117,8 +117,8 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         //首次进入加载第一条
-        if(data.size()>0 && data!=null){
-            ClassIfBean.DataBean dataBean = data.get(0);
+        if(list.size()>0 && list!=null){
+            ClassIfBean.DataBean dataBean = list.get(0);
             List<ClassIfBean.DataBean.ChildrenBean> children = dataBean.getChildren();
             manager = new GridLayoutManager(getContext(),3);
             rcSecondList.setLayoutManager(manager);

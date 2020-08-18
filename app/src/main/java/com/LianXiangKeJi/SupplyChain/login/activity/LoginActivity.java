@@ -353,10 +353,4 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

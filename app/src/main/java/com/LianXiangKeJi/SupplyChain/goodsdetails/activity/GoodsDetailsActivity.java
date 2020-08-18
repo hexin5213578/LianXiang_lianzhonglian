@@ -499,6 +499,7 @@ public class GoodsDetailsActivity extends BaseAvtivity implements View.OnClickLi
                         list.add(orderBean);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("orderlist", (Serializable) list);
+                        intent.putExtra("flag","true");
                         intent.putExtras(bundle);
                         startActivity(intent);
                         dismiss();

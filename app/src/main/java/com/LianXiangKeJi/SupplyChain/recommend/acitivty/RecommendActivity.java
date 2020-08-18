@@ -75,7 +75,7 @@ public class RecommendActivity extends BaseAvtivity {
             textList.add(0);
         }
 
-        // TODO: 2020/7/21 常买商品列表
+        //常买商品列表
         getData(token);
         sv.setListener(new SpringView.OnFreshListener() {
             @Override

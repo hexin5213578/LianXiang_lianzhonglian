@@ -96,10 +96,6 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     TextView tvPrice;
     @BindView(R.id.bt_confirm)
     Button btConfirm;
-    @BindView(R.id.iv_havenoaddress)
-    ImageView ivHavenoaddress;
-    @BindView(R.id.tv_havenoaddress)
-    TextView tvHavenoaddress;
     @BindView(R.id.iv_haveaddress)
     ImageView ivHaveaddress;
     @BindView(R.id.tv_coupon)

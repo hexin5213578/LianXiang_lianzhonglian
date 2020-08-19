@@ -98,7 +98,6 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
         getHotSell(token);
         //获取分类
         getClassif();
-        //轮播图的点击事件
         sv.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {

@@ -26,28 +26,6 @@
                 <ImageView
                     android:layout_width="@dimen/dp_22"
                     android:src="@mipmap/order_address"
-                    android:id="@+id/iv_havenoaddress"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone"
-                    android:layout_marginLeft="@dimen/dp_8"
-                    android:layout_height="@dimen/dp_22">
-                </ImageView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_toRightOf="@id/iv_havenoaddress"
-                    android:text="您还没有添加收货地址请先去添加"
-                    android:layout_centerVertical="true"
-                    android:textSize="@dimen/sp_12"
-                    android:visibility="gone"
-                    android:id="@+id/tv_havenoaddress"
-                    android:textColor="#999999"
-                    android:layout_marginLeft="@dimen/dp_8"
-                    android:layout_height="wrap_content">
-                </TextView>
-
-                <ImageView
-                    android:layout_width="@dimen/dp_22"
-                    android:src="@mipmap/order_address"
                     android:id="@+id/iv_haveaddress"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_8"
@@ -78,6 +56,7 @@
                     android:layout_marginTop="@dimen/dp_5"
                     android:textColor="#333333"
                     android:id="@+id/tv_address"
+                    android:layout_marginBottom="@dimen/dp_15"
                     android:textSize="@dimen/sp_12"
                     android:layout_height="wrap_content">
                 </TextView>

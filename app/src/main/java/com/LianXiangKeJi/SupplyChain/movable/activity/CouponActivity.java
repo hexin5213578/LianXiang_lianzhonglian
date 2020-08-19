@@ -3,6 +3,7 @@ package com.LianXiangKeJi.SupplyChain.movable.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,6 +39,10 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
     TextView tvRight;
     @BindView(R.id.rc_coupon)
     RecyclerView rcCoupon;
+    @BindView(R.id.rl_coupon)
+    RelativeLayout rlCoupon;
+    @BindView(R.id.rl_noCoupon)
+    RelativeLayout rlNoCoupon;
 
     @Override
     protected int getResId() {
@@ -75,11 +80,19 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
                     public void onNext(CouponBean couponBean) {
                         hideDialog();
                         List<CouponBean.DataBean> data = couponBean.getData();
-                        if(data!=null && data.size()>0){
-                            LinearLayoutManager manager = new LinearLayoutManager(CouponActivity.this,RecyclerView.VERTICAL,false);
+                        if (data != null && data.size() > 0) {
+                            rlCoupon.setVisibility(View.VISIBLE);
+                            rlNoCoupon.setVisibility(View.GONE);
+                            tvRight.setVisibility(View.VISIBLE);
+
+                            LinearLayoutManager manager = new LinearLayoutManager(CouponActivity.this, RecyclerView.VERTICAL, false);
                             rcCoupon.setLayoutManager(manager);
                             CouPonAdapter couPonAdapter = new CouPonAdapter(CouponActivity.this, data);
                             rcCoupon.setAdapter(couPonAdapter);
+                        }else{
+                            tvRight.setVisibility(View.GONE);
+                            rlNoCoupon.setVisibility(View.VISIBLE);
+                            rlCoupon.setVisibility(View.GONE);
                         }
                     }
 
@@ -103,7 +116,7 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
@@ -111,25 +124,32 @@ public class CouponActivity extends BaseAvtivity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getbean(SaveCouponIdBean bean){
-        if(bean.getClose().equals("关闭界面")){
+    public void getbean(SaveCouponIdBean bean) {
+        if (bean.getClose().equals("关闭界面")) {
             finish();
         }
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.back:
                 //关闭页面
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

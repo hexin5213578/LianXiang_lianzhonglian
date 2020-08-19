@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_below="@id/include"
+        android:id="@+id/rl_coupon"
         android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -16,5 +17,30 @@
             android:layout_marginRight="@dimen/dp_20"
             android:layout_height="match_parent">
         </androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/dialog_bg"
+        android:layout_margin="@dimen/dp_10"
+        android:layout_below="@id/include"
+        android:id="@+id/rl_noCoupon"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@mipmap/no_coupon"
+            android:layout_centerInParent="true"
+            android:id="@+id/iv"
+            android:layout_height="wrap_content">
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="暂无优惠券，快去领取吧~"
+            android:textColor="#999999"
+            android:layout_below="@id/iv"
+            android:textSize="@dimen/sp_13"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content">
+        </TextView>
     </RelativeLayout>
 </RelativeLayout>

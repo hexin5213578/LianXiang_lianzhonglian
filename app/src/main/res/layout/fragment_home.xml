@@ -61,14 +61,14 @@
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:background="@color/white"
-                    android:layout_height="@dimen/dp_89">
+                    android:layout_height="@dimen/dp_85">
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rc_fenLei"
                         android:layout_width="match_parent"
                         android:layout_marginLeft="@dimen/dp_30"
                         android:layout_marginRight="@dimen/dp_30"
                         android:layout_height="@dimen/dp_75"
-                        android:layout_marginTop="@dimen/dp_14"
+                        android:layout_marginTop="@dimen/dp_5"
                         android:layout_below="@id/xbn"
                         android:background="@color/white">
                     </androidx.recyclerview.widget.RecyclerView>
@@ -118,21 +118,20 @@
                         android:id="@+id/ll_more"
                         android:layout_below="@id/activity_coupon"
                         android:orientation="horizontal"
-                        android:layout_marginRight="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_13"
                         android:layout_alignParentRight="true"
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="更多"
                             android:textSize="@dimen/sp_13"
-                            android:textStyle="bold"
                             android:textColor="@color/more_font">
                         </TextView>
                         <ImageView
                             android:layout_width="@dimen/dp_8"
                             android:src="@mipmap/arrow_right"
-                            android:layout_marginLeft="@dimen/dp_2"
                             android:layout_gravity="center"
                             android:layout_height="match_parent">
                         </ImageView>
@@ -152,5 +151,11 @@
         </androidx.core.widget.NestedScrollView>
     </com.liaoinstan.springview.widget.SpringView>
 
-
+    <View
+        android:layout_width="match_parent"
+        android:background="#EFEFEF"
+        android:id="@+id/v4"
+        android:layout_alignParentBottom="true"
+        android:layout_height="@dimen/dp_1">
+    </View>
 </RelativeLayout>

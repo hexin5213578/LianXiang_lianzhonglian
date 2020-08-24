@@ -6,8 +6,8 @@
 
     <stroke
         android:width="0.1dp"
-        android:color="@color/black" />
-    <solid android:color="@color/white">
+        android:color="@color/yemian_bg" />
+    <solid android:color="@color/xuanzhong">
     </solid>
     <size
         android:height="5dp"

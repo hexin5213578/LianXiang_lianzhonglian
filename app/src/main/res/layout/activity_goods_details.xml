@@ -23,7 +23,8 @@
         android:layout_below="@id/iv_good_image"
         android:layout_height="match_parent">
         <TextView
-            android:layout_width="@dimen/dp_260"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="@dimen/dp_10"
             android:text="农夫山泉 饮用水 饮用天然水普通装550ml*24瓶整箱装"
             android:textColor="#323232"
             android:textSize="@dimen/sp_16"

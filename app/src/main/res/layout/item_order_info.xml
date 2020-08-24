@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:id="@+id/rl"
         android:background="@drawable/confirmorder_bg"
-        android:layout_height="@dimen/dp_116">
+        android:layout_height="@dimen/dp_122">
         <ImageView
             android:layout_width="@dimen/dp_70"
             android:layout_centerVertical="true"

@@ -54,7 +54,7 @@ public class NetUtils {
                 .build();
 
         Retrofit.Builder builder = new Retrofit.Builder();
-        Retrofit retrofit = builder.client(build).baseUrl("http://192.168.0.143:8081/")
+        Retrofit retrofit = builder.client(build).baseUrl("https://www.luoyanglx.com:8443/lianxiang_app/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

@@ -67,10 +67,6 @@
                 </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:background="#f6f6f6"></View>
         <RelativeLayout
             android:id="@+id/ll_jieSuan"
             android:orientation="horizontal"
@@ -85,7 +81,7 @@
                 android:id="@+id/rb_checkAll"
                 android:button="@drawable/check_box"
                 android:paddingLeft="@dimen/dp_5"
-                android:textSize="@dimen/sp_20"
+                android:textSize="@dimen/sp_18"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:textColor="#999999"
                 android:text="全选">
@@ -168,4 +164,11 @@
             android:layout_height="wrap_content">
         </TextView>
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:background="#EFEFEF"
+        android:id="@+id/v4"
+        android:layout_alignParentBottom="true"
+        android:layout_height="@dimen/dp_1">
+    </View>
 </RelativeLayout>

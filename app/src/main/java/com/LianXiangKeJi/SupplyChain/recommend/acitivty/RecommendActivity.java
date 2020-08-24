@@ -62,7 +62,6 @@ public class RecommendActivity extends BaseAvtivity {
         String token = Common.getToken();
 
         sv.setHeader(new DefaultHeader(this));
-        sv.setFooter(new DefaultFooter(this));
         title.setText("同城热销");
         tvRight.setVisibility(View.GONE);
         back.setOnClickListener(new View.OnClickListener() {

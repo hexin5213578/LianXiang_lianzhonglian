@@ -1,13 +1,20 @@
 package com.LianXiangKeJi.SupplyChain.paysuccess.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,8 +22,10 @@ import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.common.bean.OrderBean;
+import com.LianXiangKeJi.SupplyChain.map.activity.MapActivity;
 import com.LianXiangKeJi.SupplyChain.order.activity.ConfirmOrderActivity;
 import com.LianXiangKeJi.SupplyChain.order.adapter.OrderInfoAdapter;
+import com.LianXiangKeJi.SupplyChain.regist.activity.RegistActivity;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 
 import java.text.SimpleDateFormat;
@@ -60,12 +69,12 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
         back.setOnClickListener(this);
         title.setText("订单详情");
         tvRight.setVisibility(View.GONE);
- /*       llCall.setOnClickListener(new View.OnClickListener() {
+        llCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callPhone("13253353293");
+                Request();
             }
-        });*/
+        });
         //展示默认地址
         tvName.setText(SPUtil.getInstance().getData(PaySuccessOrderActivity.this, SPUtil.FILE_NAME, SPUtil.USER_NAME));
         tvAddress.setText(SPUtil.getInstance().getData(PaySuccessOrderActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_ADDRESS));
@@ -107,6 +116,33 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
                 break;
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+      if(requestCode==100){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                callPhone("13253353293");
 
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(this, "权限申请失败，用户拒绝权限", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    //安卓拨打电话权限
+    public void Request() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int request = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+            if (request != PackageManager.PERMISSION_GRANTED)//缺少权限，进行权限申请
+            {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 100);
+                return;//
+            } else {
+                Intent intent = new Intent(PaySuccessOrderActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+        } else {
+
+        }
+    }
 }

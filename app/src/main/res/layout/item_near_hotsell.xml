@@ -21,6 +21,8 @@
             android:layout_below="@id/iv_goods_image"
             android:layout_marginLeft="@dimen/dp_7"
             android:layout_marginRight="@dimen/dp_9"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="@dimen/sp_13"
             android:textColor="#333333"
             android:id="@+id/tv_goods_name"

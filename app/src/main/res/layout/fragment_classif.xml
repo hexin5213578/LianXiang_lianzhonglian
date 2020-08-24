@@ -33,7 +33,7 @@
         </ImageView>
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="@dimen/dp_80"
+        android:layout_width="@dimen/dp_85"
         android:layout_below="@id/rl_title"
         android:id="@+id/rc_firstList"
         android:background="#F5F5F5"
@@ -65,5 +65,11 @@
             android:layout_height="match_parent">
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:background="#EFEFEF"
+        android:id="@+id/v4"
+        android:layout_alignParentBottom="true"
+        android:layout_height="@dimen/dp_1">
+    </View>
 </RelativeLayout>

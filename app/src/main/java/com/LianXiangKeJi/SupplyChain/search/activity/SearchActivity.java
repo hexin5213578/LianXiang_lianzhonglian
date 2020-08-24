@@ -135,8 +135,8 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
                     }
                 });
 
-        sv.setHeader(new DefaultHeader(SearchActivity.this));
-        sv.setFooter(new DefaultFooter(SearchActivity.this));
+       // sv.setHeader(new DefaultHeader(SearchActivity.this));
+       // sv.setFooter(new DefaultFooter(SearchActivity.this));
 
         //上拉刷新下拉加载监听
         sv.setListener(new SpringView.OnFreshListener() {
@@ -182,12 +182,6 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
                 sv.setVisibility(View.GONE);
             }
         });
-        if (!TextUtils.isEmpty(token)) {
-            doSearch("");
-        } else {
-            doSearchNoLogin("");
-        }
-
         //从sp取出
         Gson gson = new Gson();
         String data1 = SPUtil.getInstance().getData(SearchActivity.this, "searchlist", "search");
@@ -240,7 +234,6 @@ public class SearchActivity extends BaseAvtivity implements View.OnClickListener
                         doSearch(s);
                     } else {
                         Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
-                        etSearch.setText("");
                     }
 
                     for (int i = 0; i < list.size(); i++) {

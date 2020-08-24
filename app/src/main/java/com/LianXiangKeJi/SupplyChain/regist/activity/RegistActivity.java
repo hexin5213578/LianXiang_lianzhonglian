@@ -194,8 +194,6 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                 break;
             // 提交
             case R.id.bt_regist:
-
-
                 String phone = etPhone.getText().toString();
                 String code = etCode.getText().toString();
                 String pwd1 = etPwd1.getText().toString();

@@ -32,7 +32,7 @@
         </com.facebook.drawee.view.SimpleDraweeView>
         <ImageView
             android:layout_width="@dimen/dp_18"
-            android:src="@mipmap/arrow_right"
+            android:src="@mipmap/arrow_right2"
             android:id="@+id/right2"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -75,7 +75,7 @@
         <ImageView
             android:id="@+id/right1"
             android:layout_width="@dimen/dp_18"
-            android:src="@mipmap/arrow_right"
+            android:src="@mipmap/arrow_right2"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
@@ -105,7 +105,7 @@
         </TextView>
         <ImageView
             android:layout_width="@dimen/dp_18"
-            android:src="@mipmap/arrow_right"
+            android:src="@mipmap/arrow_right2"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
@@ -135,7 +135,7 @@
         </TextView>
         <ImageView
             android:layout_width="@dimen/dp_18"
-            android:src="@mipmap/arrow_right"
+            android:src="@mipmap/arrow_right2"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
@@ -165,7 +165,7 @@
         </TextView>
         <ImageView
             android:layout_width="@dimen/dp_18"
-            android:src="@mipmap/arrow_right"
+            android:src="@mipmap/arrow_right2"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"

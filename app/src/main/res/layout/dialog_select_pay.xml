@@ -183,8 +183,9 @@
         </TextView>
 <Button
     android:layout_width="@dimen/dp_96"
-    android:text="生成订单"
+    android:text="确定"
     android:layout_alignParentRight="true"
+    android:textColor="@color/color_white"
     android:layout_centerVertical="true"
     android:id="@+id/startpay"
     android:layout_marginRight="@dimen/dp_10"

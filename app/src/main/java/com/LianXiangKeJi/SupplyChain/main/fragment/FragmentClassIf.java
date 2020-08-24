@@ -119,6 +119,9 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         //首次进入加载第一条
         if(list.size()>0 && list!=null){
             ClassIfBean.DataBean dataBean = list.get(0);
+            firstListAdapter.getId(0);
+            firstListAdapter.notifyDataSetChanged();
+
             List<ClassIfBean.DataBean.ChildrenBean> children = dataBean.getChildren();
             manager = new GridLayoutManager(getContext(),3);
             rcSecondList.setLayoutManager(manager);

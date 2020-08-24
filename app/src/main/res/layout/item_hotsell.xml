@@ -23,9 +23,11 @@
             android:layout_marginLeft="@dimen/dp_7"
             android:layout_marginRight="@dimen/dp_9"
             android:textSize="@dimen/sp_12"
+            android:ellipsize="end"
+            android:lines="2"
             android:textColor="#333333"
             android:id="@+id/tv_goods_name"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/dp_35">
         </TextView>
         <TextView
             android:layout_marginLeft="@dimen/dp_7"

@@ -54,6 +54,7 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         getData();
     }
 
+
     // 展示loading圈
     public void showDialog() {
         if (mLoadingDialog == null) {
@@ -123,9 +124,11 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         }
         return false;
     }
+
     protected abstract int getResId();
     protected abstract void getData();
     protected abstract P initPresenter();
+
     //获取经纬度
     public LatitudeandlongitudeBean getLocation(Context context){
         float dataOffloat = SPUtil.getInstance().getDataOffloat(this, SPUtil.FILE_NAME, SPUtil.LATITUDE);

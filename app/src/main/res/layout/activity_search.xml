@@ -90,7 +90,7 @@
             android:layout_marginLeft="@dimen/dp_5"
             android:layout_toRightOf="@id/v1"
             android:layout_marginTop="@dimen/dp_23"
-            android:textColor="@color/black"
+            android:textColor="@color/recommend_font"
             android:textStyle="bold"
             android:textSize="@dimen/sp_15"
             >
@@ -132,7 +132,7 @@
             android:layout_toRightOf="@id/v1"
             android:layout_below="@id/rc_search_history"
             android:layout_marginTop="@dimen/dp_23"
-            android:textColor="@color/black"
+            android:textColor="@color/recommend_font"
             android:textStyle="bold"
             android:textSize="@dimen/sp_15"
             >

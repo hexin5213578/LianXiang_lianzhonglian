@@ -110,6 +110,8 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
     String counponId  ="";
     int orderstate;
     private String flag;
+    private String orderprice;
+    private String round;
 
     @Override
     protected int getResId() {
@@ -148,6 +150,7 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
             Log.d("hmy", "条目价格为" + itemprice + "");
             this.price += itemprice;
             Orderprice = this.price;
+            orderprice = StringUtil.round(String.valueOf(Orderprice));
         }
         tvCount.setText(orderlist.size() + "种共" + count + "件，");
         Log.d("hmy", "总价为" + price + "");
@@ -214,16 +217,17 @@ public class ConfirmOrderActivity extends BaseAvtivity implements View.OnClickLi
         int full = Integer.valueOf(bean.getFull());
         int jian = Integer.valueOf(bean.getJian());
         if(price>=full){
-            price = this.price - jian;
-            tvPrice.setText(price + "");
+            price = this.Orderprice - jian;
+            round = StringUtil.round(String.valueOf(price));
+            tvPrice.setText(round + "");
             tvCoupon.setText("满"+full+"元减"+jian+"元");
         }
         if(full==0){
             tvCoupon.setText("请选择优惠券");
         }
         if(bean.getCouponId().equals("")){
-            tvPrice.setText(Orderprice+"");
-            price = Orderprice;
+            tvPrice.setText(orderprice+"");
+            round = orderprice;
         }
 
     }

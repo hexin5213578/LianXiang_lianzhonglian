@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.common.custom.CustomCountView;
 import com.LianXiangKeJi.SupplyChain.main.bean.ShopCarBean;
+import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,7 +67,6 @@ public class ShopcarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 EventBus.getDefault().post("123");
             }
         });
-
 
         //设置数量
         ((ViewHolder)holder).ccvItemShopCar.setCount(dataBean.getCount());

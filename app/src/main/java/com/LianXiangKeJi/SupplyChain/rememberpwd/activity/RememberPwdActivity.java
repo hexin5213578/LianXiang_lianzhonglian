@@ -90,7 +90,7 @@ public class RememberPwdActivity extends BaseAvtivity implements View.OnClickLis
                     countDownTime();
                     // 发起获取验证码的网络请求
                     showDialog();
-                    NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code",phon)
+                    NetUtils.getInstance().getApis().getPhoneCode(phon)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<GetPhoneCodeBean>() {

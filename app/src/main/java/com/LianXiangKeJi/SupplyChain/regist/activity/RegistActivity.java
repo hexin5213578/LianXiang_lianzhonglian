@@ -29,6 +29,7 @@ import com.LianXiangKeJi.SupplyChain.BuildConfig;
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
+import com.LianXiangKeJi.SupplyChain.bindphone.activity.BindPhoneActivity;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
 import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
 import com.LianXiangKeJi.SupplyChain.map.activity.MapActivity;
@@ -155,7 +156,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                     countDownTime();
                     //发起获取验证码的网络请求
                     showDialog();
-                    NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code", phon)
+                    NetUtils.getInstance().getApis().getPhoneCode(phon)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<GetPhoneCodeBean>() {
@@ -172,7 +173,8 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    hideDialog();
+                                    Toast.makeText(RegistActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
@@ -260,7 +262,7 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
                                                                                                     hideDialog();
                                                                                                     Toast.makeText(RegistActivity.this, getPhoneCodeBean.getData(), Toast.LENGTH_SHORT).show();
 
-                                                                                                    if (getPhoneCodeBean.getData().equals("注册信息已提交")) {
+                                                                                                    if (getPhoneCodeBean.getData().equals("注册申请已提交")) {
                                                                                                         startActivity(new Intent(RegistActivity.this,LoginActivity.class));
                                                                                                         finish();
                                                                                                     }

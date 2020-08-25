@@ -155,16 +155,18 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                 String username = etUsername.getText().toString();
                 String pwd = etPwd.getText().toString();
 
-                LoginBean loginBean = new LoginBean();
-                loginBean.setPhone(username);
-                loginBean.setPassword(pwd);
-
-                Gson gson = new Gson();
-                String json = gson.toJson(loginBean);
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
 
                 if (StringUtil.checkPhoneNumber(username)) {
                     if (StringUtil.checkPassword(pwd)) {
+
+                        LoginBean loginBean = new LoginBean();
+                        loginBean.setPhone(username);
+                        loginBean.setPassword(pwd);
+
+                        Gson gson = new Gson();
+                        String json = gson.toJson(loginBean);
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
                         showDialog();
                         NetUtils.getInstance().getApis().doPwdLogin(requestBody)
                                 .subscribeOn(Schedulers.io())
@@ -178,7 +180,6 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                     @Override
                                     public void onNext(LoginSuccessBean bean) {
                                         hideDialog();
-
                                         if (bean.getMessage().equals("success")) {
                                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             finish();
@@ -200,7 +201,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                     @Override
                                     public void onError(Throwable e) {
                                         hideDialog();
-                                        Toast.makeText(LoginActivity.this, "没有此用户,可能账号或密码错误", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "登录失败，请与管理员联系", Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override
@@ -209,7 +210,11 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                     }
                                 });
 
+                    }else{
+                        Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
                     }
+                }else{
+                    Toast.makeText(this, "手机号不能为空", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -255,11 +260,11 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                                             SPUtil.getInstance().saveData(LoginActivity.this, SPUtil.FILE_NAME, SPUtil.KEY_PHONE, data.getPhone());
                                         }
                                     }
-
                                     @Override
                                     public void onError(Throwable e) {
                                         hideDialog();
-                                        Toast.makeText(LoginActivity.this, "没有此验证码可能已经过期", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "登录失败，请与管理员联系", Toast.LENGTH_SHORT).show();
+
                                     }
 
                                     @Override
@@ -271,6 +276,8 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                     } else {
                         Toast.makeText(this, "验证码不能为空", Toast.LENGTH_SHORT).show();
                     }
+                }else{
+                    Toast.makeText(this, "手机号不能为空", Toast.LENGTH_SHORT).show();
                 }
                 break;
             // 忘記密碼
@@ -286,7 +293,7 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
                     countDownTime();
                     // 发起获取验证码的网络请求
                     showDialog();
-                    NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code", phone)
+                    NetUtils.getInstance().getApis().getPhoneCode(phone)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<GetPhoneCodeBean>() {
@@ -303,7 +310,8 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    hideDialog();
+                                    Toast.makeText(LoginActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
@@ -311,6 +319,8 @@ public class LoginActivity extends BaseAvtivity implements View.OnClickListener 
 
                                 }
                             });
+                }else{
+                    Toast.makeText(this, "手机号输入有误", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.tv_yonghuxieyi:

@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -121,9 +122,12 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 ((ViewHolder)holder).count.setText(integer+"");
 
                 map.put(list.get(position).getId(), String.valueOf(integer));
+
                 ((ViewHolder)holder).jian.setVisibility(View.VISIBLE);
                 ((ViewHolder)holder).count.setVisibility(View.VISIBLE);
+
                 String id = list.get(position).getId();
+
                 map.put(id, String.valueOf(integer));
 
                 //拿到商品信息 以count为数量加入购物车
@@ -320,6 +324,7 @@ public class SearchGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 Intent intent = new Intent(context, GoodsDetailsActivity.class);
                 intent.putExtra("goods", goodsDeatailsBean);
                 context.startActivity(intent);
+                //Toast.makeText(context, "当前点击为第"+position+"个条目", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -18,6 +18,8 @@
 
     <color name="black">#000000</color>
 
+    <color name="more_font1">#f8f8f8</color>
+
     <color name="rc_selector">#F5F5F5</color>
     <color name="rc_selector_FontColor">#33CC99</color>
 

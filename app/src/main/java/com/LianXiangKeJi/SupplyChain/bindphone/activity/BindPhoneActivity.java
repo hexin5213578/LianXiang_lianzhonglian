@@ -84,7 +84,7 @@ public class BindPhoneActivity extends BaseAvtivity implements View.OnClickListe
                     countDownTime();
                     //发起获取验证码的网络请求
                     showDialog();
-                    NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code",phone)
+                    NetUtils.getInstance().getApis().getPhoneCode(phone)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<GetPhoneCodeBean>() {
@@ -101,7 +101,8 @@ public class BindPhoneActivity extends BaseAvtivity implements View.OnClickListe
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    hideDialog();
+                                    Toast.makeText(BindPhoneActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override

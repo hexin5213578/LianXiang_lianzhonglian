@@ -13,6 +13,7 @@ import com.LianXiangKeJi.SupplyChain.base.BaseAvtivity;
 import com.LianXiangKeJi.SupplyChain.base.BasePresenter;
 import com.LianXiangKeJi.SupplyChain.bindphone.bean.ReplactPhoneBean;
 import com.LianXiangKeJi.SupplyChain.common.bean.GetPhoneCodeBean;
+import com.LianXiangKeJi.SupplyChain.login.activity.LoginActivity;
 import com.LianXiangKeJi.SupplyChain.setup.bean.UpdateImageBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
@@ -134,7 +135,7 @@ public class ReplacePhoneActivity extends BaseAvtivity implements View.OnClickLi
                     countDownTime();
                     //发起获取验证码的网络请求
                     showDialog();
-                    NetUtils.getInstance().getApis().getPhoneCode("http://192.168.0.143:8081/user/code",phone)
+                    NetUtils.getInstance().getApis().getPhoneCode(phone)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Observer<GetPhoneCodeBean>() {
@@ -151,7 +152,8 @@ public class ReplacePhoneActivity extends BaseAvtivity implements View.OnClickLi
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    hideDialog();
+                                    Toast.makeText(ReplacePhoneActivity.this, "获取验证码失败", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override

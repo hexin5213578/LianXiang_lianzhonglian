@@ -48,8 +48,8 @@ public interface Apis {
     Observable<ClassIfBean> getClassIf();
 
     //获取验证码
-    @GET()
-    Observable<GetPhoneCodeBean> getPhoneCode(@Url String url, @Query("phone") String phone);
+    @GET("user/code")
+    Observable<GetPhoneCodeBean> getPhoneCode(@Query("phone") String phone);
 
     //用户注册
     @POST("user/signIn")

@@ -119,11 +119,9 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-      if(requestCode==100){
+      if(requestCode==101){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                callPhone("13253353293");
-
+                callPhone("037963273363");
             } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(this, "权限申请失败，用户拒绝权限", Toast.LENGTH_SHORT).show();
             }
@@ -135,11 +133,10 @@ public class PaySuccessOrderActivity extends BaseAvtivity implements View.OnClic
             int request = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
             if (request != PackageManager.PERMISSION_GRANTED)//缺少权限，进行权限申请
             {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 100);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 101);
                 return;//
             } else {
-                Intent intent = new Intent(PaySuccessOrderActivity.this, MapActivity.class);
-                startActivity(intent);
+                callPhone("037963273363");
             }
         } else {
 

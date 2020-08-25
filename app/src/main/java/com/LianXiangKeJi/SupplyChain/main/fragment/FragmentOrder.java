@@ -126,6 +126,7 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         } else {
             Toast.makeText(getContext(), "请先登录", Toast.LENGTH_SHORT).show();
         }
+
     }
     @SuppressLint("WrongConstant")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -133,7 +134,6 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
         //是否所有的条目都被选中
         boolean isAllChecked = true;
         totalPrice = 0;
-
         for (ShopCarBean.DataBean bean : data) {
             if (!bean.isPersonChecked()) {
                 isAllChecked = false;
@@ -141,9 +141,20 @@ public class FragmentOrder extends BaseFragment implements View.OnClickListener 
                 totalPrice += Double.valueOf(bean.getPrice()) * bean.getCount();
             }
         }
-            money.setText("¥" + String.format("%.2f", totalPrice));
+        money.setText("¥" + String.format("%.2f", totalPrice));
 
         rbCheckAll.setChecked(isAllChecked);
+
+        //将改变的数量存入本地文件
+        LinkedHashMap<String, String> goodsid = SPUtil.getMap(getContext(), "goodsid");
+        for (String key : goodsid.keySet()) {
+            for (ShopCarBean.DataBean bean : data) {
+                if (key.equals(bean.getId())){
+                    goodsid.put(key, String.valueOf(bean.getCount()));
+                }
+            }
+        }
+        SPUtil.setMap(getContext(), "goodsid", goodsid);
     }
 
     @Override

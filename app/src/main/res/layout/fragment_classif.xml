@@ -36,7 +36,7 @@
         android:layout_width="@dimen/dp_85"
         android:layout_below="@id/rl_title"
         android:id="@+id/rc_firstList"
-        android:background="#F5F5F5"
+        android:background="#f8f8f8"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -55,15 +55,20 @@
             android:id="@+id/rc_secondList"
             android:layout_height="wrap_content">
         </androidx.recyclerview.widget.RecyclerView>
-
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/dp_12"
-            android:id="@+id/rc_search_goodss"
             android:layout_marginLeft="@dimen/dp_9"
-            android:background="@color/white"
+            android:layout_marginTop="@dimen/dp_12"
             android:layout_height="match_parent">
-        </androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/rc_search_goodss"
+                android:background="@color/white"
+                android:layout_height="match_parent">
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

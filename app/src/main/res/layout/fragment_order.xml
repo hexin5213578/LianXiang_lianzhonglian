@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/dp_10"
-            android:background="@drawable/order_bg"
+            android:background="@drawable/order_bg_no_bottom"
             android:layout_marginRight="@dimen/dp_10"
             android:layout_weight="1">
             <LinearLayout

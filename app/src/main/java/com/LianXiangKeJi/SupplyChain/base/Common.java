@@ -113,7 +113,7 @@ public  class Common {
 //            Log.d("tag", "r=" + red + ",g=" + green + ",b=" + blue);
             int color = Color.rgb(red, green, blue);
             //除去白色和黑色
-            if (color!=Color.BLACK){
+            if (color!=Color.WHITE && color!=Color.BLACK){
                 rgb.add(color);
             }
         }

@@ -119,17 +119,20 @@ public class FinishAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
-        SaveOrdersidBean saveOrdersidBean = new SaveOrdersidBean();
-        saveOrdersidBean.setId(list.get(position).getId());
 
-        Gson gson = new Gson();
-        String json = gson.toJson(saveOrdersidBean);
-
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         //取消订单
         ((ViewHolder) holder).btDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SaveOrdersidBean saveOrdersidBean = new SaveOrdersidBean();
+                saveOrdersidBean.setId(list.get(position).getId());
+
+                Gson gson = new Gson();
+                String json = gson.toJson(saveOrdersidBean);
+
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(context)
                         .setMessage("是否确认删除").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override

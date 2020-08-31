@@ -13,13 +13,17 @@
       android:layout_below="@id/include"
       android:id="@+id/sv"
       android:layout_height="match_parent">
-    <androidx.recyclerview.widget.RecyclerView
-        android:background="@color/white"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_below="@+id/include"
-        android:id="@+id/rc_recommend"
         android:layout_height="match_parent">
-    </androidx.recyclerview.widget.RecyclerView>
+      <androidx.recyclerview.widget.RecyclerView
+          android:background="@color/white"
+          android:layout_width="match_parent"
+          android:layout_below="@+id/include"
+          android:id="@+id/rc_recommend"
+          android:layout_height="match_parent">
+      </androidx.recyclerview.widget.RecyclerView>
+    </androidx.core.widget.NestedScrollView>
   </com.liaoinstan.springview.widget.SpringView>
 
 </RelativeLayout>

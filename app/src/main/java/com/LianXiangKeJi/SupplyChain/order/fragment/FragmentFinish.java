@@ -104,8 +104,7 @@ public class FragmentFinish extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(String str){
         if (str.equals("刷新界面")){
-            page=1;
-            getDataBean(page,state);
+            getDataBean(1,state);
         }
     }
 

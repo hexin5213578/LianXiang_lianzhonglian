@@ -55,6 +55,8 @@
             android:id="@+id/rc_secondList"
             android:layout_height="wrap_content">
         </androidx.recyclerview.widget.RecyclerView>
+
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/dp_9"

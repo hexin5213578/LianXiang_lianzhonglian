@@ -1,13 +1,25 @@
 package com.LianXiangKeJi.SupplyChain.main.fragment;
 
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,6 +79,7 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
     SpringView sv;
     @BindView(R.id.activity_coupon)
     ImageView activityCoupon;
+    private PopupWindow mPopupWindow1;
 
     @Override
     protected void getid(View view) {
@@ -128,7 +141,6 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
 
             }
         });
-
 
     }
 
@@ -291,4 +303,5 @@ public class FragmentHome extends BaseFragment implements View.OnClickListener {
                     }
                 });
     }
+
 }

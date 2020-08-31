@@ -24,7 +24,7 @@ public class UserAgreementActivity extends BaseAvtivity {
     TextView tvRight;
     @BindView(R.id.wab)
     WebView wab;
-    String str = "http://www.luoyanglx.com/xieyi/";
+    String str = "http://www.luoyanglx.com/fuwuxieyi/";
     @Override
     protected int getResId() {
         return R.layout.activity_user_agreement;
@@ -40,7 +40,7 @@ public class UserAgreementActivity extends BaseAvtivity {
             }
         });
         tvRight.setVisibility(View.GONE);
-        title.setText("用户协议");
+        title.setText("服务协议");
         /**
          * 通过此WebView 获取到 WebSettings ，通过WebSettings设置WebView
          */

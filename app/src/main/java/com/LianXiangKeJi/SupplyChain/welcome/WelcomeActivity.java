@@ -115,18 +115,20 @@ public class WelcomeActivity extends BaseAvtivity{
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(WelcomeActivity.this, PrivacypolicyActivity.class));
-
+                dismiss1();
             }
         });
         tv_xieyi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismiss1();
                 startActivity(new Intent(WelcomeActivity.this, UserAgreementActivity.class));
             }
         });
         tv_notagree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismiss1();
                 finish();
             }
         });
@@ -150,5 +152,10 @@ public class WelcomeActivity extends BaseAvtivity{
             }
         });
         show1(view1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

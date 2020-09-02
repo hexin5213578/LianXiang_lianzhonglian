@@ -29,6 +29,7 @@ import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.bean.IntentBean;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.LianXiangKeJi.SupplyChain.wxapi.WXPayEntryActivity;
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
@@ -156,7 +157,9 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                             data = generOrdersBean.getData();
                             tvOrderNumber.setText(data.getOrdersId());
                             info = data.getBody();
-                            tvOrderPrice.setText("￥"+ data.getMoney()+"");
+                            double money = data.getMoney();
+                            String round = StringUtil.round(String.valueOf(money));
+                            tvOrderPrice.setText("￥"+ round);
                             tvOrderPayTheway.setText(data.getPayment());
                             String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
                                     new java.util.Date(data.getGmtCreate()));
@@ -279,7 +282,9 @@ public class ConfirmPaymentActivity extends BaseAvtivity implements View.OnClick
                             data1 = bean.getData();
                             tvOrderNumber.setText(data1.getOrdersId());
 
-                            tvOrderPrice.setText("￥"+data1.getMoney()+"");
+                            double money = data1.getMoney();
+                            String round = StringUtil.round(String.valueOf(money));
+                            tvOrderPrice.setText("￥"+ round);
                             tvOrderPayTheway.setText(data1.getPayment());
                             String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(
                                     new java.util.Date(data1.getGmtCreate()));

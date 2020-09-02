@@ -48,6 +48,7 @@ import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderWaitPayActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessOrderActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -118,7 +119,9 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
             //总价为
-            ((ViewHolder) holder).tvPrice.setText("总价：￥" + list.get(position).getMoney());
+            double money = list.get(position).getMoney();
+            String round = StringUtil.round(String.valueOf(money));
+            ((ViewHolder) holder).tvPrice.setText("总价：￥" + round);
 
             SaveOrdersidBean saveOrdersidBean = new SaveOrdersidBean();
             saveOrdersidBean.setId(list.get(position).getId());
@@ -325,7 +328,9 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             OrderGoodsListAdapter adapter = new OrderGoodsListAdapter(context, ordersDetailList);
             ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
 
-            ((ViewHolder) holder).tvPrice.setText("总价：￥" + list.get(position).getMoney());
+            double money = list.get(position).getMoney();
+            String round = StringUtil.round(String.valueOf(money));
+            ((ViewHolder) holder).tvPrice.setText("总价：￥" + round);
 
             ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -546,7 +551,9 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
 
-            ((ViewHolder) holder).tvPrice.setText("总价：￥" + list.get(position).getMoney());
+            double money = list.get(position).getMoney();
+            String round = StringUtil.round(String.valueOf(money));
+            ((ViewHolder) holder).tvPrice.setText("总价：￥" + round);
 
             SaveOrdersidBean saveOrdersidBean = new SaveOrdersidBean();
             saveOrdersidBean.setId(list.get(position).getId());
@@ -651,7 +658,9 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
 
-            ((ViewHolder) holder).tvPrice.setText("总价：￥" + list.get(position).getMoney());
+            double money = list.get(position).getMoney();
+            String round = StringUtil.round(String.valueOf(money));
+            ((ViewHolder) holder).tvPrice.setText("总价：￥" + round);
 
 
             SaveOrdersidBean saveOrdersidBean = new SaveOrdersidBean();
@@ -759,7 +768,9 @@ public class AllOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
             ((ViewHolder)holder).tvPayment.setText("等待卖家发货");
-            ((ViewHolder) holder).tvPrice.setText("总价：￥" + list.get(position).getMoney());
+            double money = list.get(position).getMoney();
+            String round = StringUtil.round(String.valueOf(money));
+            ((ViewHolder) holder).tvPrice.setText("总价：￥" + round);
             ((ViewHolder) holder).btPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

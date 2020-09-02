@@ -25,6 +25,7 @@ import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderShippedActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderWaitPayActivity;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.PaySuccessOrderActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -71,7 +72,9 @@ public class ShipAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
 
-        ((ViewHolder) holder).tvPrice.setText("总价：￥" + list.get(position).getMoney());
+        double money = list.get(position).getMoney();
+        String round = StringUtil.round(String.valueOf(money));
+        ((ViewHolder) holder).tvPrice.setText("总价：￥" + round);
 
         ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override

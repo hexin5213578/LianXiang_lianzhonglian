@@ -26,6 +26,7 @@ import com.LianXiangKeJi.SupplyChain.order.bean.SaveOrdersidBean;
 import com.LianXiangKeJi.SupplyChain.order.bean.UserOrderBean;
 import com.LianXiangKeJi.SupplyChain.paysuccess.activity.OrderFinishActivity;
 import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
+import com.LianXiangKeJi.SupplyChain.utils.StringUtil;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
@@ -74,7 +75,9 @@ public class FinishAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         ((ViewHolder) holder).rcOrdergoods.setAdapter(adapter);
 
-        ((ViewHolder) holder).tvPrice.setText("总价：￥" + list.get(position).getMoney());
+        double money = list.get(position).getMoney();
+        String round = StringUtil.round(String.valueOf(money));
+        ((ViewHolder) holder).tvPrice.setText("总价：￥" + round);
 
         ((ViewHolder) holder).rlItem.setOnClickListener(new View.OnClickListener() {
             @Override

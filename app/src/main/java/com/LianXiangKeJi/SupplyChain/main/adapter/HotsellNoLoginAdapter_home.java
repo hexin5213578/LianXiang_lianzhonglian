@@ -103,7 +103,11 @@ public class HotsellNoLoginAdapter_home extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public int getItemCount() {
-        return 20;
+        if(list.size()>20){
+            return 20;
+        }else{
+            return list.size();
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

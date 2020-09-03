@@ -115,13 +115,11 @@ public class WelcomeActivity extends BaseAvtivity{
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(WelcomeActivity.this, PrivacypolicyActivity.class));
-                dismiss1();
             }
         });
         tv_xieyi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss1();
                 startActivity(new Intent(WelcomeActivity.this, UserAgreementActivity.class));
             }
         });

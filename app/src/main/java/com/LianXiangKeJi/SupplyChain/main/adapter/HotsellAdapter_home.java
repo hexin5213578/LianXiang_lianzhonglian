@@ -288,7 +288,7 @@ public class HotsellAdapter_home extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return list.size()-1;
+        return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

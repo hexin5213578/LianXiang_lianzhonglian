@@ -133,28 +133,6 @@ public class MapActivity extends Activity implements View.OnClickListener, Locat
             }
         });
 
-
-        // 定义多边形的5个点点坐标
-        LatLng latLng1 = new LatLng(34.646023, 112.39782);
-        LatLng latLng2 = new LatLng(34.656023, 112.38782);
-        LatLng latLng3 = new LatLng(34.686023, 112.36782);
-        LatLng latLng4 = new LatLng(34.616023, 112.34782);
-
-/*// 声明 多边形参数对象
-        PolygonOptions polygonOptions = new PolygonOptions();
-// 添加 多边形的每个顶点（顺序添加）
-        polygonOptions.add(latLng1, latLng2, latLng3, latLng4);
-        polygonOptions.strokeWidth(15) // 多边形的边框
-                .strokeColor(Color.argb(50, 1, 1, 1)) // 边框颜色
-                .fillColor(Color.argb(1, 1, 1, 1));   // 多边形的填充色
-        aMap.addPolygon( polygonOptions.strokeWidth(15) // 多边形的边框
-                .strokeColor(Color.argb(50, 1, 1, 1)) // 边框颜色
-                .fillColor(Color.argb(1, 1, 1, 1)) );
-
-
-        LatLng latLng = new LatLng(34.645912,112.397316);
-        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLng).title("公司地址"));
-        marker.setDraggable(true);*/
     }
 
 
@@ -279,7 +257,6 @@ public class MapActivity extends Activity implements View.OnClickListener, Locat
         String building = regeocodeAddress.getFormatAddress();
         String substring = building.substring(9);
         str = substring;
-
 
     }
     @Override

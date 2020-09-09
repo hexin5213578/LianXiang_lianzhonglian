@@ -125,7 +125,6 @@ public class SetUpActivity extends BaseAvtivity implements View.OnClickListener 
             ivTouxiang.setImageURI(parse);
             tvMyname.setText(username);
         }
-
     }
     @Override
     protected BasePresenter initPresenter() {

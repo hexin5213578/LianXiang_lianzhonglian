@@ -200,32 +200,32 @@ public class FragmentClassIf extends BaseFragment implements ClassIfContract.IVi
         hideDialog();
         data = bean.getData();
         //将获取到的数据提成全局变量
-        list.addAll(data);
+            list.addAll(data);
 
-        //布局管理器
-        LinearLayoutManager manager1 = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        rcFirstList.setLayoutManager(manager1);
-        //创建适配器
-        firstListAdapter = new FirstListAdapter(getContext(), data);
-        rcFirstList.setAdapter(firstListAdapter);
+            //布局管理器
+            LinearLayoutManager manager1 = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+            rcFirstList.setLayoutManager(manager1);
+            //创建适配器
+            firstListAdapter = new FirstListAdapter(getContext(), data);
+            rcFirstList.setAdapter(firstListAdapter);
 
-        //首次进入加载第一条
-        ClassIfBean.DataBean dataBean = data.get(0);
-        List<ClassIfBean.DataBean.ChildrenBean> children = dataBean.getChildren();
-        manager = new GridLayoutManager(getContext(),3);
-        rcSecondList.setLayoutManager(manager);
-        secondListAdapter = new SecondListAdapter(getContext(),children);
-        rcSecondList.setAdapter(secondListAdapter);
-        //首次加载二级分类下三级分类的商品
-        if(children.size()>0 && children!=null){
-            secondListAdapter.getId(0);
-            if(!TextUtils.isEmpty(token)){
-                getclassIfGoods(children.get(0).getId());
-            }else{
-                getclassIfGoodsnoLogin(children.get(0).getId());
+            //首次进入加载第一条
+            ClassIfBean.DataBean dataBean = data.get(0);
+            List<ClassIfBean.DataBean.ChildrenBean> children = dataBean.getChildren();
+            manager = new GridLayoutManager(getContext(),3);
+            rcSecondList.setLayoutManager(manager);
+            secondListAdapter = new SecondListAdapter(getContext(),children);
+            rcSecondList.setAdapter(secondListAdapter);
+            //首次加载二级分类下三级分类的商品
+            if(children.size()>0 && children!=null){
+                secondListAdapter.getId(0);
+                if(!TextUtils.isEmpty(token)){
+                    getclassIfGoods(children.get(0).getId());
+                }else{
+                    getclassIfGoodsnoLogin(children.get(0).getId());
+                }
             }
-        }
-        secondListAdapter.notifyDataSetChanged();
+            secondListAdapter.notifyDataSetChanged();
     }
 
     @Override

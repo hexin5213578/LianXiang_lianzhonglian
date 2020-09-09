@@ -49,12 +49,12 @@ public class MapApapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((ViewHolder) holder).tv.setText(list.get(position).getTitle());
-        ((ViewHolder)holder).tv1.setText(list.get(position).getSnippet());
+        ((ViewHolder)holder).tv1.setText("河南省洛阳市"+list.get(position).getSnippet());
         ((ViewHolder) holder).ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PoiItem poiItem = list.get(position);
-                EventBus.getDefault().post(poiItem);
+                EventBus.getDefault().post("河南省洛阳市"+list.get(position).getSnippet()+poiItem);
                 EventBus.getDefault().post(1);
             }
         });

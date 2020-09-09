@@ -369,8 +369,8 @@ public class RegistActivity extends BaseAvtivity implements View.OnClickListener
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getAddress(PoiItem poiItem) {
-        etAddress.setText(poiItem.getCityName() + poiItem.getAdName() + poiItem.getSnippet() + poiItem.getTitle());
+    public void getAddress(String poiItem) {
+        etAddress.setText(poiItem);
     }
 
     @Override

@@ -18,11 +18,12 @@
             android:text="来电(福利彩票亭)"
             android:layout_height="wrap_content">
         </TextView>
-        <TextView
+        <TextView 
             android:layout_width="match_parent"
             android:textSize="@dimen/sp_15"
             android:textColor="@color/font_color"
             android:textStyle="bold"
+            android:maxLines="1"
             android:id="@+id/tv1"
             android:text="来电(福利彩票亭)"
             android:layout_height="wrap_content">

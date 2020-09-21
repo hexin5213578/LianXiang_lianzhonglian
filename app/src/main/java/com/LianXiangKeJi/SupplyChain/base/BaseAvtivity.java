@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 
 import com.LianXiangKeJi.SupplyChain.R;
 import com.LianXiangKeJi.SupplyChain.common.service.LocationService;
+import com.LianXiangKeJi.SupplyChain.utils.NetUtils;
 import com.LianXiangKeJi.SupplyChain.utils.SPUtil;
 import com.bumptech.glide.Glide;
 import com.smarx.notchlib.INotchScreen;
@@ -28,6 +29,9 @@ import com.smarx.notchlib.NotchScreenManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -49,11 +53,12 @@ public abstract class BaseAvtivity<P extends BasePresenter> extends AppCompatAct
         super.onCreate(savedInstanceState);
         setContentView(getResId());
 
+        //NetUtils netUtils = new NetUtils();
+
         presenter = initPresenter();
         bind = ButterKnife.bind(this);
         getData();
     }
-
 
     // 展示loading圈
     public void showDialog() {
